@@ -20,6 +20,32 @@ git --version
 
 Do not install system software yourself; tell the user what is missing. Everything else you install.
 
+## 0.5 Preflight lessons (from the first run: avoid ~30 minutes of failures)
+
+Do all of this **before** writing any film code:
+
+- **ffmpeg missing** → download the static build once (`https://github.com/BtbN/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz`), unpack with Python `tarfile` if `tar xf` fails, put it in `~/bin` on `PATH`. Delete the archive right after unpacking.
+- **Browser libraries** → after `setup.sh deps`, run `ldd $(find ~/.cache/ms-playwright -name 'chrome-headless-shell' -type f | head -1) | grep 'not found'`. For each missing lib, download the `.deb`, extract into `~/syslibs` (`dpkg-deb -x`) and export `LD_LIBRARY_PATH=~/syslibs/usr/lib/x86_64-linux-gnu` in every render command. No system install.
+- **Memory** → run `free -m`. Under 4 GB RAM: always render with `--workers 1` and `RENDER_SLOTS=1`. Never try 2 workers "to go faster": it crashes and wastes the run.
+- **Disk** → clean `/tmp` and download leftovers before rendering.
+- **Blank frames** → after every still render, check the file size: a frame under ~50 KB at 1080×1920 is blank (WebGL context lost). Prefer **Canvas 2D** styles on machines without a GPU; avoid `--range` batches there, render single times.
+- **Sample libraries** → before writing the score, list what is installed (`ls $LIB/core/audio/instruments/`) and only use instruments from those libraries (clarinet needs `vsco2ce`).
+
+## 0.6 Narration length budget (do it before writing the timeline)
+
+Iraqi Arabic with `ar-IQ-BasselNeural` at `+0%` speaks about **2.2 words per second**. Budget: `words ≈ (film seconds − 4) × 2.2` (keep ~4 s for the hook, pauses and the end card). Write the script to that budget **first**, generate once, measure, and only then trim text. Change the text, not the speed (keep the rate between −5% and +0% so the voice stays natural).
+
+## 0.7 File size (GitHub limit 100 MB)
+
+`mux.sh` encodes at high quality and adds film grain, which makes files huge. For phone delivery use `grain=0` (last argument of `mux.sh`) and then re-encode once:
+`ffmpeg -i in.mp4 -c:v libx264 -crf 24 -preset slow -c:a copy out.mp4` → a 60 s 1080×1920 film should land around 15–40 MB. Put this step in `build.sh`.
+
+## 0.8 Pushing to GitHub
+
+`git push` needs credentials. If push fails with "could not read Username", do **not** retry: tell the user in one line that they must give the agent a GitHub access token (fine-grained, only for the `my-films` repository, permission "Contents: Read and write") through the platform's secrets/environment settings (never pasted in chat), then push with
+`git push https://x-access-token:$GITHUB_TOKEN@github.com/alialdean12-hue/my-films.git main`.
+Never print the token.
+
 ## 1. Get the library
 
 ```sh
