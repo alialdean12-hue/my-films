@@ -40,7 +40,11 @@ Iraqi Arabic with `ar-IQ-BasselNeural` at `+0%` speaks about **2.2 words per sec
 `mux.sh` encodes at high quality and adds film grain, which makes files huge. For phone delivery use `grain=0` (last argument of `mux.sh`) and then re-encode once:
 `ffmpeg -i in.mp4 -c:v libx264 -crf 24 -preset slow -c:a copy out.mp4` → a 60 s 1080×1920 film should land around 15–40 MB. Put this step in `build.sh`.
 
-## 0.8 Pushing to GitHub
+## 0.75 Delivery to Google Drive (preferred for this user)
+
+The user has Google Drive connected to this agent. At the end of every film, upload these files to a Drive folder named `أفلامي/<film name>`: `<name>.mp4`, `poster.jpg`, `<name>.srt`. Then send the user the Drive link in one Arabic line. Do this even when GitHub push fails; never ask the user for a GitHub token.
+
+## 0.8 Pushing to GitHub (optional)
 
 `git push` needs credentials. If push fails with "could not read Username", do **not** retry: tell the user in one line that they must give the agent a GitHub access token (fine-grained, only for the `my-films` repository, permission "Contents: Read and write") through the platform's secrets/environment settings (never pasted in chat), then push with
 `git push https://x-access-token:$GITHUB_TOKEN@github.com/alialdean12-hue/my-films.git main`.
