@@ -9,3 +9,7 @@ node_modules/
 */review/
 */events.json
 */voice/.cache/
+examples/*/out/
+examples/*/stills/
+examples/*/events.json
+examples/*/voice/.cache/
