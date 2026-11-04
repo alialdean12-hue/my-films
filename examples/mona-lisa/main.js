@@ -113,7 +113,7 @@ function render(t) {
 // 1 · the painting on the wall (hook image)
 function s1(t) { wall(t); const z = lerp(1, 1.08, seg(t, 0, 2)); g.save(); g.translate(AX, 760); g.scale(z, z); card(IMG.monalisa, 0, 0, 420, 0, 1, { frame: true }); g.restore(); word('صباحٌ عادي في اللوفر', AX, 1420, 64, t, .45, { color: CREAM }); }
 // 2 · the year
-function s2(t) { wall(t, .8); const w = word('١٩١١', AX, 860, 300, t, K.year - .15, { color: '#fff', font: 'Lalezar' }); if (w) underline(AX - w / 2, AX + w / 2, 1010, t, K.year + .15); }
+function s2(t) { wall(t, .8); const w = word('1911', AX, 860, 300, t, K.year - .15, { color: '#fff', font: 'Lalezar' }); if (w) underline(AX - w / 2, AX + w / 2, 1010, t, K.year + .15); }
 // 3 · the empty wall (archive) + «اختفت»
 function s3(t) {
   grid(t, '#2a0f06', 'rgba(255,120,60,.18)');
@@ -150,12 +150,7 @@ function s6(t) {
   trunk(AX, 1200, lid, t);
   if (lid > 0) { const lh = 150 * eo(lid); g.fillStyle = '#5e3818'; g.fillRect(AX - 310, 1050 - lh, 620, lh); g.fillStyle = '#d8c08a'; g.fillRect(AX - 30, 1050 - 20, 60, 30); }
   word('في صندوقٍ بغرفته', AX, 330, 96, t, K.box, { color: '#fff' });
-  // two years: counter 1911 → 1913
-  if (t > K.two - .1) {
-    const yr = t < K.two + .7 ? '١٩١١' : t < K.two + 1.4 ? '١٩١٢' : '١٩١٣';
-    word('سنتين', AX, 560, 200, t, K.two, { font: 'Amiri', color: YEL });
-    g.save(); g.font = '120px Lalezar'; g.textAlign = 'center'; g.fillStyle = '#fff'; g.shadowColor = 'rgba(0,0,0,.6)'; g.shadowBlur = 20; g.fillText(yr, AX, 1640); g.restore();
-  }
+  word('سنتين', AX, 560, 200, t, K.two, { font: 'Amiri', color: YEL });
 }
 // 7 · it came back — and became the most famous painting
 function s7(t) {
@@ -188,7 +183,6 @@ window.TEXTS = () => [];
   for (const [k, v] of Object.entries(K)) EV.push({ t: v, type: 'pop', k });
   for (const t of [3.95, 10.05, 13.0, 17.95, K.back]) EV.push({ t, type: 'card' });
   EV.push({ t: K.box + .7, type: 'thud' }); EV.push({ t: K.strike, type: 'scratch' });
-  for (const t of [K.two + .7, K.two + 1.4]) EV.push({ t, type: 'tick' });
   for (const [id, t] of Object.entries(VO)) EV.push({ t, type: 'vo', id });
   EV.push({ t: 0, type: 'grid', cuts: CUT, dur: DUR, K });
   window.EV = EV.sort((a, b) => a.t - b.t);
