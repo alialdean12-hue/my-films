@@ -1,0 +1,21 @@
+الضوّاي — third-party assets and their licences
+
+Music (original score, written for this film, played with sampled instruments)
+- Piano: "Salamander Grand Piano V3" by Alexander Holm, licensed under CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+- Samples (CC0): VS Chamber Orchestra: Community Edition (Versilian Studios), Versilian Community Sample Library (Versilian Studios)
+
+Voice
+- Narration: Microsoft Azure neural voice "ar-IQ-BasselNeural", generated through the edge-tts library (https://github.com/rany2/edge-tts). Use of the generated audio is subject to Microsoft's terms for its speech service.
+- Speech check: faster-whisper (MIT) with the OpenAI Whisper "medium" model (MIT).
+
+Fonts (SIL Open Font License 1.1; licence files in fonts/)
+- Reem Kufi — Khaled Hosny, Santiago Orozco (titles, subtitles, telegram)
+- Amiri — Khaled Hosny
+- Italiana — Santiago Orozco (clock numerals)
+- Poiret One — Denis Masharov
+
+Code
+- Drawing engine in engine/ adapted from the Lemo-Opuscar Art Deco style (MIT licence, github.com/lemomo-ai/lemo-opuscar).
+- Sound effects are synthesised procedurally (no recordings).
+
+Story, characters, script, picture and score are original to this film.

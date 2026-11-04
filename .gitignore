@@ -5,3 +5,7 @@ node_modules/
 *.mp4
 *.wav
 .DS_Store
+*/stills/
+*/review/
+*/events.json
+*/voice/.cache/
