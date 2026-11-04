@@ -50,14 +50,36 @@ Each category has a **main style** (use it by default so the channel looks consi
 | # | Category | Main style | Alternates | Search angles |
 |---|---|---|---|---|
 | 1 | 🧠 **علم النفس والسلوك البشري** | `pictogram-motion` (Pictogram Motion) | `whiteboard`, `swiss-motion` | cognitive biases, famous psychology experiments (and their criticisms), everyday behaviour explained, persuasion tricks used by shops |
-| 2 | 💰 **الفلوس وقصص الأغنياء** | `dataviz` (Data Storytelling) | `dark-keynote`, `art-deco` | rise-and-fall of companies, costly mistakes, richest people in history, pricing tricks, origin stories of famous brands |
-| 3 | 📜 **تاريخنا العربي والإسلامي** | `impasto` (Impasto Oil Painting) | `archive-lighttable`, `art-deco`, `silent-film` | Mesopotamia, Abbasid Baghdad, Al-Andalus, Arab/Muslim scientists and inventions, Arabic words in other languages, lost cities |
+| 2 | 💰 **الفلوس وقصص الأغنياء** | `dataviz` (Data Storytelling) | **`doc-edit`** (A2), `dark-keynote`, `art-deco` | rise-and-fall of companies, costly mistakes, richest people in history, pricing tricks, origin stories of famous brands |
+| 3 | 📜 **تاريخنا العربي والإسلامي** | `impasto` (Impasto Oil Painting) | **`doc-edit`** (A2), `archive-lighttable`, `art-deco`, `silent-film` | Mesopotamia, Abbasid Baghdad, Al-Andalus, Arab/Muslim scientists and inventions, Arabic words in other languages, lost cities |
 | 4 | 🔬 **العلم المدهش** | `whiteboard` (Whiteboard Explainer) | `microscope`, `iso-infographic` | strange animals, the human body, space, physics paradoxes, recent discoveries from university press releases |
-| 5 | ⚖️ **قبل وبعد / المقارنات** | `archive-lighttable` (Archive Light Table) | `dataviz`, `countdown` (split-screen) | cities then/now, prices over decades, technology evolution, life expectancy, travel times |
+| 5 | ⚖️ **قبل وبعد / المقارنات** | **`doc-edit`** (A2) | `archive-lighttable`, `dataviz`, `countdown` (split-screen) | cities then/now, prices over decades, technology evolution, life expectancy, travel times |
 | 6 | 🎯 **سيناريوهات «لو...»** | `hologram-hud` (Sci-fi Hologram HUD) | `scifi-toon`, `lowpoly-island` | "what if" scenarios with real science behind them (Earth stops, Moon disappears, bees vanish...) |
-| + | 🔍 **ألغاز وجرائم** (optional 7th) | `halftone-dossier` (Halftone Dossier) | `visual-investigation`, `backrooms` | famous unsolved mysteries, historical heists, disappearances. **Only well-documented, old or famous cases** (see I. ethics) |
+| + | 🔍 **ألغاز وجرائم** (optional 7th) | **`doc-edit`** (A2) | `halftone-dossier`, `visual-investigation`, `backrooms` | famous unsolved mysteries, historical heists, disappearances. **Only well-documented, old or famous cases** (see I. ethics) |
 
 If a slug above doesn't match exactly, find the closest name in `$LIB/styles/README.md`. On a machine **without a GPU**, prefer Canvas-2D styles; avoid heavy 3D/WebGL styles (`brick-toy`, `glass-product`, `paper-popup`, `tilt-shift`, `lowpoly-island`, `desktop-flythrough`) unless the user insists, and warn about render time.
+
+## A2. House style «المونتاج الوثائقي السريع» (`doc-edit`) — the user's favourite
+
+Not in the library: it is our own style. **Reference implementation: `~/my-films/examples/mona-lisa/`** (`main.js`, `mix.py`, `img/SOURCES.txt`). Copy it as the starting point and replace the content. Whenever a story is about real people, places or events with archive images, offer this style first.
+
+**Look**
+- Real **archive photos and public-domain artworks** shown as photo cards: cream border 16 px, soft drop shadow, slight tilt (±0.03–0.08 rad), spring drop-in (scale 1.35 → 1 with overshoot, falling from 120 px above). Paintings get a gilded frame. Light sepia on black-and-white photos.
+- Rotating backgrounds, one per shot: **museum wall** (warm brown, wainscot panels, brass picture light with a warm cone), **dark orange grid with a spotlight**, **white textured paper**, **green cutting mat grid**, **near-black with grain**.
+- **Kinetic Arabic type, two voices**: bold white display font (`Lalezar`) for statements; classic serif (`Amiri` bold) in **red #e0262f** (or yellow #ffd21f) for the key word. Each word pops (scale 1.6 → 1 with overshoot) **exactly when it is spoken** (use `voice/words.json` timestamps).
+- Graphic accents: **big year** with a red underline wiping in; **yellow label-maker tag** (red text) for names and places; **red strike-through** on a word the voice contradicts; **multiplying copies** (1 → 4 → 9 → 16) to show scale or fame.
+- Every cut: whoosh 0.18 s before, low hit on the cut, a 3-frame warm flash, a zoom punch (1.12 → 1) and a 0.3 s shake. A slow warm light leak drifts across all shots. Film grain added at mux (`noise=alls=4`).
+
+**Rhythm**
+- A new shot every **2–4 s**, a new element inside the shot every ~1 s. The first frame is the most striking image. End on the comment question in big two-colour type over the hero image with a slow push-in.
+- Music: tense documentary pulse (pizz bass + spiccato cellos in 8ths, ~100 BPM, minor key, tremolo strings pad), a 1 s drop before the twist, then a piano motif and a full string/timpani swell on the reveal.
+
+**Images: where and how (non-negotiable)**
+- Only **Public domain / CC0** (or CC BY with credit) images. Search Wikimedia Commons with the API in **one combined request** (`generator=search` + `prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=1400`), with a descriptive User-Agent, and **retry slowly on HTTP 429** (wait 15–20 s; never hammer it). Also usable: Library of Congress, Rijksmuseum, The Met Open Access, NASA.
+- Check `LicenseShortName` for every file; reject anything not PD/CC0/CC BY. Save `img/SOURCES.txt` (file · title · licence · page URL) and list the images in `CREDITS`.
+- If the story has no archive images (e.g. ancient history), use public-domain paintings/engravings/manuscripts of the period, or draw stylised cut-outs in code. Never use photos of private living people, news agency photos, film stills or AI images presented as real.
+
+**Known issue:** with ffmpeg 6, `mux.sh` may reject the mix ("only N s could be decoded"). Then master by hand: two-pass `loudnorm` (I=-14, TP=-1.2, `linear=true`) on `mix.wav`, `apad` + `-t <DUR>`, and mux with `-c:v libx264 -crf 23 -preset slow -c:a aac -b:a 192k -shortest`.
 
 ## B. Preflight (once per session, before any film code)
 
