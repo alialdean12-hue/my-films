@@ -26,6 +26,12 @@ Talk to the user **in simple Arabic**. The user works from a phone and is not a 
 9. **Pace.** A new shot every **2–4 seconds** (never hold one composition longer than 4 s), a new element inside the shot about every second. A 60 s short has ≈ 18–25 shots. Static pictograms or a single word on a flat colour for several seconds is a failure.
 10. **Self-check before delivery** (render a contact sheet, one frame per second, and look at it): every frame has an image or photo card; no frame looks like the previous 4 seconds; all text is readable at 1/3 size; digits are Western; no overlay UI. Fix and re-render if any check fails.
 
+11. **Text: keywords only, no running subtitles.** Like the reference, the screen shows only **1–5 big kinetic words per shot** (the key phrase of what is being said), never the full sentence. Do not draw a subtitle box with the whole narration (it overflows, crowds the frame and repeats the voice). The full text goes only into the `.srt` file. At most **two text lines on screen at once**.
+12. **Text must fit and never cover the subject.** Measure every string (`measureText`) and keep it inside a safe area: x from 70 to 1010, y from 220 to 1650 (shorts). If a phrase is wider than 900 px, shrink it or split it into 2 lines. Text sits in the empty part of the frame, never on the photo card or the subject's face. **Vary the text position** between shots (top / middle / bottom), don't stack it at the bottom every time.
+13. **One image per shot, no reuse.** Each shot gets its own image; the same image may appear at most twice in a video (e.g. hook and ending). Never hold the same card for several shots in a row while only the text changes: that is one long static shot (a failure of rule 9).
+14. **No weak charts or diagrams.** No small bar charts, clock icons, schematic blobs or grey shapes with tiny labels. Show a number as **one huge number** with the red underline, or as a comparison of two photo cards with «ضد»/«vs» between them.
+15. **Generated images must look real and match the subject** (a real animal looks like the real animal, no robotic/sci-fi versions unless the story is sci-fi). Reject and regenerate anything odd.
+
 ## THE WORKFLOW (follow in this exact order)
 
 ### Step 1 · Format (first question, always)
@@ -142,7 +148,7 @@ node -v; python3 -V; git --version; ffmpeg -version | head -1; free -m; df -h ~
 
 - Fonts: only `Cairo` (house rule 5). Load with `@font-face` and wait for `document.fonts.load` before `READY`.
 - Canvas: `g.direction = 'rtl'`, **never letterSpacing** on Arabic, never draw letter by letter (joins break). Typewriter = full string revealed by a clip rectangle growing right → left.
-- Subtitles: your own 2-line card (split at a comma near the middle). Shorts: ~46 px on 1080 wide, y ≈ 1600 of 1920 (above the app buttons). YouTube: ~44 px, y ≈ 960 of 1080.
+- No on-screen subtitles (house rule 11): kinetic keywords only; the full narration goes to the `.srt` file.
 - Highlight the **key word** of each subtitle (number, name, the strange fact) in the style's accent colour: it raises retention.
 - Digits are always Western (0–9), see house rule 4. Bulb/marquee signs from Arabic text: build the whole word as one shape and put one bulb on each letter dot (see `~/my-films/al-dhawwai/engine/bulbs.js`, option `whole`).
 
