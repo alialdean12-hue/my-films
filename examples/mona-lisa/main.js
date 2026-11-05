@@ -1,4 +1,5 @@
 // «سرقة الموناليزا» — fast documentary edit: museum wall + spotlight, archive photo cards, kinetic Arabic type, paper/grid/mat backgrounds.
+import * as FX from './fx.js';   // motion-graphics toolkit (see AGENT_INSTRUCTIONS §4.2)
 const W = 1080, H = 1920, AX = W / 2;
 const cv = document.getElementById('c'); cv.width = W; cv.height = H; const g = cv.getContext('2d');
 const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lerp = (a, b, t) => a + (b - a) * t, seg = (t, a, b) => clamp((t - a) / (b - a));
