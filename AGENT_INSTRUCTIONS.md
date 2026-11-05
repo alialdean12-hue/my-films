@@ -16,7 +16,10 @@ Talk to the user **in simple Arabic**. The user works from a phone and is not a 
 3. **No moving counters or tickers** (no year counters, no rolling numbers, no skip counters). A number appears once, static, with the pop-in and red underline.
 4. **Numbers in English (Western) digits: 0123456789** everywhere on screen (e.g. «1911»، «20 سنة»), never Arabic-Indic (١٢٣). The voice still says numbers in words.
 5. **Readable fonts and clear colours.** One font only: **`Cairo`** (copy from `~/my-films/examples/mona-lisa/fonts/Cairo.ttf`), weight **900** for all on-screen words, 800 for subtitles. Colours: **white #FFFFFF** for statements, **yellow #FFD21F** or **red #FF3B3B** for the key word. White/yellow/red text always gets a dark outline (`strokeText`, width ≈ 8% of the font size) and a soft shadow; on light paper backgrounds use near-black #111 text without outline. Minimum sizes on 1080-wide: key words ≥ 120 px, statements ≥ 90 px, subtitles ≥ 52 px. Never put pale text on a mid-tone background (no beige-on-rust, no grey-on-teal): check contrast ≥ 4.5 : 1.
-6. **Images:** use real public-domain archive photos/artworks when they exist (section A2). When they don't, **draw the image in code** (canvas: stylised scenes, objects, silhouettes, maps, documents) and present it as a photo card in the same way. There is no image-generation model: everything else is code.
+6. **Images: you can generate them from a prompt. Use it.** Every shot needs a strong image. Order of choice:
+   1. **Real public-domain archive photos/artworks** when the story is about real documented people, places or events (section A2): they prove the story is real.
+   2. **Generated images** (your image tool, from a prompt) for everything else: scenes no camera recorded, ancient history, psychology/science illustrations, "what if" scenarios, backgrounds, objects, and the thumbnail. See section A3.
+   3. Code-drawn graphics only for simple elements (arrows, maps lines, numbers, frames).
 
 7. **No overlay UI.** Never draw a top bar, progress bar, chapter counter («06 / 12»), "STUDY 04" labels, English captions, small grey labels, watermarks or any other interface decoration. The screen holds only: the image, the kinetic Arabic words, the subtitle card.
 8. **Copy the reference, don't reinvent it.** Start every video by copying `~/my-films/examples/mona-lisa/` (index.html, main.js, mix.py, fonts) into the new project folder, then replace the shots, images, words and voice. Keep its helpers (`wall`, `paper`, `grid`, `dark`, `card`, `word`, `tag`, `underline`, `strike`, cut flash/punch/shake, light leak) and its mix structure. Do **not** use a library style's engine or layout instead.
@@ -91,9 +94,24 @@ Not in the library: it is our own style. **Reference implementation: `~/my-films
 **Images: where and how (non-negotiable)**
 - Only **Public domain / CC0** (or CC BY with credit) images. Search Wikimedia Commons with the API in **one combined request** (`generator=search` + `prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=1400`), with a descriptive User-Agent, and **retry slowly on HTTP 429** (wait 15–20 s; never hammer it). Also usable: Library of Congress, Rijksmuseum, The Met Open Access, NASA.
 - Check `LicenseShortName` for every file; reject anything not PD/CC0/CC BY. Save `img/SOURCES.txt` (file · title · licence · page URL) and list the images in `CREDITS`.
-- If the story has no archive images (e.g. ancient history), use public-domain paintings/engravings/manuscripts of the period, or draw stylised cut-outs in code. Never use photos of private living people, news agency photos, film stills or AI images presented as real.
+- If the story has no archive images (e.g. ancient history), generate images (section A3) or use public-domain paintings/engravings of the period. Never use photos of private living people, news agency photos or film stills; generated images follow section A3.
 
 **Known issue:** with ffmpeg 6, `mux.sh` may reject the mix ("only N s could be decoded"). Then master by hand: two-pass `loudnorm` (I=-14, TP=-1.2, `linear=true`) on `mix.wav`, `apad` + `-t <DUR>`, and mux with `-c:v libx264 -crf 23 -preset slow -c:a aac -b:a 192k -shortest`.
+
+## A3. Generated images (prompt rules)
+
+- **One style line for the whole video**, appended to every prompt so all images match. Defaults by mood:
+  - history / true story: `vintage documentary photograph, warm tungsten light, film grain, shallow depth of field, muted colours, cinematic`
+  - psychology / science: `cinematic editorial photo, dramatic side light, dark background, high contrast, realistic`
+  - mystery / crime: `noir documentary photo, cold moonlight, fog, film grain, high contrast`
+  - "what if": `epic cinematic matte painting, realistic, dramatic sky, wide angle`
+- Prompt = **subject + action + setting + era + camera/framing + the style line**. English prompts give better results; no text in the image ("no text, no letters, no watermark").
+- Sizes: shorts **1080×1920 (9:16)** for full-frame backgrounds, **1:1 or 4:5** for photo cards; YouTube 16:9. Generate at the highest size the tool allows.
+- **Make images for motion:** for parallax, generate the subject on a plain or dark background ("isolated on a plain dark background") and the background separately, then move them as two layers (background slow, subject faster, slight scale). Leave empty space where the Arabic words will go.
+- Use generated images as photo cards (cream border, tilt, spring drop), full-frame backgrounds with slow push/pan, or cut-out layers, exactly like the reference.
+- Plan ≈ **1 image per shot** (a 60 s short ≈ 15–25 images). Name them `img/s01.png`, `img/s02.png`… and keep the prompts in `img/PROMPTS.md`.
+- **Rules:** never generate realistic faces of real, identifiable people (celebrities, politicians, victims, private people); show them from behind, in silhouette, or use real archive photos instead. Never present a generated image as a real historical photo of a specific event (no fake "evidence"); for true stories mix it with real archive photos. No gore. Check the image tool's terms for commercial use.
+- Look at every image before using it: wrong hands, extra fingers, garbled text, modern objects in old eras → regenerate.
 
 ## B. Preflight (once per session, before any film code)
 
@@ -159,7 +177,7 @@ Render it with the **same engine and style** as the video (a dedicated `thumb.ht
 - **Short**: 1080×1920 cover; keep the important part in the **centre 1080×1350** (Instagram crops it in the grid).
 - **YouTube**: 1280×720, under 2 MB.
 - Composition: **one big subject** (face, object, animal) filling ~50% of the frame + **2 to 4 Arabic words** in a `Cairo` 900 with a thick dark outline (key word in yellow or red) with a thick outline/shadow, high contrast against the background. The words must not repeat the title; they tease it (e.g. title «أول قانون مكتوب في التاريخ» → thumbnail text «قبل ٣٨٠٠ سنة!»).
-- Make **2 variants** (different text or framing), send both, recommend one.
+- Base it on a **generated hero image** (section A3) or the strongest archive photo. Make **2 variants** (different text or framing), send both, recommend one.
 - Check it at small size (resize to 320 px wide): the text must still be readable.
 
 ## H. Captions for publishing (Arabic, ready to copy)
