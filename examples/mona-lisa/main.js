@@ -5,7 +5,7 @@ const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x)), lerp = (a, b, t)
 const eo = t => 1 - Math.pow(1 - clamp(t), 3), eio = t => { t = clamp(t); return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
 const back = (t, s = 1.8) => { t = clamp(t) - 1; return 1 + t * t * ((s + 1) * t + s); };
 const hash = n => { n = Math.sin(n * 127.1 + 311.7) * 43758.5453; return n - Math.floor(n); };
-const RED = '#e0262f', CREAM = '#f4ecdc', YEL = '#ffd21f';
+const RED = '#ff3b3b', CREAM = '#f4ecdc', YEL = '#ffd21f';
 
 const VO = { l1: .3, l2: 7.4, l3: 13.1, l4: 18.1, l5: 22.7 };
 const K = { year: 2.1, gone: 3.96, louvre: 6.54, gang: 8.5, strike: 9.6, worker: 10.16, same: 11.74, box: 13.94, two: 15.4, back: 18.68, famous: 20.6, made: 23.1, fame: 24.02 };
@@ -58,18 +58,19 @@ function card(img, cx, cy, w, rot, p, { border = 16, frame = null, sepia = 0 } =
 }
 
 // ---------- kinetic words ----------
-function word(text, x, y, size, t, t0, { font = 'Lalezar', color = '#fff', italic = false, out = Infinity, rot = 0, shadow = true, align = 'center' } = {}) {
+function word(text, x, y, size, t, t0, { font = 'Cairo', color = '#fff', italic = false, out = Infinity, rot = 0, shadow = true, align = 'center' } = {}) {
   if (t < t0 || t > out + .25) return null;
   const p = seg(t, t0, t0 + .28), q = 1 - seg(t, out, out + .25);
   g.save(); g.globalAlpha = clamp(p * 2) * q; g.translate(x, y + (1 - eo(p)) * 40); g.rotate(rot); const s = lerp(1.6, 1, back(p, 2)); g.scale(s, s);
-  g.font = `${font === 'Amiri' ? '700 ' : ''}${size}px ${font}`; g.direction = 'rtl'; g.textAlign = align; g.textBaseline = 'middle';
+  g.font = `900 ${size}px ${font}`; g.direction = 'rtl'; g.textAlign = align; g.textBaseline = 'middle';
   if (shadow) { g.shadowColor = 'rgba(0,0,0,.6)'; g.shadowBlur = 24; g.shadowOffsetY = 8; }
+  if (shadow) { g.lineJoin = 'round'; g.lineWidth = size * .08; g.strokeStyle = 'rgba(0,0,0,.75)'; g.strokeText(text, 0, 0); }
   g.fillStyle = color; g.fillText(text, 0, 0);
   const w = g.measureText(text).width; g.restore(); return w;
 }
 function tag(text, x, y, t, t0, rot = -.06) { // yellow name tag like a label maker
   if (t < t0) return; const p = back(seg(t, t0, t0 + .3), 2.2);
-  g.save(); g.translate(x, y); g.rotate(rot); g.scale(p, p); g.font = '54px Lalezar'; g.direction = 'rtl'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.save(); g.translate(x, y); g.rotate(rot); g.scale(p, p); g.font = '900 50px Cairo'; g.direction = 'rtl'; g.textAlign = 'center'; g.textBaseline = 'middle';
   const w = g.measureText(text).width + 50; g.fillStyle = YEL; g.shadowColor = 'rgba(0,0,0,.4)'; g.shadowBlur = 16; g.fillRect(-w / 2, -42, w, 84); g.shadowColor = 'transparent';
   g.fillStyle = '#c4161c'; g.fillText(text, 0, 4); g.restore();
 }
@@ -113,12 +114,12 @@ function render(t) {
 // 1 · the painting on the wall (hook image)
 function s1(t) { wall(t); const z = lerp(1, 1.08, seg(t, 0, 2)); g.save(); g.translate(AX, 760); g.scale(z, z); card(IMG.monalisa, 0, 0, 420, 0, 1, { frame: true }); g.restore(); word('صباحٌ عادي في اللوفر', AX, 1420, 64, t, .45, { color: CREAM }); }
 // 2 · the year
-function s2(t) { wall(t, .8); const w = word('1911', AX, 860, 300, t, K.year - .15, { color: '#fff', font: 'Lalezar' }); if (w) underline(AX - w / 2, AX + w / 2, 1010, t, K.year + .15); }
+function s2(t) { wall(t, .8); const w = word('1911', AX, 860, 300, t, K.year - .15, { color: '#fff', font: 'Cairo' }); if (w) underline(AX - w / 2, AX + w / 2, 1010, t, K.year + .15); }
 // 3 · the empty wall (archive) + «اختفت»
 function s3(t) {
   grid(t, '#2a0f06', 'rgba(255,120,60,.18)');
   card(IMG.emptywall, AX + 30, 920, 640, .05, seg(t, 3.95, 4.4), { sepia: .3 });
-  word('اختفت!', AX - 40, 330, 210, t, K.gone, { font: 'Amiri', color: RED, rot: -.06 });
+  word('اختفت!', AX - 40, 330, 210, t, K.gone, { font: 'Cairo', color: RED, rot: -.06 });
   word('الموناليزا', AX + 120, 520, 96, t, K.gone + 1.3, { color: '#fff' });
   tag('متحف اللوفر · باريس', AX, 1540, t, K.louvre - .2, .04);
 }
@@ -128,7 +129,7 @@ function s4(t) {
   word('لم يكن', AX + 160, 760, 120, t, 7.95, { color: '#fff' });
   const w = word('عصابة', AX - 60, 960, 220, t, K.gang - .1, { color: '#fff' });
   if (w) strike(AX - 60 - w / 2, AX - 60 + w / 2, 960, t, K.strike);
-  word('بل...', AX + 200, 1200, 100, t, 9.85, { color: RED, font: 'Amiri' });
+  word('بل...', AX + 200, 1200, 100, t, 9.85, { color: RED, font: 'Cairo' });
 }
 // 5 · the worker
 function s5(t) {
@@ -136,7 +137,7 @@ function s5(t) {
   card(IMG.peruggia, AX + 20, 860, 560, -.04, seg(t, 10.05, 10.45), { sepia: .2 });
   tag('فينتشنزو بيروجيا', AX + 120, 1230, t, 10.5);
   word('عاملٌ إيطالي', AX, 290, 120, t, K.worker, { color: '#161616', shadow: false });
-  word('عمل في المتحف نفسه', AX, 1500, 96, t, K.same, { font: 'Amiri', color: RED, shadow: false });
+  word('عمل في المتحف نفسه', AX, 1500, 96, t, K.same, { font: 'Cairo', color: RED, shadow: false });
 }
 // 6 · hidden in a trunk for two years
 function s6(t) {
@@ -150,7 +151,7 @@ function s6(t) {
   trunk(AX, 1200, lid, t);
   if (lid > 0) { const lh = 150 * eo(lid); g.fillStyle = '#5e3818'; g.fillRect(AX - 310, 1050 - lh, 620, lh); g.fillStyle = '#d8c08a'; g.fillRect(AX - 30, 1050 - 20, 60, 30); }
   word('في صندوقٍ بغرفته', AX, 330, 96, t, K.box, { color: '#fff' });
-  word('سنتين', AX, 560, 200, t, K.two, { font: 'Amiri', color: YEL });
+  word('سنتين', AX, 560, 200, t, K.two, { font: 'Cairo', color: YEL });
 }
 // 7 · it came back — and became the most famous painting
 function s7(t) {
@@ -160,9 +161,9 @@ function s7(t) {
   else {
     card(IMG.recovered, AX - 60, 760, 780, -.05, seg(t, 17.95, 18.3), { sepia: .25 });
     card(IMG.uffizi, AX + 150, 1250, 520, .06, seg(t, K.back, K.back + .35), { sepia: .25 });
-    word('عادت!', AX - 230, 300, 150, t, K.back, { font: 'Amiri', color: RED, shadow: false });
+    word('عادت!', AX - 230, 300, 150, t, K.back, { font: 'Cairo', color: RED, shadow: false });
   }
-  if (n) { g.fillStyle = 'rgba(10,10,10,.55)'; g.fillRect(0, 1390, W, 260); word('أشهر لوحة', AX, 1460, 140, t, K.famous, { color: '#fff' }); word('في العالم', AX, 1590, 90, t, K.famous + .45, { font: 'Amiri', color: YEL }); }
+  if (n) { g.fillStyle = 'rgba(10,10,10,.55)'; g.fillRect(0, 1390, W, 260); word('أشهر لوحة', AX, 1460, 140, t, K.famous, { color: '#fff' }); word('في العالم', AX, 1590, 90, t, K.famous + .45, { font: 'Cairo', color: YEL }); }
 }
 // 8 · back to the wall: the question
 function s8(t) {
@@ -171,13 +172,13 @@ function s8(t) {
   g.save(); g.translate(AX, 760); g.scale(z, z); g.translate(0, lerp(0, 60, eio(seg(t, 22.5, 26.5)))); card(IMG.monalisa, 0, 0, 420, 0, 1, { frame: true }); g.restore();
   g.fillStyle = 'rgba(10,6,3,.55)'; g.fillRect(0, 1330, W, 420);
   word('هل صنعت السرقة', AX, 1430, 104, t, K.made - .1, { color: '#fff' });
-  word('شهرتها؟', AX, 1590, 160, t, K.fame, { font: 'Amiri', color: RED });
+  word('شهرتها؟', AX, 1590, 160, t, K.fame, { font: 'Cairo', color: RED });
 }
 
 window.TEXTS = () => [];
 (async () => {
   for (const n of ['monalisa', 'emptywall', 'peruggia', 'recovered', 'uffizi']) { const im = new Image(); im.src = `img/${n}.jpg`; await im.decode(); IMG[n] = im; }
-  await Promise.all(['80px Lalezar', '700 80px Amiri'].map(f => document.fonts.load(f, 'اختفت ١٩١١')));
+  await Promise.all(['900 80px Cairo'].map(f => document.fonts.load(f, 'اختفت ١٩١١')));
   const EV = [];
   CUT.slice(1).forEach(c => { EV.push({ t: c - .18, type: 'whoosh' }); EV.push({ t: c, type: 'hit' }); });
   for (const [k, v] of Object.entries(K)) EV.push({ t: v, type: 'pop', k });

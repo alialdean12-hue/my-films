@@ -15,8 +15,13 @@ Talk to the user **in simple Arabic**. The user works from a phone and is not a 
 2. **No sources in the video.** Never write sources, credits, URLs or "المصدر" on screen, and don't put a sources list in the YouTube/Instagram/TikTok captions. Keep `FACTS.md` and `img/SOURCES.txt` in the project folder only (for accuracy and licences).
 3. **No moving counters or tickers** (no year counters, no rolling numbers, no skip counters). A number appears once, static, with the pop-in and red underline.
 4. **Numbers in English (Western) digits: 0123456789** everywhere on screen (e.g. «1911»، «20 سنة»), never Arabic-Indic (١٢٣). The voice still says numbers in words.
-5. **Fixed fonts, the same as the reference video `examples/mona-lisa`:** `Lalezar` (bold white statements, tags) and `Amiri` Bold (red/yellow key words, questions). Use no other Arabic fonts. Copy them from `~/my-films/examples/mona-lisa/fonts/`.
+5. **Readable fonts and clear colours.** One font only: **`Cairo`** (copy from `~/my-films/examples/mona-lisa/fonts/Cairo.ttf`), weight **900** for all on-screen words, 800 for subtitles. Colours: **white #FFFFFF** for statements, **yellow #FFD21F** or **red #FF3B3B** for the key word. White/yellow/red text always gets a dark outline (`strokeText`, width ≈ 8% of the font size) and a soft shadow; on light paper backgrounds use near-black #111 text without outline. Minimum sizes on 1080-wide: key words ≥ 120 px, statements ≥ 90 px, subtitles ≥ 52 px. Never put pale text on a mid-tone background (no beige-on-rust, no grey-on-teal): check contrast ≥ 4.5 : 1.
 6. **Images:** use real public-domain archive photos/artworks when they exist (section A2). When they don't, **draw the image in code** (canvas: stylised scenes, objects, silhouettes, maps, documents) and present it as a photo card in the same way. There is no image-generation model: everything else is code.
+
+7. **No overlay UI.** Never draw a top bar, progress bar, chapter counter («06 / 12»), "STUDY 04" labels, English captions, small grey labels, watermarks or any other interface decoration. The screen holds only: the image, the kinetic Arabic words, the subtitle card.
+8. **Copy the reference, don't reinvent it.** Start every video by copying `~/my-films/examples/mona-lisa/` (index.html, main.js, mix.py, fonts) into the new project folder, then replace the shots, images, words and voice. Keep its helpers (`wall`, `paper`, `grid`, `dark`, `card`, `word`, `tag`, `underline`, `strike`, cut flash/punch/shake, light leak) and its mix structure. Do **not** use a library style's engine or layout instead.
+9. **Pace.** A new shot every **2–4 seconds** (never hold one composition longer than 4 s), a new element inside the shot about every second. A 60 s short has ≈ 18–25 shots. Static pictograms or a single word on a flat colour for several seconds is a failure.
+10. **Self-check before delivery** (render a contact sheet, one frame per second, and look at it): every frame has an image or photo card; no frame looks like the previous 4 seconds; all text is readable at 1/3 size; digits are Western; no overlay UI. Fix and re-render if any check fails.
 
 ## THE WORKFLOW (follow in this exact order)
 
@@ -75,7 +80,7 @@ Not in the library: it is our own style. **Reference implementation: `~/my-films
 **Look**
 - Real **archive photos and public-domain artworks** shown as photo cards: cream border 16 px, soft drop shadow, slight tilt (±0.03–0.08 rad), spring drop-in (scale 1.35 → 1 with overshoot, falling from 120 px above). Paintings get a gilded frame. Light sepia on black-and-white photos.
 - Rotating backgrounds, one per shot: **museum wall** (warm brown, wainscot panels, brass picture light with a warm cone), **dark orange grid with a spotlight**, **white textured paper**, **green cutting mat grid**, **near-black with grain**.
-- **Kinetic Arabic type, two voices**: bold white display font (`Lalezar`) for statements; classic serif (`Amiri` bold) in **red #e0262f** (or yellow #ffd21f) for the key word. Each word pops (scale 1.6 → 1 with overshoot) **exactly when it is spoken** (use `voice/words.json` timestamps).
+- **Kinetic Arabic type**: `Cairo` 900, white for statements, **yellow #FFD21F or red #FF3B3B** for the key word, dark outline (house rule 5). Each word pops (scale 1.6 → 1 with overshoot) **exactly when it is spoken** (use `voice/words.json` timestamps).
 - Graphic accents: **big year in Western digits** with a red underline wiping in (static, never a counter); **yellow label-maker tag** (red text) for names and places; **red strike-through** on a word the voice contradicts; **multiplying copies** (1 → 4 → 9 → 16) to show scale or fame.
 - Every cut: whoosh 0.18 s before, low hit on the cut, a 3-frame warm flash, a zoom punch (1.12 → 1) and a 0.3 s shake. A slow warm light leak drifts across all shots. Film grain added at mux (`noise=alls=4`).
 
@@ -117,7 +122,7 @@ node -v; python3 -V; git --version; ffmpeg -version | head -1; free -m; df -h ~
 
 ## D. Arabic on screen
 
-- Fonts: only `Lalezar` and `Amiri` Bold (house rule 5), copied from `~/my-films/examples/mona-lisa/fonts/`. Load with `@font-face` and wait for `document.fonts.load` before `READY`.
+- Fonts: only `Cairo` (house rule 5). Load with `@font-face` and wait for `document.fonts.load` before `READY`.
 - Canvas: `g.direction = 'rtl'`, **never letterSpacing** on Arabic, never draw letter by letter (joins break). Typewriter = full string revealed by a clip rectangle growing right → left.
 - Subtitles: your own 2-line card (split at a comma near the middle). Shorts: ~46 px on 1080 wide, y ≈ 1600 of 1920 (above the app buttons). YouTube: ~44 px, y ≈ 960 of 1080.
 - Highlight the **key word** of each subtitle (number, name, the strange fact) in the style's accent colour: it raises retention.
@@ -153,7 +158,7 @@ node -v; python3 -V; git --version; ffmpeg -version | head -1; free -m; df -h ~
 Render it with the **same engine and style** as the video (a dedicated `thumb.html` or `render(t)` with a `?thumb=1` query), then save as JPEG (quality 90):
 - **Short**: 1080×1920 cover; keep the important part in the **centre 1080×1350** (Instagram crops it in the grid).
 - **YouTube**: 1280×720, under 2 MB.
-- Composition: **one big subject** (face, object, animal) filling ~50% of the frame + **2 to 4 Arabic words** in a bold font (`Lalezar`, key word in `Amiri` red) with a thick outline/shadow, high contrast against the background. The words must not repeat the title; they tease it (e.g. title «أول قانون مكتوب في التاريخ» → thumbnail text «قبل ٣٨٠٠ سنة!»).
+- Composition: **one big subject** (face, object, animal) filling ~50% of the frame + **2 to 4 Arabic words** in a `Cairo` 900 with a thick dark outline (key word in yellow or red) with a thick outline/shadow, high contrast against the background. The words must not repeat the title; they tease it (e.g. title «أول قانون مكتوب في التاريخ» → thumbnail text «قبل ٣٨٠٠ سنة!»).
 - Make **2 variants** (different text or framing), send both, recommend one.
 - Check it at small size (resize to 320 px wide): the text must still be readable.
 
