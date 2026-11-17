@@ -1,0 +1,21 @@
+{
+  "duration": 60,
+  "target_lufs": -14,
+  "items": [
+    {
+      "file": "out/score.wav",
+      "at": 0,
+      "gain": 0.42
+    },
+    {
+      "file": "out/foley.wav",
+      "at": 0,
+      "gain": 0.37
+    },
+    {
+      "file": "voice/l1.flac",
+      "at": 57.083333333333336,
+      "gain": 1.0
+    }
+  ]
+}
