@@ -1,0 +1,89 @@
+{
+  "container": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1920,
+        "r_frame_rate": "24/1",
+        "duration": "60.000000",
+        "nb_frames": "1440"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "sample_rate": "48000",
+        "channels": 2,
+        "r_frame_rate": "0/0",
+        "duration": "60.000000",
+        "nb_frames": "2814"
+      }
+    ],
+    "format": {
+      "duration": "60.000000",
+      "size": "22470410"
+    }
+  },
+  "lufs": -14.03,
+  "true_peak_dbtp": -1.66,
+  "lra_lu": 2.6,
+  "black_intervals": [],
+  "review_frames": 60,
+  "layout": {
+    "fontLoaded": true,
+    "positions": 645,
+    "glyphExtent": {
+      "x1": 95,
+      "x2": 1005,
+      "y1": 180,
+      "y2": 1683.859375
+    },
+    "outside": [],
+    "shots": 20
+  },
+  "asr": [
+    {
+      "line": "l1",
+      "transcript": "هذا الوجه السومري خرج من تحت التراب مرتين. في المرة الثانية لم تكن حفرية آثار.",
+      "normalized_character_similarity": 1.0
+    },
+    {
+      "line": "l2",
+      "transcript": "أنظر إلى العينين الفارغتين. هذا قناع الوركاء نحت قبل نحو خمسة آلاف سنة",
+      "normalized_character_similarity": 1.0
+    },
+    {
+      "line": "l3",
+      "transcript": "في ثلاثينيات القرن الماضي. اكتشفت بعثة تنقيب القناع في أوروك، جنوب العراق",
+      "normalized_character_similarity": 1.0
+    },
+    {
+      "line": "l4",
+      "transcript": "وبقية في المتحف العراقي في بغداد حتى نيسان عام 2003. نهب المتحف واختف القناعة",
+      "normalized_character_similarity": 0.982
+    },
+    {
+      "line": "l5",
+      "transcript": "بعد شهور دخل عراقي المتحف بمعلومة عن آثار مخبأة لم يذكر القناعة",
+      "normalized_character_similarity": 0.992
+    },
+    {
+      "line": "l6",
+      "transcript": "قاد البلاغ المحققين إلى مزرعة شمالية بغداد وهناك دلهم صاحبها على موضع خلف المزرعة",
+      "normalized_character_similarity": 0.9938
+    },
+    {
+      "line": "l7",
+      "transcript": "تحت التراب كان الوجه سليما وفي أيلول من العام نفسه عاد إلى المتحف",
+      "normalized_character_similarity": 1.0
+    },
+    {
+      "line": "l8",
+      "transcript": "خرج من تحت التراب مرتين أي لاكتشافين أدهشك أكثر",
+      "normalized_character_similarity": 0.9895
+    }
+  ],
+  "sha256": "7536b45844cb61ea890e526929ad8f66f8835bd171a4b87e802e12d5cea4b0f7"
+}

@@ -1,0 +1,29 @@
+سجل المواد المرئية | 2026-11-17 | لا يُطبع على الفيديو
+كل الصور الفوتوغرافية أصلية، وليست توليدية. لم يُستخدم Pixabay أو أي تصوير صحفي أو فيلم تجاري. يُحفظ الاعتماد كذلك في حقل comment في ملف MP4 وفي ملف CREDITS المرفق. عند إعادة النشر يُحافظ على بيان الاعتماد ورابط الترخيص، خصوصًا لصورة David Stanley.
+
+1. presentation.jpg → mask.jpg / portrait.jpg / الغلافان. جيمس م. بومان (MSgt James M. Bowman, USAF)، 23 أيلول 2003، بغداد. لقطة حقيقية لمسؤولين يعرضان القناع بعد العثور عليه، لا لحظة اكتشافه ولا انتشاله في المزرعة. سجل الأرشيف الوطني الأميركي NAID 6648802، رقم 330-CFD-DF-SD-05-13445.jpeg، يذكر “Use: Unrestricted” واسم المصوّر. عمل حكومي أميركي في الملك العام في الولايات المتحدة. لا حقوق لوكالة أخبار في هذه الصورة.
+   سجل القطعة: https://catalog.archives.gov/id/6648802
+   سجل الحقوق: https://dp.la/item/fcd55a9c4701856008b4dc8f2027b549
+   نسخة المطبوعة المستخدمة: الصورة السفلية Museum_4.jpg فقط (وليس صورة رأس المقال) https://www.ancient-origins.net/artifacts-other-artifacts/mask-warka-0019266
+   https://nara.getarchive.net/media/dr-jabir-khalil-ibrahim-left-state-board-of-antiquities-and-colonel-col-safa-9fbd12
+   قصصنا نسخة المعاينة 610×517 إلى الأيدي والقطعة فقط، ثم أنشأنا الاقتصاص القريب ومعالجة طباعية وحركة. لم نضف عيونًا أو نُكمل أجزاء محجوبة. مقاس الملف المرئي النهائي لا يعني أن المطبوعة الأصلية بهذا الوضوح. المصدر المخزّن محدود الدقة؛ يمكن الرجوع إلى ملف الأرشيف للتفاصيل الدقيقة. لا نستخدم UrukHead.jpg (وسم PD-Art غير واضح لصورة تمثال) ولا صور CC BY-SA.
+2. excavation.jpg → field-left.jpg / field-right.jpg. Annemarie Schwarzenbach، أرشيف الأدب السويسري / المكتبة الوطنية السويسرية، SLA-Schwarzenbach-A-5-03-112. صورتان على بطاقة فهرسة من أوروك (1933–1934)، وليستا صورة العثور على القناع في 1939. السجل الرسمي للمكتبة يحمل Public Domain Mark. اقتصاص كل صورة من بطاقة الأرشيف.
+   https://doi.org/10.7891/e-manuscripta-71990
+   https://commons.wikimedia.org/wiki/File:CH-NB_-_Irak,_Uruk_(Warka)-_Ausgrabungen_-_Annemarie_Schwarzenbach_-_SLA-Schwarzenbach-A-5-03-112.jpg
+3. uruk-aster.jpg → assets/uruk-atlas.mp4. Ancient Uruk, Iraq؛ NASA/METI/AIST/Japan Space Systems and U.S./Japan ASTER Science Team، 18 تموز 2007. Public domain في صفحة الملف. حركة تقريب فوق مرئية فضائية حقيقية لتحديد موضع المدينة، لا شريط متحرك مصوَّر للتنقيب في 1939.
+   https://commons.wikimedia.org/wiki/File:Ancient_Uruk,_Iraq_(ASTER).jpg
+   https://asterweb.jpl.nasa.gov/gallery-detail.asp?name=uruk
+4. museum.jpg. National Museum Iraq.jpg، Zzztriple2000، تنازل المؤلف عن حقوق الصورة للملك العام. لقطة تعريفية للمتحف، وليست توثيقًا ليوم السرقة. اقتصاص وتحريك.
+   https://commons.wikimedia.org/wiki/File:National_Museum_Iraq.jpg
+5. entrance.jpg. Iraq National Museum — David Stanley، 4 نيسان 2016. Creative Commons Attribution 2.0 Generic (CC BY 2.0). اقتُصّت وأُطّرت وحُرّكت وأضيفت إليها تعليقات رسومية، دون إيحاء بتأييد المصوّر. ليست من 2003. الأصل والترخيص:
+   https://www.flickr.com/photos/davidstanleytravel/29870241701/
+   https://commons.wikimedia.org/wiki/File:Iraq_National_Museum.jpg
+   https://creativecommons.org/licenses/by/2.0/
+6. baghdad-iss.jpg. NASA / ISS Expedition 61، بغداد ليلًا، ISS061-E-118088، 4 كانون الثاني 2020. صورة حكومية لناسا بلا إشارة إلى حقوق طرف ثالث؛ لا شعار ولا إيحاء بالرعاية. للسياق المكاني على مستوى المدينة، لا لتحديد مزرعة أو لحظة الحفر.
+   https://www.nasa.gov/image-article/baghdad-iraq/
+   https://www.nasa.gov/nasa-brand-center/images-and-media/
+7. assets/iraq.json. حدود العراق التقريبية: Natural Earth 1:110m، ملك عام. الإسقاط محلي، والعلامات إرشادية لأوروك وبغداد فحسب.
+   https://github.com/nvkelso/natural-earth-vector/blob/master/geojson/ne_110m_admin_0_countries.geojson
+   https://www.naturalearthdata.com/about/terms-of-use/
+
+الرسم الزراعي وقطاع التربة والأسهم والحبيبات والموسيقى والمؤثرات: من إنشاء الاستوديو بالكود. الشكل التوضيحي تخطيطي وليس إعادة تمثيل فوتوغرافية للموقع، ولا يشير إلى عقار معيّن. لا توجد برومبتات صور توليدية.
