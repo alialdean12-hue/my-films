@@ -4,6 +4,7 @@ on:
     branches: ['arena/1621eb24-my-films']
     paths:
       - '.github/workflows/saw-002-voice.yml'
+      - 'studio-kit/scripts/tts_edge.py'
       - 'studio-kit/series/saw_5tory/cases/002-part*.json'
   workflow_dispatch:
 permissions:
