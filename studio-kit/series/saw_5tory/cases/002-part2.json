@@ -1,0 +1,152 @@
+{
+  "slug": "002-backstage-whisper",
+  "title": "همسة خلف الستار",
+  "part": 2,
+  "duration": 50,
+  "voice": {
+    "name": "ar-SA-HamedNeural",
+    "rate": "-3%"
+  },
+  "room": {
+    "wall": "#171b2d",
+    "wall2": "#394351",
+    "objects": [
+      {
+        "type": "stage_wings",
+        "note": "One original, code-drawn set: burgundy drapes, lighting pipe, timber floor and two road cases."
+      },
+      {
+        "type": "clock",
+        "x": 290,
+        "y": 468,
+        "time": "22:00"
+      },
+      {
+        "type": "outline",
+        "x": 470,
+        "y": 1648,
+        "name": "سلمى"
+      },
+      {
+        "type": "chair_over",
+        "x": 829,
+        "y": 1582,
+        "note": "Decoy A: a toppled stage chair."
+      },
+      {
+        "type": "stage_ticket",
+        "x": 221,
+        "y": 1310,
+        "note": "Decoy B: two halves of the same theatre ticket."
+      },
+      {
+        "type": "file_monitor",
+        "x": 791,
+        "y": 855,
+        "note": "The only decisive fact: original clip has 1 video track and 0 audio tracks. These are file properties, not mute or a volume indicator."
+      },
+      {
+        "type": "person",
+        "id": "younes",
+        "name": "يونس",
+        "x": 435,
+        "y": 1480,
+        "coat": "#43556b",
+        "hair": "#211c1e",
+        "skin": "#cd9a78"
+      }
+    ]
+  },
+  "beats": [
+    {
+      "scene": "host",
+      "line": "قال يونس إنّه سمع سلمى تهمس في التسجيل: يا نادِر! أتذكُر؟",
+      "host": "enter",
+      "caption_size": 77,
+      "caption": "«سمعتُها تقول: [y]يا نادر[/y]»"
+    },
+    {
+      "scene": "room",
+      "line": "نعود إلى الكواليس. على الشاشة الملف الأصلي نفسه الذي شاهده الحارس.",
+      "cam": [
+        694,
+        885,
+        1.2
+      ],
+      "caption": "[b]التسجيل[/b] الأصلي"
+    },
+    {
+      "scene": "room",
+      "line": "اقرأ خصائص الملف: مسارات الصوت، صفر. هذا ليس زرَّ كتم الصوت.",
+      "cam": [
+        785,
+        887,
+        1.82
+      ],
+      "ring": [
+        781,
+        918,
+        155
+      ],
+      "reveal": "لا مسار [r]للصوت[/r]"
+    },
+    {
+      "scene": "room",
+      "line": "الكاميرا حفظت الصورة وحدها. مهما رفعتَ الصوت، لن تسمع اسمًا في هذا التسجيل.",
+      "cam": [
+        788,
+        891,
+        1.58
+      ],
+      "caption": "[y]صورة[/y] بلا صوت"
+    },
+    {
+      "scene": "room",
+      "line": "إذًا كذب يونس بشأن مصدر الاسم. شهادته لا تُدين نادرًا.",
+      "stamp": "شهادة كاذبة",
+      "cam": [
+        522,
+        1000,
+        1.04
+      ]
+    },
+    {
+      "scene": "room",
+      "line": "والتذكرة الممزّقة والكرسي المقلوب؟ لا يُخبرنا أيٌّ منهما بما سمعه الحارس.",
+      "cam": [
+        560,
+        1150,
+        1.12
+      ],
+      "tour": [
+        [
+          222,
+          1307,
+          1.95
+        ],
+        [
+          829,
+          1560,
+          1.95
+        ]
+      ],
+      "tour_start": 0.12,
+      "caption": "تفصيلان [b]للتضليل[/b]"
+    },
+    {
+      "scene": "host",
+      "line": "هل حللتَها قبل كشف الدليل؟ أخبرنا في التعليقات، وتابِع للغز القادم.",
+      "host": "point",
+      "sub": "تابع للغز القادم",
+      "caption": "هل [y]حللتَها[/y]؟"
+    }
+  ],
+  "thumb": {
+    "text": "[y]شهادة[/y]\nالحارس",
+    "focus": [
+      455,
+      1044,
+      1.38
+    ]
+  }
+}

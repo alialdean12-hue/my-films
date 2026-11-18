@@ -1,0 +1,39 @@
+name: Backstage Whisper · Hamed narration
+on:
+  push:
+    branches: ['arena/1621eb24-my-films']
+    paths:
+      - '.github/workflows/saw-002-voice.yml'
+      - 'studio-kit/series/saw_5tory/cases/002-part*.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-voice:
+    if: github.repository == 'alialdean12-hue/my-films'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Install the studio speech client and audio tools
+        run: |
+          python -m pip install --disable-pip-version-check edge-tts==7.3.1
+          if ! command -v ffprobe >/dev/null; then sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg; fi
+      - name: Record the two approved scripts without changing the narrator
+        working-directory: studio-kit/series/saw_5tory
+        run: |
+          for n in 1 2; do python voice_stems.py "cases/002-part${n}.json" "$RUNNER_TEMP/hamed/part${n}"; done
+      - name: Store short-lived, checksummed production stems
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5
+        with:
+          name: saw-002-hamed
+          path: |
+            ${{ runner.temp }}/hamed/part*/*.wav
+            ${{ runner.temp }}/hamed/part*/manifest.json
+          if-no-files-found: error
+          retention-days: 1
