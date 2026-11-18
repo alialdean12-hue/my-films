@@ -1,5 +1,5 @@
 # studio-kit
-- `AGENT_INSTRUCTIONS.md` : الصقه في تعليمات الـ Agent (9 أساليب).
+- `ملف صناعة الفيديوهات.md` : الصقه في تعليمات الـ Agent (9 أساليب).
 - `styles/<style>/` : قوالب جاهزة تعمل كما هي (انسخها ثم عدّل النص والتوقيت).
 - `scripts/` : tts_edge.py (صوت) · sfx_lib.py (مؤثرات) · mix.py (دمج) · pixabay.py (لقطات) · render.sh (إخراج).
 - `anime/` : مولّد الأنمي ومؤثراته.
