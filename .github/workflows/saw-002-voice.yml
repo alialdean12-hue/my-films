@@ -1,85 +1,33 @@
-name: Backstage Whisper · Hamed narration
+name: Backstage Whisper · narration check
 on:
   push:
-    branches: ['arena/1621eb24-my-films']
     paths:
       - '.github/workflows/saw-002-voice.yml'
       - 'studio-kit/series/saw_5tory/cases/002-part*.json'
+      - 'studio-kit/series/saw_5tory/narration/002/**'
+      - 'studio-kit/series/saw_5tory/voice_stems.py'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
-  original-voice:
-    if: github.repository == 'alialdean12-hue/my-films' && github.ref == 'refs/heads/arena/1621eb24-my-films'
+  verify-original-takes:
     runs-on: ubuntu-24.04
-    permissions:
-      contents: read
-      actions: read
-    timeout-minutes: 8
+    timeout-minutes: 4
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
         with:
           persist-credentials: false
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
-        with:
-          python-version: '3.12'
-      - name: Install the studio speech client and audio tools
-        run: |
-          python -m pip install --disable-pip-version-check edge-tts==7.3.1
-          if ! command -v ffprobe >/dev/null; then sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg; fi
-      - name: Restore the original session if its short-lived artifact still exists
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          # These are the studio's original, approved Hamed takes. Do not resynthesise if they still match.
-          if ! gh run download 44406853133 --name saw-002-hamed --dir "$RUNNER_TEMP/original"; then echo 'Original takes no longer in artifact storage.'; fi
-      - name: Preserve each exact line losslessly, regenerating only if the script changed
+      - name: Verify both Hamed performances offline against the two scripts
         working-directory: studio-kit/series/saw_5tory
         run: |
-          for n in 1 2; do
-            ep="cases/002-part$n.json"; original="$RUNNER_TEMP/original/part$n"; out="$RUNNER_TEMP/packed/part$n"; stored="narration/002/part$n"
-            if [ -f "$stored/manifest.json" ] && python - "$ep" "$stored" "$out" <<'PY'
-          import json, pathlib, shutil, sys, tempfile
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg; fi
+          python3 - <<'PY'
+          import json, tempfile
+          from pathlib import Path
           from voice_stems import materialize
-          ep,src,out=map(pathlib.Path,sys.argv[1:])
-          with tempfile.TemporaryDirectory() as t: materialize(json.loads(ep.read_text()),src,t)
-          shutil.copytree(src,out)
+          for n in (1, 2):
+              ep = json.loads(Path(f'cases/002-part{n}.json').read_text())
+              with tempfile.TemporaryDirectory() as tmp:
+                  materialize(ep, Path(f'narration/002/part{n}'), tmp)
+                  assert len(list(Path(tmp).glob('b*.wav'))) == len(ep['beats'])
           PY
-            then continue; fi
-            if ! [ -f "$original/manifest.json" ] || ! python voice_stems.py pack "$ep" "$original" "$out"; then
-              python voice_stems.py "$ep" "$RUNNER_TEMP/raw/part$n"
-              python voice_stems.py pack "$ep" "$RUNNER_TEMP/raw/part$n" "$out"
-            fi
-          done
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
-        with:
-          name: saw-002-lossless
-          path: ${{ runner.temp }}/packed/
-          if-no-files-found: error
-          retention-days: 1
-  save-production-assets:
-    needs: original-voice
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
-        with:
-          ref: arena/1621eb24-my-films
-      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7
-        with:
-          name: saw-002-lossless
-          path: ${{ runner.temp }}/packed
-      - name: Keep just the two compact, editable performances on the production branch
-        run: |
-          set -eu
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          for n in 1 2; do
-            dst="studio-kit/series/saw_5tory/narration/002/part$n"; mkdir -p "$dst"
-            for file in manifest.json hamed.flac; do cp "$RUNNER_TEMP/packed/part$n/$file" "$dst/$file"; git add -- "$dst/$file"; done
-          done
-          if ! git diff --cached --quiet; then
-            git config user.name 'github-actions[bot]'; git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git commit -m 'Preserve the approved Hamed performances for case 002'
-            git push origin arena/1621eb24-my-films
-          fi

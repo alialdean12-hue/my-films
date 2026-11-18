@@ -31,7 +31,8 @@
         "type": "chair_over",
         "x": 829,
         "y": 1582,
-        "note": "Decoy A: a toppled stage chair."
+        "note": "Decoy A: a toppled stage chair.",
+        "padded": true
       },
       {
         "type": "stage_ticket",
@@ -68,9 +69,9 @@
       "scene": "room",
       "line": "العاشرة ليلًا. انصرف جمهور المسرح، وبقي الحارس يونس في الكواليس.",
       "cam": [
-        469,
-        770,
-        1.22
+        540,
+        910,
+        1.02
       ],
       "caption": "بعد [y]العرض الأخير[/y]"
     },
@@ -78,9 +79,9 @@
       "scene": "room",
       "line": "خلف الستار، وُجدت سلمى، مديرة المسرح، ميتةً بجوار كرسيٍّ مقلوب.",
       "cam": [
-        570,
-        1605,
-        1.66
+        542,
+        1690,
+        2.17
       ],
       "tags": [
         "outline"
@@ -102,7 +103,8 @@
         "younes"
       ],
       "caption_size": 83,
-      "caption": "«سمعتُها تهمس:\n[y]يا نادر![/y]»"
+      "caption": "«سمعتُها تهمس:\n[y]يا نادر![/y]»",
+      "caption_pos": "bottom"
     },
     {
       "scene": "room",

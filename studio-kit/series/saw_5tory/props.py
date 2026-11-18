@@ -89,9 +89,11 @@ def table(x=820, y=1300, w=300):
     return (f'<rect x="{x-w/2}" y="{y}" width="{w}" height="24" rx="4" fill="#5a3a26" stroke="#2a1a12" stroke-width="3"/>'
             f'<rect x="{x-w/2+16}" y="{y+24}" width="18" height="200" fill="#4a2f1f"/><rect x="{x+w/2-34}" y="{y+24}" width="18" height="200" fill="#4a2f1f"/>')
 
-def chair_over(x=780, y=1560):
+def chair_over(x=780, y=1560, padded=False):
+    cushion = ('<rect x="-85" y="-126" width="160" height="59" rx="9" fill="#703949" stroke="#bd9170" stroke-width="5"/>'
+               '<path d="M-76 -13H79" stroke="#bb956e" stroke-width="9" stroke-linecap="round"/>') if padded else ''
     return (f'<g transform="translate({x} {y}) rotate(-78)"><rect x="-90" y="-10" width="180" height="22" fill="#4a3022" stroke="#1a0f0a" stroke-width="3"/><rect x="-80" y="-170" width="18" height="160" fill="#4a3022"/>'
-            f'<rect x="62" y="-170" width="18" height="160" fill="#4a3022"/><rect x="-80" y="12" width="16" height="140" fill="#3a251a"/><rect x="64" y="12" width="16" height="140" fill="#3a251a"/></g>')
+            f'<rect x="62" y="-170" width="18" height="160" fill="#4a3022"/><rect x="-80" y="12" width="16" height="140" fill="#3a251a"/><rect x="64" y="12" width="16" height="140" fill="#3a251a"/>{cushion}</g>')
 
 def outline(x=700, y=1610, name=""):
     """chalk outline on the floor (no body is ever shown). anchor: centre. name -> hidden tag id tag_outline."""
@@ -236,7 +238,70 @@ def person(id_="p1", x=490, y=1520, name="", coat="#6b4a32", hair="#14121a", ski
     if name: o.append(tag(id_, x, y - 860, name))
     return "".join(o)
 
-PROPS = dict(window=window, clock=clock, digital_clock=digital_clock, calendar=calendar, photo_frame=photo_frame, door=door, doormat=doormat,
+# ----------------------------------------------------------- backstage (case 002)
+def stage_wings():
+    """A single practical-lit theatre wing, with burgundy velvet and two touring trunks."""
+    wing = ['''<defs>
+<linearGradient id="velvet002"><stop stop-color="#211321"/><stop offset=".24" stop-color="#7f3241"/><stop offset=".50" stop-color="#431d32"/><stop offset=".8" stop-color="#702b3d"/><stop offset="1" stop-color="#241d32"/></linearGradient>
+<linearGradient id="wood002" x2="0" y2="1"><stop stop-color="#805142"/><stop offset=".45" stop-color="#54403c"/><stop offset="1" stop-color="#221e2c"/></linearGradient>
+<radialGradient id="worklight002" cx=".73" cy=".12" r=".88"><stop stop-color="#e8c68f" stop-opacity=".23"/><stop offset=".56" stop-color="#8a8d9f" stop-opacity=".08"/><stop offset="1" stop-color="#161828" stop-opacity="0"/></radialGradient>
+<linearGradient id="metal002"><stop stop-color="#829099"/><stop offset=".22" stop-color="#cad3cd"/><stop offset=".33" stop-color="#536475"/><stop offset="1" stop-color="#2d394a"/></linearGradient>
+</defs>
+<rect x="0" y="0" width="1080" height="1380" fill="url(#worklight002)"/>
+<path d="M155 240H1000M135 255H1035" fill="none" stroke="#161a2a" stroke-width="12"/>
+<path d="M350 250Q524 456 722 251M505 249Q624 341 640 252" fill="none" stroke="#242532" stroke-width="7"/>
+<path d="M171 305V1358M358 305V1358M546 305V1358M734 305V1358M922 305V1358" fill="none" stroke="#8791a0" stroke-opacity=".13" stroke-width="3"/>
+<path d="M0 1238H1080M0 1345H1080" stroke="#171b25" stroke-width="11"/>
+<path d="M0 1376H1080V1920H0Z" fill="url(#wood002)"/>
+<path d="M0 1438H1080M0 1515H1080M0 1611H1080M0 1736H1080M0 1880H1080" stroke="#251f2b" stroke-width="5"/>
+<path d="M231 1378v59m399 0v78m-462 0v95m687 0v126m-348 1v145" fill="none" stroke="#302b32" stroke-width="4"/>''']
+    # One painted wing on each side; asymmetric so the room reads in close-ups as well.
+    for tr in ['', 'translate(1080 0) scale(-.67 .96)']:
+        wing.append(f'''<g transform="{tr}"><path d="M-10 60H248Q243 443 122 842Q91 988 90 1072Q128 1240 169 1498Q87 1530 -10 1506Z" fill="url(#velvet002)" stroke="#261a29" stroke-width="6"/>''')
+        for i in range(6):
+            z=23+i*39
+            wing.append(f'<path d="M{z} 74 Q{int(z*1.03)} 510 {int(z*.42)} 1040 Q{int(z*.55)} 1240 {int(z*.64)} 1497" fill="none" stroke="{"#ae5b5d" if i%2 else "#271829"}" stroke-opacity=".48" stroke-width="{5 if i%2 else 10}"/>')
+        wing.append('<path d="M-10 1046Q45 1084 100 1051M-10 1060Q43 1098 100 1063" fill="none" stroke="#c09960" stroke-width="9"/><path d="M88 1061q18 37 8 72" fill="none" stroke="#a77b4f" stroke-width="6"/><path d="M94 1125l-7 31 18 0-6-31Z" fill="#bb925a"/></g>')
+    wing.append('''<path d="M0 0H1080V164Q980 236 873 166Q720 277 529 165Q348 270 186 160Q74 230 0 156Z" fill="url(#velvet002)" stroke="#331c2b" stroke-width="6"/>
+<path d="M0 152Q72 217 186 157Q347 260 529 162Q713 267 873 162Q978 229 1080 158" fill="none" stroke="#ae8656" stroke-width="7"/>
+<rect x="644" y="305" width="283" height="92" rx="10" fill="#191e2a" stroke="#ac8a63" stroke-width="4"/>
+<g fill="#d2b28a"><circle cx="662" cy="324" r="4"/><circle cx="907" cy="378" r="4"/></g>''')
+    wing.append(_t(785,366,44,'الكواليس','#e9d6b5'))
+    # A shaded stage weight at left and a wheeled road case under the video monitor.
+    for x,y,w,h in [(42,1351,305,172),(588,1092,414,352)]:
+        wing.append(f'''<g transform="translate({x} {y})"><ellipse cx="{w/2+3}" cy="{h+21}" rx="{w*.55}" ry="19" fill="#141720" opacity=".48"/><rect x="13" y="{h-3}" width="28" height="28" rx="10" fill="#14151f"/><rect x="{w-44}" y="{h-3}" width="28" height="28" rx="10" fill="#14151f"/><rect x="0" y="0" width="{w}" height="{h}" rx="9" fill="#2b3540" stroke="#171c26" stroke-width="7"/><path d="M2 3H{w-2}M2 48H{w-2}M2 {h-3}H{w-2}" stroke="url(#metal002)" stroke-width="9"/><rect x="{w/2-36}" y="{h*.58}" width="72" height="25" rx="7" fill="#1a202c" stroke="#78818a" stroke-width="4"/>''')
+        for xx in [30,w-55]:
+            wing.append(f'<rect x="{xx}" y="32" width="26" height="33" rx="4" fill="#c7ab77" stroke="#534c4d" stroke-width="3"/><path d="M{xx+6} 47h14" stroke="#4d494b" stroke-width="4"/>')
+        wing.append('</g>')
+    return ''.join(wing)
+
+
+def stage_ticket(x=221,y=1310):
+    """A torn ivory theatre ticket, visibly in two pieces, not a second solution."""
+    return f'''<g transform="translate({x} {y}) rotate(-9)"><ellipse cx="0" cy="43" rx="135" ry="17" fill="#101620" opacity=".48"/>
+<path d="M-127 -59H57l-9 15 9 14-9 15 8 14-10 16 7 15-10 24H-127Z" fill="#f5e2ac" stroke="#896745" stroke-width="5"/>
+<path d="M69 -65l-9 15 9 14-9 15 8 14-10 16 7 15-10 24h61V-65Z" fill="#ddbf84" stroke="#896745" stroke-width="5"/>
+<path d="M-121 -45H38M-121 51H31" stroke="#b25c50" stroke-width="6"/>
+{_t(-38,17,37,'تذكرة','#612c37')}
+<path d="M79 -48v80m7-80v80m8-80v80" stroke="#62484a" stroke-width="4"/></g>'''
+
+
+def file_monitor(x=791,y=855):
+    """Editor showing the original clip's properties. Zero counts tracks; it is NOT mute.
+    Rows have equal visual weight. The separate part-two ring belongs to the episode.
+    """
+    return f'''<g transform="translate({x} {y})"><path d="M-26 109v99l-79 12v13H107v-13l-79-12v-99Z" fill="#333e4a" stroke="#141926" stroke-width="6"/>
+<rect x="-219" y="-133" width="438" height="266" rx="17" fill="#111924" stroke="#879599" stroke-width="6"/>
+<rect x="-205" y="-118" width="410" height="232" rx="6" fill="#223449"/>
+<path d="M-204 -116h408v55h-408Z" fill="#34505d"/>
+{_t(0,-79,33,'الملف الأصلي','#f8ecd2')}
+<path d="M-178 25h356" stroke="#8babb0" opacity=".6" stroke-width="2"/>
+<g id="file-properties-002">{_t(43,0,37,'مسارات الصورة','#f7f2e8')}{_t(-156,0,46,'1','#f7f2e8',rtl=False)}
+{_t(42,81,38,'مسارات الصوت','#f7f2e8')}{_t(-156,81,46,'0','#f7f2e8',rtl=False)}</g>
+<circle cx="183" cy="122" r="3" fill="#c9ad84"/></g>'''
+
+
+PROPS = dict(stage_wings=stage_wings, stage_ticket=stage_ticket, file_monitor=file_monitor, window=window, clock=clock, digital_clock=digital_clock, calendar=calendar, photo_frame=photo_frame, door=door, doormat=doormat,
              table=table, chair_over=chair_over, outline=outline, umbrella=umbrella, cup_broken=cup_broken, cup=cup, ice_glass=ice_glass,
              candle=candle, phone=phone, paper=paper, plant=plant, dusty_box=dusty_box, shoes=shoes, footprints=footprints,
              glass_shards=glass_shards, book=book, dog=dog, person=person)

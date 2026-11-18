@@ -13,3 +13,6 @@ examples/*/out/
 examples/*/stills/
 examples/*/events.json
 examples/*/voice/.cache/
+
+# Transient local production proofs and research; deliver via Drive.
+/.cache/

@@ -44,3 +44,17 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 - Part 2 opens by recalling the lie, shows the clue with `ring` + `reveal`, explains in 2 lines, dismisses the red herrings, ends with a question + «تابع للغز القادم».
 - Look at `sheet*.jpg` before the full render: no caption on a face, no tag over a caption, the clue visible in part 1.
 - No body is ever shown (chalk outline only), no blood, no weapons in close-up.
+
+### Case 002: «همسة خلف الستار»
+
+The two `cases/002-part*.json` files use the pilot’s original puppet and `ar-SA-HamedNeural` at −3%. Their compact, lossless takes are in `narration/002/part1` and `part2`. The builder automatically checks the line text, voice, sample counts, and FLAC/PCM digests, then applies the **same** doll filter as the pilot. No account or live speech service is needed to rebuild these takes. If the text changes, record and validate matching stems instead of silently reusing the old speech.
+
+```sh
+python3 make_episode.py cases/002-part1.json /tmp/saw002-part1 --preview
+python3 make_episode.py cases/002-part2.json /tmp/saw002-part2 --preview
+# Inspect the sheets before running these same commands without --preview.
+```
+
+`--layout-proof` is a silent storyboard with **provisional** timings, never a master. `--voice-dir DIR` accepts a matching manifest and its recorded data. For new recordings, `voice_stems.py CASE LOOSE-DIR` runs the kit’s speech client; `voice_stems.py pack CASE LOOSE-DIR ARCHIVE-DIR` preserves PCM losslessly. Keep render outputs outside the kit. Install FFmpeg/ffprobe, NumPy, Node 22+, HyperFrames and Chromium first; pin the same local tools for preview and final render.
+
+New SVG props for the backstage set: `stage_wings()`, `stage_ticket(x,y)`, `file_monitor(x,y)` and the optional `padded` stage chair. The monitor displays **file properties**, not device volume. `tour_start` changes when the equal-length stops begin; a tour never competes with a continuous push. The miniature titles omit the monitor properties so they do not give away the answer.

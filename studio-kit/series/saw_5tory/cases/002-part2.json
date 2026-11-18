@@ -31,7 +31,8 @@
         "type": "chair_over",
         "x": 829,
         "y": 1582,
-        "note": "Decoy A: a toppled stage chair."
+        "note": "Decoy A: a toppled stage chair.",
+        "padded": true
       },
       {
         "type": "stage_ticket",
@@ -73,7 +74,8 @@
         885,
         1.2
       ],
-      "caption": "[b]التسجيل[/b] الأصلي"
+      "caption": "[b]التسجيل[/b] الأصلي",
+      "caption_pos": "bottom"
     },
     {
       "scene": "room",
@@ -84,15 +86,15 @@
         1.82
       ],
       "ring": [
-        781,
-        918,
-        155
+        635,
+        919,
+        39
       ],
       "reveal": "لا مسار [r]للصوت[/r]"
     },
     {
       "scene": "room",
-      "line": "الكاميرا حفظت الصورة وحدها. مهما رفعتَ الصوت، لن تسمع اسمًا في هذا التسجيل.",
+      "line": "مهما رفعتَ الصوت، لن تسمع اسمًا في هذا التسجيل.",
       "cam": [
         788,
         891,

@@ -20,7 +20,9 @@ def sha(data):
 
 
 def spec(ep):
-    v = ep['voice']; assert v['name'] == VOICE and v['rate'] == '-3%'
+    v = ep['voice']
+    if (v['name'], v['rate']) != (VOICE, '-3%'):
+        raise ValueError('The studio export must use its approved Hamed voice and rate.')
     return {'voice': v['name'], 'rate': v['rate'], 'lines': [b['line'] for b in ep['beats']]}
 
 
