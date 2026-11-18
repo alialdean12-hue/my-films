@@ -9,6 +9,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import wave
 
 VOICE = 'ar-SA-HamedNeural'
 KIT = Path(__file__).resolve().parents[2]
@@ -35,11 +36,39 @@ def materialize(ep, directory, dest):
     if any(manifest.get(k) != v for k,v in spec(ep).items()):
         raise ValueError('Narration cache does not match the script, rate and Hamed voice.')
     dest.mkdir(parents=True, exist_ok=True)
+    if 'flac_sha256' in manifest:
+        archive = src / 'hamed.flac'
+        if sha(archive.read_bytes()) != manifest['flac_sha256']:
+            raise ValueError('Unexpected Hamed archive checksum.')
+        pcm = subprocess.check_output(['ffmpeg','-nostdin','-v','error','-i',str(archive),'-ac','1','-ar','48000','-f','s16le','pipe:1'])
+        counts = manifest['samples_per_line']
+        if (len(counts) != len(ep['beats']) or any(type(n) is not int or n <= 0 for n in counts)
+            or sum(counts)*2 != len(pcm) or sha(pcm) != manifest['pcm_sha256']):
+            raise ValueError('Invalid PCM or line boundaries in the recorded narration.')
+        offset = 0
+        for i,n in enumerate(counts):
+            with wave.open(str(dest / f'b{i}.wav'),'wb') as f:
+                f.setparams((1,2,48000,0,'NONE','not compressed')); f.writeframes(pcm[offset:offset+2*n]); offset+=2*n
+        return
     for i in range(len(ep['beats'])):
         f = f'b{i}.wav'; data = (src / f).read_bytes()
         if manifest['files'].get(f) != sha(data) or len(data) <= 1000:
             raise ValueError('Invalid cached narration: ' + f)
         if (src/f).resolve() != (dest/f).resolve(): shutil.copyfile(src/f, dest/f)
+
+
+def pack(ep, raw, directory):
+    raw, out = Path(raw), Path(directory); out.mkdir(parents=True,exist_ok=True)
+    materialize(ep,raw,raw)  # refuse partial, wrong-voice or stale recordings
+    blocks=[]; counts=[]
+    for i in range(len(ep['beats'])):
+        with wave.open(str(raw/f'b{i}.wav'),'rb') as f:
+            if (f.getnchannels(),f.getsampwidth(),f.getframerate())!=(1,2,48000): raise ValueError('Unexpected Hamed wave format')
+            block=f.readframes(f.getnframes()); counts.append(len(block)//2); blocks.append(block)
+    pcm=b''.join(blocks); f=out/'hamed.flac'
+    subprocess.run(['ffmpeg','-y','-v','error','-f','s16le','-ar','48000','-ac','1','-i','pipe:0','-c:a','flac','-compression_level','8',str(f)],input=pcm,check=True)
+    manifest={**spec(ep),'samples_per_line':counts,'pcm_sha256':sha(pcm),'flac_sha256':sha(f.read_bytes())}
+    (out/'manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
 
 
 def main():
@@ -51,4 +80,6 @@ def main():
     write_manifest(ep,out)
 
 
-if __name__ == '__main__': main()
+if __name__ == '__main__':
+    if len(sys.argv)==5 and sys.argv[1]=='pack': pack(json.loads(Path(sys.argv[2]).read_text()),sys.argv[3],sys.argv[4])
+    else: main()
