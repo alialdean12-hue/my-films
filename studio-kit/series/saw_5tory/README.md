@@ -39,6 +39,27 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 
 **thumb**: `text` 2–4 words (part 1 asks, part 2 teases the answer without saying it), `focus` = what the background shows. Badge «الجزء 1: اللغز» / «الجزء 2: الحل» and `saw_5tory` are added automatically.
 
+## Five case formats (rotate them: never the same format twice in a row)
+| Format | Question | Scenes used | Example |
+|---|---|---|---|
+| **classic** | «ما الذي كشف كذبته؟» one suspect, one lie, one visible clue | title, host, room | `examples/001` |
+| **lineup** | «من الكاذب؟ 1 أم 2 أم 3» three suspects, each one statement; one is contradicted by the room | title, host, room, cards | `examples/002` |
+| **slip** (زلة لسان) | «ما الكلمة التي كشفته؟» the suspect says something nobody told him | title, host, room, talk | `examples/003` |
+| **timeline** | «أين الخلل؟» times on a board do not fit the alibi | title, host, room, board | `examples/004` |
+| **howdunit** | «كيف فعلها؟» we know who; the clue shows how | title, host, room, cards | build like 001/002 |
+
+**Scene types**
+- `title`: case card. Keys: `case` ("005"), `title`, optional `subtitle`. Always the first beat.
+- `host`: the puppet. `host`: enter | talk | point; `timer: true` shows a «فكّر» ring after the line (use on the last beat of part 1).
+- `room`: the scene (cam, tour, tags, fx, stamp, ring, reveal as above). A beat with `tags` puts its caption low automatically.
+- `cards`: 2–3 numbered evidence cards cropped live from the room: `"cards": [[x, y, scale, "label"], ...]`; part 2 adds `"pick": index` (0-based) to light the right card and dim the others.
+- `talk`: interrogation bubbles, one per beat, they stay on screen for the whole run (max 4, then a fresh page): `"say": ["detective" | <person id>, "text with [r]..[/r]"]`.
+- `board`: timeline notes. Put `"board": {"title": "...", "items": [["9:00", "..."], ...]}` at the top level (max 4 items); each board beat has `"show": n` (notes visible by its end) and, in part 2, `"mark": index`.
+
+**People (`person`)**: vary them every case: `gender` m|f · `age` young|adult|old · `hair_style` short|spiky|long|bun|bald|hijab|shemagh|curly · `facial` beard|mustache|stubble · `outfit` coat|suit|thobe|uniform|sweater|dress|apron|hoodie · `coat` / `accent` colours · `skin` light|medium|tan|brown|dark · `body` normal|tall|short|heavy|thin · `expression` neutral|nervous|smug|scared|angry · `wet`, `shoes` wet|mud, `glasses`, `fog`. Put 2–3 people at x ≈ 320 / 560 / 790 (feet y 1530) or 1 person at x ≈ 490.
+
+**Rooms**: `"preset"`: living | office | hotel | kitchen | warehouse | shop (wall colours, wall pattern and furniture added automatically; `"no_furniture": true` to skip). Extra furniture props: `sofa rug desk bookshelf bed fridge counter painting crates safe lamp_stand blinds hanging_bulb shelf_items`.
+
 ## Rules that keep it good
 - Part 1 never circles or names the decisive clue: the `tour` visits the clue AND the red herrings equally.
 - Part 2 opens by recalling the lie, shows the clue with `ring` + `reveal`, explains in 2 lines, dismisses the red herrings, ends with a question + «تابع للغز القادم».

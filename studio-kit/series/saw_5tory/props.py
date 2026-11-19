@@ -208,35 +208,212 @@ def tag(id_, x, y, name):
     return f'<g id="tag_{id_}" opacity="0"><rect x="{x-w/2}" y="{y-34}" width="{w}" height="64" rx="32" fill="{GOLD}"/>' + _t(x, y + 11, 40, name) + '</g>'
 
 # ---------------------------------------------------------------- people
-def person(id_="p1", x=490, y=1520, name="", coat="#6b4a32", hair="#14121a", skin="#f0c9ad", wet=False, glasses=False, fog=False):
-    """anchor: x = body centre, y = feet. Animated by the builder: breathing (id_body), blinking (id_open/id_shut), glancing (id_pup).
-    wet -> soaked coat and hair, drops, puddle. glasses / fog (fogged lenses)."""
-    dx, dy = x - 490, y - 1520
-    coat2 = "#3a2a1e" if wet else coat
-    o = [f'<g id="{id_}" transform="translate({dx} {dy})"><g id="{id_}_body">']
-    o.append('<path d="M440,1250 L430,1500 L470,1500 L480,1260 Z" fill="#1d1a22"/><path d="M500,1260 L510,1500 L550,1500 L540,1250 Z" fill="#17141b"/>')
-    o.append('<path d="M420,1490 L478,1490 L480,1520 L414,1520 Z" fill="#0a0a0d"/><path d="M502,1490 L560,1490 L566,1520 L500,1520 Z" fill="#0a0a0d"/>')
-    o.append(f'<path d="M400,960 Q490,930 580,960 L600,1280 L380,1280 Z" fill="{coat2}" stroke="{LINE}" stroke-width="5" stroke-linejoin="round"/>')
-    o.append(f'<path d="M490,960 L490,1280" stroke="{LINE}" stroke-width="4"/><path d="M455,950 L490,1040 L525,950" fill="#e8eef6" stroke="{LINE}" stroke-width="3"/>')
-    o.append(f'<path d="M580,970 L600,1170" stroke="{coat2}" stroke-width="44" stroke-linecap="round"/><path d="M402,970 L384,1170" stroke="{coat2}" stroke-width="44" stroke-linecap="round"/>')
-    o.append(f'<circle cx="602" cy="1190" r="22" fill="{skin}"/><circle cx="382" cy="1190" r="22" fill="{skin}"/><rect x="472" y="880" width="36" height="70" fill="{skin}"/>')
+SKINS = {"light": "#f3d2b8", "medium": "#e2b48e", "tan": "#c98f62", "brown": "#9a6640", "dark": "#6b4429"}
+
+def person(id_="p1", x=490, y=1520, name="", gender="m", age="adult", hair_style=None, hair="#14121a",
+           facial=None, outfit="coat", coat="#6b4a32", accent="#2f6bd8", skin="#f0c9ad", body="normal",
+           expression="neutral", wet=False, shoes=None, glasses=False, fog=False):
+    """A suspect / witness. anchor: x = body centre, y = feet (floor y 1500-1540).
+    gender: m | f · age: young | adult | old (old -> grey/white hair, wrinkles)
+    hair_style: short | spiky | long | bun | bald | hijab | shemagh | curly (default: spiky for m, long for f)
+    facial: None | beard | mustache | stubble · outfit: coat | suit | thobe | uniform | sweater | dress | apron | hoodie
+    coat = main outfit colour, accent = tie / hijab / scarf colour · skin: hex or light|medium|tan|brown|dark
+    body: normal | tall | short | heavy | thin · expression: neutral | nervous | smug | scared | angry
+    wet: soaked clothes+hair · shoes: None | wet | mud (only the shoes, with a small puddle/mud) · glasses / fog.
+    Animated by the builder: breathing (id_body), blinking (id_open / id_shut), glancing (id_pup)."""
+    skin = SKINS.get(skin, skin)
+    if hair_style is None: hair_style = "long" if gender == "f" else "spiky"
+    if age == "old" and hair == "#14121a": hair = "#d9d9d9"
+    if coat == "#6b4a32": coat = {"thobe": "#eef0f2", "uniform": "#22325a", "suit": "#1d2230", "dress": "#7a2f35", "apron": "#8a3a3a", "hoodie": "#3a3a4a", "sweater": "#3a5a7a"}.get(outfit, coat)
+    out_col = "#3a2a1e" if wet and outfit in ("coat", "sweater", "hoodie") else coat
+    sx = {"heavy": 1.22, "thin": 0.86}.get(body, 1.0); sy = {"tall": 1.08, "short": 0.9}.get(body, 1.0)
+    o = [f'<g id="{id_}" transform="translate({x} {y}) scale({sy}) translate(-490 -1520)"><g id="{id_}_body">']
+    W = f'transform="translate(490 0) scale({sx} 1) translate(-490 0)"'
+    long_robe = outfit in ("thobe", "dress")
+    # back hair / hijab (behind everything)
+    if hair_style == "long":
+        o.append(f'<path d="M426,780 Q420,700 490,698 Q562,700 556,780 L566,1010 Q490,1040 414,1010 Z" fill="{hair}"/>')
+    if hair_style == "hijab":
+        o.append(f'<path d="M418,800 Q414,690 490,686 Q566,690 562,800 L590,1000 Q490,1040 390,1000 Z" fill="{accent}"/>')
+    if hair_style == "shemagh":
+        o.append('<path d="M412,790 Q410,690 490,684 Q570,690 568,790 L600,1010 L380,1010 Z" fill="#f2f2f2"/>')
+    o.append(f'<g {W}>')
+    # legs + shoes
+    leg = "#1d1a22" if outfit != "uniform" else "#1a2440"
+    if not long_robe or outfit == "dress":
+        o.append(f'<path d="M440,1250 L430,1500 L470,1500 L480,1260 Z" fill="{leg if outfit!="dress" else skin}"/><path d="M500,1260 L510,1500 L550,1500 L540,1250 Z" fill="{"#17141b" if outfit!="dress" else skin}"/>')
+    shoe = {"mud": "#4a3018"}.get(shoes, "#0a0a0d") if outfit != "thobe" else "#5a3a22"
+    o.append(f'<path d="M420,1490 L478,1490 L480,1520 L414,1520 Z" fill="{shoe}"/><path d="M502,1490 L560,1490 L566,1520 L500,1520 Z" fill="{shoe}"/>')
+    if shoes == "wet": o.append('<g fill="#9fd0ff"><circle cx="430" cy="1484" r="4"/><circle cx="552" cy="1486" r="4"/></g><ellipse cx="490" cy="1528" rx="100" ry="10" fill="#7cc6ff" opacity=".45"/>')
+    if shoes == "mud": o.append('<g fill="#5a3a1a"><circle cx="424" cy="1516" r="7"/><circle cx="470" cy="1518" r="6"/><circle cx="512" cy="1517" r="7"/><circle cx="556" cy="1518" r="6"/></g>')
+    # torso by outfit
+    L = f'stroke="{LINE}" stroke-width="5" stroke-linejoin="round"'
+    if outfit == "coat":
+        o.append(f'<path d="M400,960 Q490,930 580,960 L600,1280 L380,1280 Z" fill="{out_col}" {L}/><path d="M490,960 L490,1280" stroke="{LINE}" stroke-width="4"/><path d="M455,950 L490,1040 L525,950" fill="#e8eef6" stroke="{LINE}" stroke-width="3"/>')
+    elif outfit == "suit":
+        o.append(f'<path d="M400,960 Q490,930 580,960 L594,1260 L386,1260 Z" fill="{coat}" {L}/><path d="M462,950 L490,1060 L518,950 Z" fill="#f2f4f8"/><path d="M484,960 L496,960 L500,1040 L490,1056 L480,1040 Z" fill="{accent}"/>'
+                 f'<path d="M456,948 L490,1070 L438,1010 L430,966 Z M524,948 L490,1070 L542,1010 L550,966 Z" fill="{coat}" stroke="#000" stroke-opacity=".35" stroke-width="3"/>')
+    elif outfit == "thobe":
+        o.append(f'<path d="M404,960 Q490,934 576,960 L604,1494 L376,1494 Z" fill="{coat}" {L}/><path d="M490,960 L490,1100" stroke="#b9c0c8" stroke-width="4"/><circle cx="490" cy="980" r="5" fill="#b9c0c8"/>')
+    elif outfit == "dress":
+        o.append(f'<path d="M410,960 Q490,934 570,960 L612,1400 L368,1400 Z" fill="{coat}" {L}/><path d="M440,1120 Q490,1140 540,1120" stroke="#000" stroke-opacity=".25" stroke-width="4" fill="none"/>')
+    elif outfit == "uniform":
+        o.append(f'<path d="M400,960 Q490,930 580,960 L594,1270 L386,1270 Z" fill="{coat}" {L}/><rect x="392" y="1180" width="196" height="22" fill="#111"/><rect x="478" y="1176" width="24" height="30" fill="#c9a24a"/>'
+                 f'<path d="M538,1010 l8,16 l18,2 l-13,12 l4,18 l-17,-9 l-16,9 l4,-18 l-13,-12 l18,-2 Z" fill="#ffd21f"/>')
+    elif outfit == "sweater":
+        o.append(f'<path d="M400,960 Q490,930 580,960 L596,1280 L384,1280 Z" fill="{out_col}" {L}/><path d="M458,950 Q490,980 522,950" stroke="#000" stroke-opacity=".3" stroke-width="10" fill="none"/>'
+                 + "".join(f'<path d="M392,{1040+k*60} H588" stroke="#000" stroke-opacity=".12" stroke-width="6"/>' for k in range(4)))
+    elif outfit == "hoodie":
+        o.append(f'<path d="M400,960 Q490,930 580,960 L596,1280 L384,1280 Z" fill="{out_col}" {L}/><path d="M440,950 Q490,1010 540,950" stroke="#000" stroke-opacity=".35" stroke-width="12" fill="none"/><path d="M470,990 L466,1060 M510,990 L514,1060" stroke="#ddd" stroke-width="4"/><rect x="430" y="1160" width="120" height="60" rx="14" fill="#000" opacity=".2"/>')
+    elif outfit == "apron":
+        o.append(f'<path d="M400,960 Q490,930 580,960 L596,1280 L384,1280 Z" fill="{coat}" {L}/><path d="M440,1000 L540,1000 L560,1290 L420,1290 Z" fill="#f4f4f4" stroke="#999" stroke-width="3"/><path d="M440,1000 L470,950 M540,1000 L510,950" stroke="#f4f4f4" stroke-width="8"/>')
+    arm = out_col
+    o.append(f'<path d="M580,970 L600,1170" stroke="{arm}" stroke-width="44" stroke-linecap="round"/><path d="M402,970 L384,1170" stroke="{arm}" stroke-width="44" stroke-linecap="round"/>')
+    o.append(f'<circle cx="602" cy="1190" r="22" fill="{skin}"/><circle cx="382" cy="1190" r="22" fill="{skin}"/>')
+    o.append('</g>')
+    # neck + head
+    if hair_style not in ("hijab", "shemagh"): o.append(f'<rect x="472" y="880" width="36" height="70" fill="{skin}"/>')
     o.append(f'<path d="M430,800 C430,720 550,720 550,800 C550,870 520,912 490,916 C460,912 430,870 430,800 Z" fill="{skin}" stroke="{LINE}" stroke-width="4"/>')
-    o.append(f'<path d="M424,800 Q420,720 490,712 Q560,716 556,800 L540,770 L526,800 L508,766 L490,802 L470,768 L452,800 L440,776 Z" fill="{hair}"/>')
-    if wet: o.append(f'<path d="M440,790 l-6,40 M470,796 l-4,36 M520,794 l4,34" stroke="{hair}" stroke-width="6" stroke-linecap="round"/>')
-    o.append(f'<g id="{id_}_open"><ellipse cx="468" cy="830" rx="12" ry="9" fill="#f6f3ee"/><ellipse cx="514" cy="830" rx="12" ry="9" fill="#f6f3ee"/>'
-             f'<g id="{id_}_pup"><circle cx="470" cy="831" r="6" fill="{LINE}"/><circle cx="516" cy="831" r="6" fill="{LINE}"/></g></g>'
+    if age == "old": o.append(f'<path d="M456,770 h56 M462,782 h44 M446,846 l-8,6 M534,846 l8,6" stroke="#000" stroke-opacity=".28" stroke-width="3" fill="none"/>')
+    # front hair
+    if hair_style == "spiky":
+        o.append(f'<path d="M424,800 Q420,720 490,712 Q560,716 556,800 L540,770 L526,800 L508,766 L490,802 L470,768 L452,800 L440,776 Z" fill="{hair}"/>')
+    elif hair_style == "short":
+        o.append(f'<path d="M428,796 Q426,716 490,712 Q556,716 552,796 Q540,758 490,756 Q440,758 428,796 Z" fill="{hair}"/>')
+    elif hair_style == "curly":
+        o.append(f'<g fill="{hair}">' + "".join(f'<circle cx="{430+k*20}" cy="{752+(k%2)*10}" r="22"/>' for k in range(7)) + '<circle cx="436" cy="792" r="16"/><circle cx="546" cy="792" r="16"/></g>')
+    elif hair_style == "long":
+        o.append(f'<path d="M426,812 Q428,712 490,708 Q556,712 556,812 Q540,764 500,752 Q468,776 438,812 Z" fill="{hair}"/>')
+    elif hair_style == "bun":
+        o.append(f'<circle cx="490" cy="700" r="30" fill="{hair}"/><path d="M428,800 Q426,716 490,712 Q556,716 552,800 Q540,756 490,752 Q440,756 428,800 Z" fill="{hair}"/>')
+    elif hair_style == "bald":
+        o.append(f'<path d="M430,806 q-2,-22 8,-30 M550,806 q2,-22 -8,-30" stroke="{hair}" stroke-width="12" stroke-linecap="round" fill="none"/><path d="M462,734 Q490,726 518,734" stroke="#fff" stroke-opacity=".35" stroke-width="5" fill="none"/>')
+    elif hair_style == "hijab":
+        o.append(f'<path d="M428,806 Q426,712 490,708 Q554,712 552,806" fill="none" stroke="{accent}" stroke-width="18"/><path d="M432,860 Q440,930 490,946 Q540,930 548,860 L560,980 L420,980 Z" fill="{accent}"/>')
+    elif hair_style == "shemagh":
+        o.append('<path d="M424,806 Q426,712 490,708 Q554,712 556,806" fill="none" stroke="#f2f2f2" stroke-width="18"/><path d="M424,748 Q490,724 556,748" stroke="#111" stroke-width="12" fill="none"/><path d="M426,764 Q490,740 554,764" stroke="#111" stroke-width="8" fill="none"/>')
+    # brows by expression
+    brow = {"neutral": "M454,814 L482,818 M500,818 L528,814", "nervous": "M454,812 L482,804 M500,804 L528,812", "smug": "M454,818 L482,814 M500,810 L528,816",
+            "scared": "M454,808 L482,800 M500,800 L528,808", "angry": "M454,806 L482,818 M500,818 L528,806"}[expression]
+    o.append(f'<path d="{brow}" stroke="{hair if hair_style not in ("hijab","shemagh") else "#2a1a12"}" stroke-width="5" stroke-linecap="round"/>')
+    ry = 6 if expression == "smug" else (11 if expression == "scared" else 9)
+    o.append(f'<g id="{id_}_open"><ellipse cx="468" cy="830" rx="12" ry="{ry}" fill="#f6f3ee"/><ellipse cx="514" cy="830" rx="12" ry="{ry}" fill="#f6f3ee"/>'
+             f'<g id="{id_}_pup"><circle cx="470" cy="831" r="{5 if ry<7 else 6}" fill="{LINE}"/><circle cx="516" cy="831" r="{5 if ry<7 else 6}" fill="{LINE}"/></g></g>'
              f'<path id="{id_}_shut" d="M456,832 Q468,838 480,832 M502,832 Q514,838 526,832" stroke="{LINE}" stroke-width="4" fill="none" opacity="0"/>')
-    o.append(f'<path d="M454,814 L482,818 M500,818 L528,814" stroke="{hair}" stroke-width="5" stroke-linecap="round"/><path d="M480,880 Q492,874 504,880" stroke="#7a3a2a" stroke-width="4" fill="none" stroke-linecap="round"/>')
+    if gender == "f": o.append(f'<path d="M454,822 l-6,-6 M526,822 l6,-6" stroke="{LINE}" stroke-width="3"/>')
+    mouth = {"neutral": "M480,880 Q492,874 504,880", "nervous": "M478,882 Q484,876 490,882 Q496,876 504,882", "smug": "M478,878 Q496,888 508,872",
+             "scared": "M482,876 Q492,894 502,876 Z", "angry": "M478,884 Q492,874 506,884"}[expression]
+    lip = "#b0444a" if gender == "f" else "#7a3a2a"
+    o.append(f'<path d="{mouth}" stroke="{lip}" stroke-width="4" fill="{"#3a1a14" if expression=="scared" else "none"}" stroke-linecap="round"/>')
+    if expression == "nervous": o.append('<path d="M548,786 q8,14 0,22 q-8,-8 0,-22 Z" fill="#9fd0ff"/>')
+    if facial == "beard": o.append(f'<path d="M434,842 Q440,912 490,926 Q540,912 546,842 Q532,890 490,894 Q448,890 434,842 Z" fill="{hair}"/><path d="M470,868 Q490,858 510,868 Q490,876 470,868 Z" fill="{hair}"/>')
+    if facial == "mustache": o.append(f'<path d="M466,870 Q490,856 514,870 Q490,878 466,870 Z" fill="{hair}"/>')
+    if facial == "stubble": o.append(f'<path d="M440,850 Q446,906 490,918 Q534,906 540,850" stroke="{hair}" stroke-opacity=".35" stroke-width="16" fill="none" stroke-dasharray="2 4"/>')
+    if hair_style == "spiky" and wet: o.append(f'<path d="M440,790 l-6,40 M470,796 l-4,36 M520,794 l4,34" stroke="{hair}" stroke-width="6" stroke-linecap="round"/>')
     if glasses:
         lens = "#eef4fb" if fog else "none"; op = ".85" if fog else "1"
         o.append(f'<g stroke="#111" stroke-width="4"><circle cx="468" cy="830" r="18" fill="{lens}" fill-opacity="{op}"/><circle cx="514" cy="830" r="18" fill="{lens}" fill-opacity="{op}"/><path d="M486,830 h10"/></g>')
     if wet:
         o.append('<g fill="#9fd0ff"><circle cx="420" cy="1100" r="5"/><circle cx="560" cy="1150" r="5"/><circle cx="470" cy="1230" r="5"/><circle cx="600" cy="1240" r="6"/></g><ellipse cx="490" cy="1526" rx="120" ry="14" fill="#7cc6ff" opacity=".45"/>')
     o.append('</g></g>')
-    if name: o.append(tag(id_, x, y - 860, name))
+    if name: o.append(tag(id_, x, y - int(860 * sy), name))
     return "".join(o)
+
+# ---------------------------------------------------------------- furniture (for room presets)
+def sofa(x=880, y=1400, color="#5a2f3a"):
+    """anchor: bottom-centre, against the back wall."""
+    return (f'<rect x="{x-190}" y="{y-230}" width="380" height="140" rx="30" fill="{color}" stroke="#1a0f12" stroke-width="4"/><rect x="{x-200}" y="{y-120}" width="400" height="100" rx="20" fill="{color}" stroke="#1a0f12" stroke-width="4"/>'
+            f'<rect x="{x-220}" y="{y-170}" width="50" height="150" rx="20" fill="{color}" stroke="#1a0f12" stroke-width="4"/><rect x="{x+170}" y="{y-170}" width="50" height="150" rx="20" fill="{color}" stroke="#1a0f12" stroke-width="4"/>'
+            f'<rect x="{x-180}" y="{y-20}" width="16" height="22" fill="#1a0f12"/><rect x="{x+164}" y="{y-20}" width="16" height="22" fill="#1a0f12"/>')
+
+def rug(x=540, y=1600, color="#6b2a2a"):
+    return f'<ellipse cx="{x}" cy="{y}" rx="380" ry="90" fill="{color}" opacity=".85"/><ellipse cx="{x}" cy="{y}" rx="330" ry="66" fill="none" stroke="#e8c87a" stroke-width="5" opacity=".7"/>'
+
+def desk(x=860, y=1300, screen="", lit=True):
+    """anchor: top-centre of the desk (y = desk top). Computer monitor; screen text optional."""
+    scr = "#0e2a55" if lit else "#050608"
+    return (table(x, y, 340) + f'<rect x="{x-110}" y="{y-200}" width="220" height="150" rx="8" fill="#111" stroke="#3a4560" stroke-width="5"/><rect x="{x-98}" y="{y-188}" width="196" height="126" fill="{scr}"/>'
+            f'<rect x="{x-12}" y="{y-50}" width="24" height="50" fill="#222"/>' + (_t(x, y - 116, 30, screen, "#fff") if screen and lit else ""))
+
+def bookshelf(x=900, y=1380):
+    """anchor: bottom-centre."""
+    books = "".join(f'<rect x="{x-150+(k*37)%290}" y="{y-470+(k//8)*120}" width="26" height="{80+(k*13)%26}" fill="{["#7a2f35","#2f5a7a","#7a6a2f","#3a6a3a"][k%4]}"/>' for k in range(32))
+    return f'<rect x="{x-170}" y="{y-520}" width="340" height="520" fill="#4a2f1f" stroke="#1a0f0a" stroke-width="5"/>' + "".join(f'<rect x="{x-160}" y="{y-390+i*120}" width="320" height="14" fill="#2a1a10"/>' for i in range(4)) + books
+
+def bed(x=840, y=1420, color="#3a4a7a"):
+    """anchor: bottom-centre."""
+    return (f'<rect x="{x-230}" y="{y-330}" width="40" height="330" fill="#4a2f1f"/><rect x="{x-230}" y="{y-170}" width="470" height="120" rx="14" fill="#f2f2f2"/>'
+            f'<rect x="{x-190}" y="{y-200}" width="110" height="50" rx="20" fill="#fff" stroke="#ccc" stroke-width="3"/><rect x="{x-110}" y="{y-180}" width="350" height="110" rx="16" fill="{color}"/><rect x="{x-230}" y="{y-50}" width="470" height="50" fill="#4a2f1f"/>')
+
+def fridge(x=960, y=1400):
+    return f'<rect x="{x-110}" y="{y-560}" width="220" height="560" rx="18" fill="#dfe5ec" stroke="#8592a8" stroke-width="5"/><path d="M{x-110},{y-360} H{x+110}" stroke="#8592a8" stroke-width="5"/><rect x="{x+70}" y="{y-500}" width="12" height="90" rx="6" fill="#8592a8"/><rect x="{x+70}" y="{y-320}" width="12" height="120" rx="6" fill="#8592a8"/>'
+
+def counter(x=760, y=1400, w=420):
+    """anchor: bottom-centre. kitchen counter, top surface at y-300 (put cups there)."""
+    return f'<rect x="{x-w/2}" y="{y-300}" width="{w}" height="300" fill="#6b4a32" stroke="#2a1a12" stroke-width="5"/><rect x="{x-w/2-10}" y="{y-320}" width="{w+20}" height="26" fill="#d9d2c4"/>' + "".join(f'<rect x="{x-w/2+20+k*(w/3)}" y="{y-270}" width="{w/3-40}" height="230" fill="none" stroke="#2a1a12" stroke-width="4"/>' for k in range(3))
+
+def painting(x=860, y=1000, kind="landscape"):
+    """anchor: centre. framed painting (also good as a wall clue holder)."""
+    inner = '<rect x="-96" y="-66" width="192" height="132" fill="#e8b36a"/><path d="M-96,40 L-40,-20 L10,30 L50,-10 L96,40 L96,66 L-96,66 Z" fill="#4a6a3a"/>' if kind == "landscape" else '<rect x="-96" y="-66" width="192" height="132" fill="#3a2a4a"/><circle cx="0" cy="-6" r="30" fill="#e8c8a8"/>'
+    return f'<g transform="translate({x} {y})"><rect x="-112" y="-82" width="224" height="164" fill="#c9a24a" stroke="#6a4a1a" stroke-width="5"/>{inner}</g>'
+
+def crates(x=860, y=1500, n=3):
+    """anchor: bottom-centre. stacked wooden crates (warehouse)."""
+    out = ""
+    pos = [(-120, 0), (60, 0), (-30, -160)][:n]
+    for dx, dy in pos:
+        cx, cy = x + dx, y + dy
+        out += f'<rect x="{cx-80}" y="{cy-160}" width="160" height="160" fill="#8a6a3a" stroke="#3a2a14" stroke-width="5"/><path d="M{cx-80},{cy-160} L{cx+80},{cy} M{cx+80},{cy-160} L{cx-80},{cy}" stroke="#3a2a14" stroke-width="5"/>'
+    return out
+
+def safe(x=880, y=1500, open_=True, empty=True):
+    """anchor: bottom-centre. a wall/floor safe; open shows the inside (empty or with money)."""
+    out = f'<rect x="{x-120}" y="{y-240}" width="240" height="240" rx="10" fill="#3a4250" stroke="#11151c" stroke-width="6"/><rect x="{x-96}" y="{y-216}" width="192" height="192" fill="#11151c"/>'
+    if not empty: out += f'<rect x="{x-70}" y="{y-110}" width="140" height="60" fill="#3a7a4a"/><rect x="{x-60}" y="{y-150}" width="120" height="40" fill="#3a7a4a"/>'
+    if open_: out += f'<path d="M{x-120},{y-240} L{x-230},{y-210} L{x-230},{y-30} L{x-120},{y}" fill="#4a5262" stroke="#11151c" stroke-width="6"/><circle cx="{x-180}" cy="{y-120}" r="22" fill="#c9ccd4" stroke="#11151c" stroke-width="4"/>'
+    else: out += f'<circle cx="{x}" cy="{y-120}" r="34" fill="#c9ccd4" stroke="#11151c" stroke-width="5"/>'
+    return out
+
+def lamp_stand(x=160, y=1500, lit=True):
+    out = f'<rect x="{x-6}" y="{y-420}" width="12" height="420" fill="#222"/><ellipse cx="{x}" cy="{y}" rx="50" ry="10" fill="#222"/><path d="M{x-70},{y-420} L{x+70},{y-420} L{x+40},{y-520} L{x-40},{y-520} Z" fill="{"#ffd27a" if lit else "#6a5a3a"}" stroke="#2a1a12" stroke-width="4"/>'
+    return out
+
+def blinds(x=640, y=300, w=320, h=520):
+    """window blinds drawn over a window (office)."""
+    return "".join(f'<rect x="{x}" y="{y+k*26}" width="{w}" height="14" fill="#c9ccd4" opacity=".55"/>' for k in range(h // 26))
+
+def hanging_bulb(x=540, y=0, lit=True):
+    return f'<path d="M{x},{y} V{y+260}" stroke="#222" stroke-width="4"/><circle cx="{x}" cy="{y+290}" r="30" fill="{"#ffe8a8" if lit else "#555"}"/>' + (f'<circle cx="{x}" cy="{y+290}" r="120" fill="#ffd27a" opacity=".12"/>' if lit else "")
+
+def shelf_items(x=860, y=1380):
+    """shop shelves with jars and boxes. anchor: bottom-centre."""
+    out = f'<rect x="{x-190}" y="{y-560}" width="380" height="560" fill="#5a3e2a" stroke="#2a1a10" stroke-width="5"/>'
+    for i in range(4):
+        sy_ = y - 440 + i * 130
+        out += f'<rect x="{x-180}" y="{sy_}" width="360" height="12" fill="#2a1a10"/>'
+        out += "".join(f'<rect x="{x-170+k*58}" y="{sy_-70}" width="44" height="70" rx="8" fill="{["#c4262e","#2f6bd8","#e8b33a","#3a8a4a"][(i+k)%4]}"/>' for k in range(6))
+    return out
+
+PRESETS = {
+    "living":    dict(wall="#0c1628", wall2="#1a2a44", pattern="plain", furniture=[("sofa", dict(x=880, y=1400)), ("rug", dict(x=540, y=1610))]),
+    "office":    dict(wall="#1a2230", wall2="#2a3446", pattern="panels", furniture=[("desk", dict(x=860, y=1300)), ("blinds", dict(x=640, y=300))]),
+    "hotel":     dict(wall="#2a1a2a", wall2="#3a2438", pattern="wallpaper", furniture=[("bed", dict(x=850, y=1420)), ("lamp_stand", dict(x=1010, y=1420))]),
+    "kitchen":   dict(wall="#1c2a2a", wall2="#2a3a3a", pattern="tiles", furniture=[("counter", dict(x=720, y=1400)), ("fridge", dict(x=990, y=1400))]),
+    "warehouse": dict(wall="#1a1c20", wall2="#2a2c30", pattern="metal", furniture=[("crates", dict(x=880, y=1500)), ("hanging_bulb", dict(x=540, y=0))]),
+    "shop":      dict(wall="#24180f", wall2="#3a2818", pattern="plain", furniture=[("shelf_items", dict(x=880, y=1380))]),
+    "none":      dict(wall="#0c1628", wall2="#1a2a44", pattern="plain", furniture=[]),
+}
+
+def wall_pattern(kind, floor_y=1380):
+    if kind == "wallpaper": return '<g opacity=".12" fill="#fff">' + "".join(f'<circle cx="{40+(i%14)*80+(i//14%2)*40}" cy="{40+(i//14)*80}" r="6"/>' for i in range(14 * (floor_y // 80))) + '</g>'
+    if kind == "tiles": return '<g stroke="#fff" stroke-opacity=".08" stroke-width="3">' + "".join(f'<path d="M0,{k*90}H1080"/>' for k in range(floor_y // 90)) + "".join(f'<path d="M{k*90},0V{floor_y}"/>' for k in range(13)) + '</g>'
+    if kind == "metal": return '<g stroke="#000" stroke-opacity=".35" stroke-width="4">' + "".join(f'<path d="M{k*120},0V{floor_y}"/>' for k in range(10)) + '</g>'
+    if kind == "panels": return '<g stroke="#000" stroke-opacity=".25" stroke-width="4"><path d="M0,1000H1080"/></g>'
+    return ""
 
 PROPS = dict(window=window, clock=clock, digital_clock=digital_clock, calendar=calendar, photo_frame=photo_frame, door=door, doormat=doormat,
              table=table, chair_over=chair_over, outline=outline, umbrella=umbrella, cup_broken=cup_broken, cup=cup, ice_glass=ice_glass,
              candle=candle, phone=phone, paper=paper, plant=plant, dusty_box=dusty_box, shoes=shoes, footprints=footprints,
-             glass_shards=glass_shards, book=book, dog=dog, person=person)
+             glass_shards=glass_shards, book=book, dog=dog, person=person,
+             sofa=sofa, rug=rug, desk=desk, bookshelf=bookshelf, bed=bed, fridge=fridge, counter=counter, painting=painting,
+             crates=crates, safe=safe, lamp_stand=lamp_stand, blinds=blinds, hanging_bulb=hanging_bulb, shelf_items=shelf_items)
