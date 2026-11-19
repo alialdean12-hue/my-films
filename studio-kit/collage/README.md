@@ -2,6 +2,8 @@
 
 Real photos (Pixabay / Wikimedia) become **paper stickers**: the subject is cut out automatically (rembg), gets a white sticker border and a shadow; other photos become **torn photo cards with tape**. Everything pops / drops / slides in, «boils» like stop-motion paper (12 fps jitter), sits on textured paper with halftone, and scenes change with a **paper-tear wipe**. Hand-drawn red circles, arrows and underlines draw themselves; key words get a yellow marker.
 
+**73 motions** (enter, paper effects, tears, loops, annotations, info graphics, transitions, camera): see `MOTIONS.md`. Boil only on characters (`"loop":"boil"`).
+
 ```sh
 pip install "rembg[cpu]" pillow numpy      # once; first cut downloads the u2net model (~170 MB)
 python3 ~/my-films/studio-kit/scripts/pixabay.py photos "gold bars" media --n 5   # pick the clearest subject on a simple background
@@ -15,7 +17,7 @@ Example: `examples/gold.json` (download its four photos into `media/` first; eac
 - `title`, `paper` (default background: cream · kraft · white · dark · blue · red · green · yellow), `voice` `{name, rate}`, optional `duration` (default: fits the voice), `gap`.
 - `assets`: `{"name": {"src": "media/x.jpg", "cut": true}}` → sticker; without `cut` → photo card (`"vintage": true` = sepia print).
 - `beats` (one spoken `line` each, 4–8 beats for 25–45 s): `bg` (paper colour), `zoom` (slow push, default 1.06), `items`:
-  - `cutout` `{asset, x, y, h|w, tilt, enter: pop|drop|left|right|grow|fade, at, boil}`
+  - `cutout` `{asset, x, y, h|w, tilt, size: hero|main|small|icon, enter, effect, loop, exit, at} (keys in MOTIONS.md)`
   - `photo` `{asset, x, y, w, tilt, tape, enter, at}` (torn edges automatic)
   - `text` `{text, x, y, size, style: big|label|stamp|note, at}`: `[y]..[/y]` yellow marker, `[r]..[/r]` red, `\n` new line
   - `circle` `{x, y, r, sx}` · `arrow` `{from:[x,y], to:[x,y]}` · `underline` `{x, y, w}` · `pin` `{x, y}`
