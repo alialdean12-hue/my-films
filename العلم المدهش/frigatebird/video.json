@@ -1,0 +1,1137 @@
+{
+  "title": "قيلولة بلا هبوط",
+  "width": 1080,
+  "height": 1920,
+  "fps": 24,
+  "duration": 60,
+  "paper": "cream",
+  "voice": {
+    "name": "voice-00",
+    "rate": "+0%",
+    "lines": "lines.json"
+  },
+  "assets": {
+    "flight": {
+      "src": "assets/flight.png",
+      "cut": true
+    },
+    "tag": {
+      "src": "assets/tagged.png",
+      "cut": true
+    },
+    "wave": {
+      "src": "assets/ocean.jpg",
+      "cut": false
+    },
+    "sky": {
+      "src": "assets/sky.jpg",
+      "cut": false
+    },
+    "colony": {
+      "src": "assets/colony.jpg",
+      "cut": false
+    },
+    "tracks": {
+      "src": "assets/tracks.png",
+      "cut": false
+    },
+    "head": {
+      "src": "assets/head.jpg",
+      "cut": false
+    },
+    "back": {
+      "src": "assets/back.jpg",
+      "cut": false
+    }
+  },
+  "beats": [
+    {
+      "cue": "start",
+      "bg": "cream",
+      "motif": "sun",
+      "transition": "cut",
+      "direction": "الموج قصاصة مستقلة؛ الطائر معروف النوع وليس تسجيلًا لنومه.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "photo",
+          "asset": "wave",
+          "x": 540,
+          "y": 1700,
+          "w": 1390,
+          "h": 670,
+          "enter": "park",
+          "tilt": -3,
+          "at": 0,
+          "tape": false
+        },
+        {
+          "type": "cutout",
+          "asset": "flight",
+          "x": 559,
+          "y": 978,
+          "w": 732,
+          "enter": "park",
+          "tilt": -6,
+          "loop": "glide",
+          "at": 0
+        },
+        {
+          "type": "text",
+          "text": "قيلولة",
+          "y": 195,
+          "size": 163,
+          "at": 0,
+          "style": "first",
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "text": "بلا [y]هبوط[/y]",
+          "y": 397,
+          "size": 134,
+          "at": 0.78,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "sweep",
+          "at": 1.65,
+          "shape": "glide"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b0",
+        6,
+        0.14
+      ],
+      "bg": "blue",
+      "motif": "nightwind",
+      "transition": "tear",
+      "direction": "لقطة أقرب للسؤال، لا استنتاج من شكل العين.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "cutout",
+          "asset": "flight",
+          "x": 523,
+          "y": 885,
+          "w": 780,
+          "enter": "left",
+          "tilt": 6,
+          "loop": "float",
+          "at": 0
+        },
+        {
+          "type": "text",
+          "text": "نائم",
+          "y": 200,
+          "size": 145,
+          "at": 0.4,
+          "style": "light",
+          "align": "right"
+        },
+        {
+          "type": "text",
+          "text": "أم يقظ؟",
+          "y": 1410,
+          "size": 126,
+          "at": 1.29,
+          "style": "label",
+          "align": "left"
+        },
+        {
+          "type": "sweep",
+          "at": 2.05,
+          "shape": "query"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b1",
+        0,
+        0
+      ],
+      "bg": "oat",
+      "motif": "specimen",
+      "transition": "brush",
+      "direction": "صورة من التجربة لتعريف النوع، بلا ادعاء أنها لقطة للنوم.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 539,
+          "y": 997,
+          "w": 945,
+          "enter": "pop",
+          "tilt": -8,
+          "loop": "boil",
+          "at": 0
+        },
+        {
+          "type": "text",
+          "text": "الفرقاطة",
+          "y": 242,
+          "size": 141,
+          "at": 0.12,
+          "style": "big",
+          "align": "right"
+        },
+        {
+          "type": "text",
+          "text": "[y]الكبيرة[/y]",
+          "y": 1390,
+          "size": 127,
+          "at": 0.98,
+          "style": "big",
+          "align": "left"
+        },
+        {
+          "type": "sweep",
+          "at": 1.77,
+          "shape": "wing"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b1",
+        5,
+        0
+      ],
+      "bg": "sea",
+      "motif": "chart",
+      "transition": "punch",
+      "direction": "صورة عش على جينوفيسا للتعريف بالمكان؛ ليست من عيّنة الإناث.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "photo",
+          "asset": "colony",
+          "x": 540,
+          "y": 1060,
+          "w": 817,
+          "h": 543,
+          "enter": "tape",
+          "tilt": -3,
+          "at": 0,
+          "tape": true
+        },
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 720,
+          "y": 559,
+          "w": 384,
+          "enter": "right",
+          "tilt": 9,
+          "loop": "float",
+          "at": 0.15
+        },
+        {
+          "type": "text",
+          "text": "جزر غالاباغوس",
+          "y": 196,
+          "size": 103,
+          "at": 0.27,
+          "style": "big",
+          "align": "right"
+        },
+        {
+          "type": "text",
+          "text": "جزيرة جينوفيسا",
+          "y": 1480,
+          "size": 80,
+          "at": 1.12,
+          "style": "strip",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b1",
+        9,
+        0
+      ],
+      "bg": "night",
+      "motif": "wind",
+      "transition": "tear",
+      "direction": "أطول رحلة مسجّلة تقريبًا؛ الرقم حدّ أعلى لا معدل.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "photo",
+          "asset": "wave",
+          "x": 490,
+          "y": 1700,
+          "w": 1400,
+          "h": 545,
+          "enter": "left",
+          "tilt": 3,
+          "at": 0,
+          "tape": false
+        },
+        {
+          "type": "cutout",
+          "asset": "flight",
+          "x": 540,
+          "y": 990,
+          "w": 644,
+          "enter": "right",
+          "tilt": 4,
+          "loop": "glide",
+          "at": 0
+        },
+        {
+          "type": "text",
+          "text": "رحلة تصل إلى",
+          "y": 203,
+          "size": 94,
+          "at": 0.1,
+          "style": "light",
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "text": "10 أيام",
+          "y": 410,
+          "size": 157,
+          "at": 1.42,
+          "style": "numberdark",
+          "align": "center"
+        },
+        {
+          "type": "sweep",
+          "at": 2.02,
+          "shape": "flightpath"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b2",
+        0,
+        0
+      ],
+      "bg": "white",
+      "motif": "chart",
+      "transition": "brush",
+      "direction": "خطوط الطيران المنشورة، ومواقعها النسبية بلا تغيير.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "photo",
+          "asset": "tracks",
+          "x": 540,
+          "y": 1050,
+          "w": 792,
+          "h": 700,
+          "enter": "tape",
+          "tilt": -2,
+          "at": 0.05,
+          "tape": true
+        },
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 722,
+          "y": 555,
+          "w": 390,
+          "enter": "left",
+          "tilt": 3,
+          "loop": "float",
+          "at": 0.25
+        },
+        {
+          "type": "text",
+          "text": "خريطة [y]الرحلات[/y]",
+          "y": 230,
+          "size": 111,
+          "at": 0.22,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "circle",
+          "at": 1.98,
+          "x": 290,
+          "y": 1158,
+          "r": 66,
+          "sx": 1.15,
+          "color": "#cd4031"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b2",
+        6,
+        -0.21
+      ],
+      "bg": "oat",
+      "motif": "fold",
+      "transition": "tear",
+      "direction": "تضيق النظرة إلى الخريطة: تصلح للمكان، لا للتشخيص.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "photo",
+          "asset": "tracks",
+          "x": 518,
+          "y": 985,
+          "w": 748,
+          "h": 580,
+          "enter": "drop",
+          "tilt": 3,
+          "at": 0,
+          "tape": true
+        },
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 222,
+          "y": 578,
+          "w": 288,
+          "enter": "right",
+          "tilt": -4,
+          "loop": "float",
+          "at": 0.22
+        },
+        {
+          "type": "text",
+          "text": "أين طارت؟",
+          "y": 226,
+          "size": 114,
+          "at": 0.02,
+          "style": "big",
+          "align": "right"
+        },
+        {
+          "type": "text",
+          "text": "متى نامت؟",
+          "y": 1441,
+          "size": 112,
+          "at": 1.77,
+          "style": "label",
+          "align": "left"
+        },
+        {
+          "type": "sweep",
+          "at": 0.95,
+          "shape": "mapbracket"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b3",
+        0,
+        0
+      ],
+      "bg": "sea",
+      "motif": "specimen",
+      "transition": "punch",
+      "direction": "صورتان لنفس الطائر: الملصق ومقطع مكبّر للرأس؛ الدائرة تقع على المسجّل.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 555,
+          "y": 708,
+          "w": 858,
+          "enter": "left",
+          "tilt": 0,
+          "loop": "breathe",
+          "at": 0
+        },
+        {
+          "type": "photo",
+          "asset": "head",
+          "x": 523,
+          "y": 1230,
+          "w": 584,
+          "h": 360,
+          "enter": "tape",
+          "tilt": 0,
+          "at": 0.48,
+          "tape": true
+        },
+        {
+          "type": "text",
+          "text": "جهاز على الرأس",
+          "y": 185,
+          "size": 108,
+          "at": 0.45,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "circle",
+          "at": 1.86,
+          "x": 527,
+          "y": 1190,
+          "r": 70,
+          "sx": 1.12,
+          "color": "#cd4031"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b3",
+        6,
+        0
+      ],
+      "bg": "white",
+      "motif": "draft",
+      "transition": "tear",
+      "direction": "رسم موضع التسجيل من الشكل 1ب، لا رسم تشريحي متخيّل.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 648,
+          "y": 614,
+          "w": 510,
+          "enter": "top",
+          "tilt": 3,
+          "loop": "float",
+          "at": 0
+        },
+        {
+          "type": "print",
+          "plate": "skull",
+          "x": 529,
+          "y": 1120,
+          "w": 885,
+          "h": 354,
+          "enter": "drop",
+          "tilt": -1,
+          "at": 0.13
+        },
+        {
+          "type": "text",
+          "text": "نشاط الدماغ",
+          "y": 211,
+          "size": 114,
+          "at": 0.03,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "text": "من [y]الجانبين[/y]",
+          "y": 1480,
+          "size": 112,
+          "at": 0.92,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "circle",
+          "at": 1.56,
+          "x": 808,
+          "y": 1114,
+          "r": 96,
+          "sx": 0.89,
+          "color": "#cd4031"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b3",
+        9,
+        0.12
+      ],
+      "bg": "blue",
+      "motif": "nightwind",
+      "transition": "brush",
+      "direction": "مُسجّل الموقع ظاهر على الظهر. لقطة التفصيل ليست لجهاز الرأس.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 535,
+          "y": 740,
+          "w": 890,
+          "enter": "right",
+          "tilt": 0,
+          "loop": "breathe",
+          "at": 0
+        },
+        {
+          "type": "photo",
+          "asset": "back",
+          "x": 525,
+          "y": 1240,
+          "w": 583,
+          "h": 332,
+          "enter": "tape",
+          "tilt": 0,
+          "at": 0.06,
+          "tape": true
+        },
+        {
+          "type": "text",
+          "text": "وعلى الظهر",
+          "y": 190,
+          "size": 113,
+          "at": 0.15,
+          "style": "light",
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "text": "الموقع والارتفاع",
+          "y": 1515,
+          "size": 94,
+          "at": 2.14,
+          "style": "bright",
+          "align": "center"
+        },
+        {
+          "type": "circle",
+          "at": 1.36,
+          "x": 524,
+          "y": 1165,
+          "r": 65,
+          "sx": 1.22,
+          "color": "#cd4031"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b4",
+        0,
+        -0.45
+      ],
+      "bg": "cream",
+      "motif": "chart",
+      "transition": "tear",
+      "direction": "اجتماع الدليلين: مسار حقيقي وإشارة حقيقية، من دون مزامنة نقطتين غير متقابلتين.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "print",
+          "plate": "compare",
+          "x": 540,
+          "y": 1040,
+          "w": 856,
+          "h": 535,
+          "enter": "tape",
+          "tilt": -2,
+          "at": 0
+        },
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 738,
+          "y": 606,
+          "w": 383,
+          "enter": "left",
+          "tilt": 4,
+          "loop": "float",
+          "at": 0
+        },
+        {
+          "type": "text",
+          "text": "قارنوا [y]التسجيلين[/y]",
+          "y": 220,
+          "size": 105,
+          "at": 0.32,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "text": "المسار والدماغ",
+          "y": 1473,
+          "size": 87,
+          "at": 0.95,
+          "style": "strip",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b4",
+        3,
+        0.4
+      ],
+      "bg": "sea",
+      "motif": "air",
+      "transition": "brush",
+      "direction": "خط أحمر توضيحي للتيار الصاعد، وليس تتبّعًا لطائر العينة رقم 13.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "photo",
+          "asset": "wave",
+          "x": 520,
+          "y": 1730,
+          "w": 1450,
+          "h": 525,
+          "enter": "bottom",
+          "tilt": 2,
+          "at": 0,
+          "tape": false
+        },
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 570,
+          "y": 700,
+          "w": 780,
+          "enter": "right",
+          "tilt": -11,
+          "loop": "glide",
+          "at": 0
+        },
+        {
+          "type": "text",
+          "text": "يدور صاعدًا",
+          "y": 219,
+          "size": 130,
+          "at": 0.63,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "sweep",
+          "at": 0.48,
+          "shape": "spiral"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b4",
+        8,
+        0.35
+      ],
+      "bg": "white",
+      "motif": "proof",
+      "transition": "tear",
+      "direction": "المقطع الحقيقي الأحادي من 2ب: موجات النوم في الإشارة اليسرى العليا.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 643,
+          "y": 610,
+          "w": 500,
+          "enter": "left",
+          "tilt": -4,
+          "loop": "float",
+          "at": 0
+        },
+        {
+          "type": "print",
+          "plate": "uni",
+          "x": 540,
+          "y": 1093,
+          "w": 876,
+          "h": 468,
+          "enter": "tape",
+          "tilt": 0,
+          "at": 0.1,
+          "focus": "top"
+        },
+        {
+          "type": "text",
+          "text": "موجات النوم",
+          "y": 194,
+          "size": 124,
+          "at": 0.18,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "text": "في [y]نصف واحد[/y]",
+          "y": 1459,
+          "size": 114,
+          "at": 2.02,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "arrow",
+          "at": 1.03,
+          "from": [
+            207,
+            813
+          ],
+          "to": [
+            352,
+            985
+          ],
+          "color": "#ce4335"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b5",
+        0,
+        0
+      ],
+      "bg": "sea",
+      "motif": "proof",
+      "transition": "cut",
+      "direction": "نفس المقطع وبنفس المقياس، والعلامة تنتقل إلى الإشارة اليمنى السفلى.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 430,
+          "y": 606,
+          "w": 504,
+          "enter": "park",
+          "tilt": 1,
+          "loop": "float",
+          "at": 0
+        },
+        {
+          "type": "print",
+          "plate": "uni",
+          "x": 540,
+          "y": 1093,
+          "w": 876,
+          "h": 468,
+          "enter": "park",
+          "tilt": 0,
+          "at": 0,
+          "focus": "lower"
+        },
+        {
+          "type": "text",
+          "text": "والنصف الآخر",
+          "y": 195,
+          "size": 104,
+          "at": 0.14,
+          "style": "big",
+          "align": "right"
+        },
+        {
+          "type": "text",
+          "text": "مستيقظ",
+          "y": 1452,
+          "size": 138,
+          "at": 0.97,
+          "style": "label",
+          "align": "left"
+        },
+        {
+          "type": "arrow",
+          "at": 0.62,
+          "from": [
+            245,
+            1367
+          ],
+          "to": [
+            395,
+            1202
+          ],
+          "color": "#ce4335"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b5",
+        3,
+        0.45
+      ],
+      "bg": "blue",
+      "motif": "proof",
+      "transition": "brush",
+      "direction": "مثال آخر من 2ب: نوم الموجات البطيئة في الجانبين معًا.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 620,
+          "y": 608,
+          "w": 510,
+          "enter": "right",
+          "tilt": -3,
+          "loop": "float",
+          "at": 0
+        },
+        {
+          "type": "print",
+          "plate": "bi",
+          "x": 540,
+          "y": 1093,
+          "w": 876,
+          "h": 468,
+          "enter": "tape",
+          "tilt": 0,
+          "at": 0,
+          "focus": "both"
+        },
+        {
+          "type": "text",
+          "text": "وأحيانًا",
+          "y": 205,
+          "size": 122,
+          "at": 0.1,
+          "style": "light",
+          "align": "right"
+        },
+        {
+          "type": "text",
+          "text": "ينام النصفان معًا",
+          "y": 1460,
+          "size": 100,
+          "at": 1.05,
+          "style": "bright",
+          "align": "center"
+        },
+        {
+          "type": "sweep",
+          "at": 1.55,
+          "shape": "brace"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b6",
+        0,
+        0
+      ],
+      "bg": "oat",
+      "motif": "fold",
+      "transition": "tear",
+      "direction": "قصاصات غير متصلة ترمز للغفوات، وليست قياسات إضافية.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 530,
+          "y": 837,
+          "w": 847,
+          "enter": "left",
+          "tilt": -4,
+          "loop": "boil",
+          "at": 0
+        },
+        {
+          "type": "print",
+          "plate": "scraps",
+          "x": 540,
+          "y": 1234,
+          "w": 816,
+          "h": 212,
+          "enter": "park",
+          "tilt": 0,
+          "at": 0
+        },
+        {
+          "type": "text",
+          "text": "غفوات متفرّقة",
+          "y": 230,
+          "size": 105,
+          "at": 0.18,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "text": "ماذا لو جمعناها؟",
+          "y": 1475,
+          "size": 90,
+          "at": 1.35,
+          "style": "strip",
+          "align": "left"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b6",
+        8,
+        0
+      ],
+      "bg": "night",
+      "motif": "day",
+      "transition": "punch",
+      "direction": "حلقة نسبية لا ساعة: القطاع يساوي 0.69 من 24 ساعة، وليس موعد غفوة.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "print",
+          "plate": "share",
+          "x": 540,
+          "y": 996,
+          "w": 750,
+          "h": 750,
+          "enter": "pop",
+          "tilt": 0,
+          "at": 0
+        },
+        {
+          "type": "cutout",
+          "asset": "tag",
+          "x": 537,
+          "y": 996,
+          "w": 648,
+          "enter": "right",
+          "tilt": -6,
+          "loop": "float",
+          "at": 0.09
+        },
+        {
+          "type": "text",
+          "text": "نحو 41 دقيقة",
+          "y": 223,
+          "size": 127,
+          "at": 0.33,
+          "style": "numberdark",
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "text": "يوميًا في الجو",
+          "y": 1460,
+          "size": 105,
+          "at": 1.14,
+          "style": "bright",
+          "align": "center"
+        },
+        {
+          "type": "sweep",
+          "at": 1.7,
+          "shape": "share"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b7",
+        0,
+        0
+      ],
+      "bg": "sea",
+      "motif": "wind",
+      "transition": "tear",
+      "direction": "نعود إلى المشاهدة بالعين بعد التمييز بينها وبين القياس.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "photo",
+          "asset": "sky",
+          "x": 540,
+          "y": 1008,
+          "w": 839,
+          "h": 717,
+          "enter": "tape",
+          "tilt": -3,
+          "at": 0,
+          "tape": true
+        },
+        {
+          "type": "text",
+          "text": "لو رأيته يحلّق…",
+          "y": 226,
+          "size": 112,
+          "at": 0.06,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "sweep",
+          "at": 0.82,
+          "shape": "query"
+        }
+      ]
+    },
+    {
+      "cue": [
+        "b7",
+        3,
+        0.15
+      ],
+      "bg": "cream",
+      "motif": "sun",
+      "transition": "brush",
+      "direction": "السؤال الأخير يعيد لقطة الطائر والمحيط إلى البداية.",
+      "zoom": 1.0,
+      "items": [
+        {
+          "type": "photo",
+          "asset": "wave",
+          "x": 540,
+          "y": 1692,
+          "w": 1390,
+          "h": 650,
+          "enter": "park",
+          "tilt": -3,
+          "at": 0,
+          "tape": false
+        },
+        {
+          "type": "cutout",
+          "asset": "flight",
+          "x": 559,
+          "y": 979,
+          "w": 732,
+          "enter": "left",
+          "tilt": -6,
+          "loop": "glide",
+          "at": 0
+        },
+        {
+          "type": "text",
+          "text": "هل توقّعت",
+          "y": 194,
+          "size": 137,
+          "at": 0.02,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "text",
+          "text": "أنه [y]نائم؟[/y]",
+          "y": 398,
+          "size": 133,
+          "at": 0.55,
+          "style": "big",
+          "align": "center"
+        },
+        {
+          "type": "sweep",
+          "at": 1.09,
+          "shape": "glide"
+        }
+      ]
+    }
+  ],
+  "cover": {
+    "asset": "flight",
+    "text": "ينام وهو يطير؟",
+    "bg": "cream"
+  },
+  "coverB": {
+    "asset": "tag",
+    "text": "الدليل في دماغه",
+    "bg": "blue"
+  }
+}

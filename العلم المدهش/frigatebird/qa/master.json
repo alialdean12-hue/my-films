@@ -1,0 +1,73 @@
+{
+  "probe": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "codec_type": "video",
+        "width": 1080,
+        "height": 1920,
+        "pix_fmt": "yuv420p",
+        "r_frame_rate": "24/1",
+        "duration": "60.000000",
+        "nb_frames": "1440"
+      },
+      {
+        "codec_name": "aac",
+        "codec_type": "audio",
+        "sample_rate": "48000",
+        "channels": 2,
+        "r_frame_rate": "0/0",
+        "duration": "60.000000",
+        "nb_frames": "2814"
+      }
+    ],
+    "format": {
+      "duration": "60.000000",
+      "size": "16660941",
+      "tags": {}
+    }
+  },
+  "lufs": -14.28,
+  "truePeak_dBTP": -1.4,
+  "range_LU": 2.5,
+  "blackIntervals": [],
+  "lint": "0 error(s), 22 warning(s)",
+  "shots": 19,
+  "srtCues": 20,
+  "reviewFrames": 60,
+  "sampleFrameWithinEachSecond": 13,
+  "minAdjacentReviewFrameDifference": 0.7857,
+  "files": {
+    "frigatebird.mp4": {
+      "bytes": 16660941,
+      "md5": "921b6b20f2601635e8335f8b4928404d",
+      "sha256": "7d8b44fcec83b7ea5be305edcd781f7aca6ea6f0856085bae9048d012029ec23"
+    },
+    "thumbnail.jpg": {
+      "bytes": 382341,
+      "md5": "b2af0ffaac9ded8c40587c13ec8d2ec0",
+      "sha256": "fd8661da116109bb910ee1458edeeb4fd14fd2c083e52447b2c2ff95ae73d93f"
+    },
+    "thumbnail-b.jpg": {
+      "bytes": 527809,
+      "md5": "d2312ffe29e06b712b5c2b4058423c7e",
+      "sha256": "0570b9f52d6487c58b848fef92c53a91d14cd79d935484fe45b5403c1eb3015e"
+    },
+    "CAPTIONS.md": {
+      "bytes": 3190,
+      "md5": "03498f5dc0cdf6df7a898e91073c2e65",
+      "sha256": "cdfe17e8fb1d8033feb72bd6d90383a080f83e2fc5cfa0cd54045261cac8ac92"
+    },
+    "frigatebird.srt": {
+      "bytes": 1656,
+      "md5": "6030d0edc3f9341978f7f287c2da644e",
+      "sha256": "b0e76fa5b00f11fedb355b50c8d9fa827df9d553ff32b08b6d93aa8510952994"
+    },
+    "CREDITS": {
+      "bytes": 1858,
+      "md5": "8a1d1471a44f29096e1e5e53323011f1",
+      "sha256": "af1242f6cb99aba80dab1a0eebc065445cd6d6eec8f943ec13f7b4e6ab0a46c6"
+    }
+  }
+}
