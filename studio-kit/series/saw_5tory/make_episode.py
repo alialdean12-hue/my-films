@@ -345,29 +345,81 @@ def sound(ep, sch, P):
 
 # ------------------------------------------------------------------ thumbnail
 def thumbnail(ep, P, OUT):
+    """Cover. Design «face + clue» for single-suspect cases, «lineup» when 3 suspects (cards / format lineup).
+    thumb keys: text (markup, 2-4 words), design ("face"|"lineup", optional), suspect (id), expression,
+    mystery [x,y,scale] (part 1 magnifier, hidden with ?), clue [x,y,scale] (part 2 magnifier, revealed), stamp (part 2 word),
+    suspects [ids] and liar (id) for lineup."""
+    import people
     th = ep.get("thumb", {}); H = host.parts(); T = os.path.join(P, "thumb"); os.makedirs(T, exist_ok=True)
-    for f in ("gsap.min.js",): shutil.copy(os.path.join(P, f), T)
-    shutil.copytree(os.path.join(P, "fonts"), os.path.join(T, "fonts"), dirs_exist_ok=True)
-    x, y, s = th.get("focus", [540, 960, 1.2]); part = ep.get("part", 1)
-    badge = "اللغز" if part == 1 else "الحل"
-    html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>thumb</title><style>
+    shutil.copy(os.path.join(P, "gsap.min.js"), T); shutil.copytree(os.path.join(P, "fonts"), os.path.join(T, "fonts"), dirs_exist_ok=True)
+    part = ep.get("part", 1); room = room_svg(ep)
+    persons = [o for o in ep["room"]["objects"] if o["type"] == "person"]
+    byid = {o.get("id", "p1"): o for o in persons}
+    design = th.get("design") or ("lineup" if (len(persons) >= 3 and any(b["scene"] == "cards" for b in ep["beats"])) else "face")
+    def head(pid, x, y, w, expression=None, dim=False):
+        o = dict(byid[pid]); o.pop("type"); o.pop("note", None); o["id_"] = "th_" + o.pop("id", "p1"); o["x"] = 490; o["y"] = 1520; o.pop("name", None)
+        if expression: o["expression"] = expression
+        h = w * 320 / 240
+        return f'<svg x="{x}" y="{y}" width="{w}" height="{h:.0f}" viewBox="370 680 240 320">{people.person(**o)}</svg>' + (f'<rect x="{x}" y="{y}" width="{w}" height="{h:.0f}" fill="#000" opacity=".55"/>' if dim else "")
+    def tx(x, y, size, text, fill="#fff", stroke="#020309", sw=14):
+        return f'<text x="{x}" y="{y}" font-size="{size}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}" paint-order="stroke fill" text-anchor="middle" direction="rtl" font-family="Cairo" font-weight="900">{text}</text>'
+    def lines(markup_text, y0, size=140):
+        cols = {"r": "#ff3b3b", "y": "#ffd21f", "b": "#7cc6ff"}; out = ""
+        for k, ln in enumerate(markup_text.split("\n")):
+            col = "#fff"
+            for c, v in cols.items():
+                if f"[{c}]" in ln: col = v
+            ln = re.sub(r"\[/?[ryb]\]", "", ln)
+            out += tx(540, y0 + k * size * 1.05, size if k else int(size * 0.85), ln, col)
+        return out
+    def badge(label, y):
+        return f'<rect x="390" y="{y-80}" width="300" height="110" rx="55" fill="#ffd21f" stroke="#020309" stroke-width="6"/>' + tx(540, y, 70, label, "#111", "none", 0)
+    defs = H["defs"] + '<defs><filter id="tblur"><feGaussianBlur stdDeviation="8"/></filter><radialGradient id="tred" cx=".5" cy=".45" r=".6"><stop offset="0" stop-color="#7a0e1e"/><stop offset="1" stop-color="#05060a"/></radialGradient><radialGradient id="tvig" cx=".5" cy=".5" r=".7"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".85"/></radialGradient></defs>'
+    fx, fy, fs = th.get("focus", [540, 1250, 1.1])
+    bg = f'<g transform="translate({540-fx*fs} {960-fy*fs}) scale({fs})" filter="url(#tblur)">{room}</g>'
+    label = "اللغز" if part == 1 else "الحل"
+    if design == "lineup":
+        ids = th.get("suspects") or [o.get("id", "p1") for o in persons][:3]
+        pick = next((b.get("pick") for b in ep["beats"] if b["scene"] == "cards" and b.get("pick") is not None), None)
+        liar = th.get("liar") or (ids[pick] if pick is not None and pick < len(ids) else None)
+        body = '<rect width="1080" height="1920" fill="#1a1e26"/>'
+        for k in range(9):
+            y = 560 + k * 110
+            body += f'<path d="M0,{y} H1080" stroke="#cfd8e2" stroke-opacity=".35" stroke-width="4"/><text x="40" y="{y-10}" font-size="30" fill="#cfd8e2" opacity=".5">{200-k*10}</text>'
+        for k, pid in enumerate(ids):
+            x = 40 + k * 340 if len(ids) == 3 else 200 + k * 380
+            is_liar = (pid == liar)
+            body += head(pid, x, 600, 320, dim=(part == 2 and liar and not is_liar))
+            body += f'<rect x="{x+40}" y="1060" width="240" height="90" rx="10" fill="#111" stroke="#cfd8e2" stroke-width="4"/>' + tx(x + 160, 1124, 54, byid[pid].get("name", ""), "#fff", "none", 0)
+            body += f'<circle cx="{x+160}" cy="1230" r="56" fill="#ffd21f" stroke="#020309" stroke-width="6"/>' + tx(x + 160, 1256, 72, str(k + 1), "#111", "none", 0)
+            if part == 2 and is_liar:
+                body += f'<g transform="rotate(-14 {x+160} 830)"><rect x="{x}" y="770" width="320" height="120" rx="16" fill="#05060a" fill-opacity=".5" stroke="#ff3b3b" stroke-width="14"/>' + tx(x + 160, 862, 84, th.get("stamp", "الكاذب"), "#ff3b3b", "none", 0) + '</g>'
+        body += lines(th.get("text", "من [r]الكاذب[/r]؟" if part == 1 else "[y]انكشف![/y]"), 330 if "\n" in th.get("text", "") else 430)
+        body += '<rect width="1080" height="1920" fill="url(#tvig)"/>' + badge(label, 1480)
+    else:
+        pid = th.get("suspect") or (persons[0].get("id", "p1") if persons else None)
+        body = '<rect width="1080" height="1920" fill="url(#tred)"/>' + bg + '<rect width="1080" height="1920" fill="#05060a" opacity=".7"/>'
+        if pid: body += head(pid, -60, 430, 640, th.get("expression", "nervous" if part == 1 else "scared"))
+        ring = next((b.get("ring") for b in ep["beats"] if b.get("ring")), None)
+        view = th.get("mystery", [fx, fy, 1.6]) if part == 1 else th.get("clue", [ring[0], ring[1], 1.9] if ring else [fx, fy, 1.6])
+        cx, cy, r = 790, 1030, 240; vx, vy, vs = view; vw = 2 * r / vs
+        body += (f'<defs><clipPath id="tmag"><circle cx="{cx}" cy="{cy}" r="{r}"/></clipPath></defs><g clip-path="url(#tmag)"><rect x="{cx-r}" y="{cy-r}" width="{2*r}" height="{2*r}" fill="#05060a"/>'
+                 f'<svg x="{cx-r}" y="{cy-r}" width="{2*r}" height="{2*r}" viewBox="{vx-vw/2} {vy-vw/2} {vw} {vw}">{room}</svg>'
+                 + (f'<rect x="{cx-r}" y="{cy-r}" width="{2*r}" height="{2*r}" fill="#05060a" opacity=".35"/>' + tx(cx, cy + 70, 260, "؟", "#ffd21f", "#020309", 16) if part == 1 else "")
+                 + f'</g><circle cx="{cx}" cy="{cy}" r="{r}" fill="none" stroke="#ff3b3b" stroke-width="16"/><path d="M{cx+r*0.7},{cy+r*0.7} l{r*0.55},{r*0.55}" stroke="#ff3b3b" stroke-width="34" stroke-linecap="round"/>')
+        if part == 2:
+            body += f'<g transform="rotate(-12 790 1260)"><rect x="620" y="1205" width="340" height="110" rx="14" fill="none" stroke="#ff3b3b" stroke-width="12"/>' + tx(790, 1290, 80, th.get("stamp", "انكشف!"), "#ff3b3b", "#020309", 8) + '</g>'
+        body += lines(th.get("text", "هل تكشف\n[r]الكذبة[/r]؟" if part == 1 else "الحل\n[y]هنا[/y]!"), 400)
+        body += '<rect width="1080" height="1920" fill="url(#tvig)"/>' + badge(label, 1560)
+    html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>cover</title><style>
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}}
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}}
-html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:#020309;font-family:"Cairo",sans-serif;direction:rtl}}
-.clip{{position:absolute;inset:0;overflow:hidden}}
-.big{{position:absolute;left:90px;right:90px;top:400px;text-align:center;font-weight:900;font-size:128px;line-height:1.15;color:#fff;-webkit-text-stroke:12px #020309;paint-order:stroke fill;text-shadow:0 10px 30px #000}}
-.r{{color:#ff3b3b}}.b{{color:#7cc6ff}}.y{{color:#ffd21f}}
-.badge{{position:absolute;top:1360px;left:50%;transform:translateX(-50%);background:#ffd21f;color:#111;font-weight:900;font-size:70px;padding:4px 50px 16px;border-radius:999px;white-space:nowrap;box-shadow:0 10px 40px #000}}
-.brand{{position:absolute;top:1500px;left:0;right:0;text-align:center;color:#7cc6ff;font-weight:900;font-size:48px;letter-spacing:2px;direction:ltr}}
-.vig{{background:radial-gradient(ellipse at 50% 50%,#0000 35%,#000d 100%)}}
-</style></head><body>
-<div id="root" data-composition-id="thumb" data-start="0" data-duration="1" data-width="1080" data-height="1920">
-<div id="a" class="clip" data-start="0" data-duration="1" data-track-index="1">
-<svg width="1080" height="1920" viewBox="0 0 1080 1920" style="position:absolute;inset:0">{H["defs"]}<g transform="translate({540-x*s} {960-y*s}) scale({s})">{room_svg(ep)}</g><rect width="1080" height="1920" fill="#020309" opacity=".35"/>
-<g transform="translate(560 700) scale(.62)">{H["puppet"]}{H["head"]}</g></svg>
-<div class="clip vig"></div><div class="big">{markup(th.get("text", "هل تكشف [r]الكذبة[/r]؟"))}</div><div class="badge">{badge}</div><div class="brand">saw_5tory</div></div></div>
+html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:#05060a}}.clip{{position:absolute;inset:0;overflow:hidden}}
+</style></head><body><div id="root" data-composition-id="thumb" data-start="0" data-duration="1" data-width="1080" data-height="1920">
+<div id="a" class="clip" data-start="0" data-duration="1" data-track-index="1"><svg width="1080" height="1920" viewBox="0 0 1080 1920" style="position:absolute;inset:0">{defs}{body}</svg></div></div>
 <script src="gsap.min.js"></script><script>const tl=gsap.timeline({{paused:true}});tl.to({{}},{{duration:1}},0);window.__timelines={{thumb:tl}};</script></body></html>'''
     open(os.path.join(T, "index.html"), "w").write(html)
+    shutil.rmtree(os.path.join(T, "snap"), ignore_errors=True)
     sh(["npx", "hyperframes", "snapshot", "--at", "0.5", "--no-end", "-o", "snap", "."], cwd=T, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     png = [f for f in os.listdir(os.path.join(T, "snap")) if f.startswith("frame-")][0]
     sh(["ffmpeg", "-y", "-loglevel", "error", "-i", os.path.join(T, "snap", png), "-q:v", "2", os.path.join(OUT, "thumb.jpg")])

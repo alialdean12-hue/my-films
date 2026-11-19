@@ -37,7 +37,7 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 - room beats: `"cam": [x, y, scale]` (1.0 = whole room, 1.5–2.3 = close), `"tour": [[x,y,s],...]` quick equal stops (2–4), `"tags": ["<person id>", "outline"]` show name tags, `"fx": ["lightning", "flicker", "glance"]`, `"stamp": "يكذب!"` red stamp, `"caption_pos": "top"|"bottom"|"low"`, `"caption_size"`.
 - part 2 only: `"ring": [x, y, r]` red circle drawn on the decisive clue, `"reveal": "المظلة [r]جافة[/r]!"` big yellow line.
 
-**thumb**: `text` 2–4 words (part 1 asks, part 2 teases the answer without saying it), `focus` = what the background shows. Badge «اللغز» / «الحل» and `saw_5tory` are added automatically; all text stays inside the centre 1080×1350 (the area every platform keeps visible on covers).
+**thumb** (covers are automatic, two designs): **face + clue** for one-suspect cases (big face of `suspect` + red magnifier: part 1 hides `mystery` [x,y,scale] behind «؟», part 2 reveals `clue` [x,y,scale] (default = the beat `ring`) with stamp «انكشف!») and **lineup** when the case has 3 suspects and a `cards` scene (headshots on a height chart, names, 1 2 3; part 2 dims the innocent and stamps the `liar`, default = the `pick` card). Keys: `text` (2–4 words, `\n` for two lines), optional `design`, `suspect`, `expression`, `mystery`, `clue`, `stamp`, `suspects`, `liar`, `focus` (blurred background). Badge «اللغز»/«الحل» added automatically; all text inside the centre 1080×1350.
 
 ## Five case formats (rotate them: never the same format twice in a row)
 | Format | Question | Scenes used | Example |
