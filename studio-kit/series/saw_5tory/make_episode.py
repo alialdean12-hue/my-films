@@ -6,13 +6,16 @@
 Writes OUTDIR/video.mp4, OUTDIR/thumb.jpg, OUTDIR/sheet.jpg (contact sheet to LOOK at), OUTDIR/project/ (html).
 The json format is documented in README.md and examples/*.json. Needs: python3, ffmpeg, node>=22 (npx hyperframes), edge-tts, numpy.
 """
-import json, os, re, shutil, subprocess, sys
+import argparse, json, os, re, shutil, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 KIT = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, HERE)
 import props, host, places, things
 
 GAP, SWITCH, LEAD, TAIL = 0.45, 0.35, 0.4, 2.0
+
+def hf(*args):
+    return ([shutil.which("hyperframes")] if shutil.which("hyperframes") else ["npx", "hyperframes"]) + list(args)
 
 def sh(cmd, **kw):
     return subprocess.run(cmd, check=True, **kw)
@@ -26,14 +29,22 @@ def markup(s):
     return s.replace("\n", "<br/>")
 
 # ------------------------------------------------------------------ voice
-def voice(ep, P):
+def voice(ep, P, stems=None):
     vd = os.path.join(P, "voice"); os.makedirs(vd, exist_ok=True)
     v = ep.get("voice", {})
     lines = [{"id": f"b{i}", "text": b["line"]} for i, b in enumerate(ep["beats"])]
     json.dump(lines, open(os.path.join(P, "lines.json"), "w"), ensure_ascii=False)
-    env = dict(os.environ)
-    sh([sys.executable, os.path.join(KIT, "scripts", "tts_edge.py"), os.path.join(P, "lines.json"), vd,
-        "--voice", v.get("name", "ar-SA-HamedNeural"), f"--rate={v.get('rate', '-3%')}"], env=env, stdout=subprocess.DEVNULL)
+    if not stems:
+        archive = v.get('archive', ep['slug'])
+        candidate = os.path.join(HERE, 'narration', archive, f"part{ep['part']}")
+        if 'archive' in v or os.path.isfile(os.path.join(candidate, 'manifest.json')):
+            stems = candidate
+    if stems:
+        from voice_stems import materialize
+        materialize(ep, stems, vd)
+    else:
+        sh([sys.executable, os.path.join(KIT, "scripts", "tts_edge.py"), os.path.join(P, "lines.json"), vd,
+            "--voice", v.get("name", "ar-SA-HamedNeural"), f"--rate={v.get('rate', '-3%')}"], stdout=subprocess.DEVNULL)
     low = v.get("puppet_layer", 0.38)  # the approved «doll» voice: Hamed + an octave-down copy at 38 % + light echo
     out = []
     for i in range(len(lines)):
@@ -143,12 +154,12 @@ def build_html(ep, sch, P):
         cid = f"cap{i}"
         if b.get("caption"):
             pos = b.get("caption_pos", "bottom" if b["scene"] == "host" else ("low" if b.get("tags") else "top"))
-            top = {"top": 120, "bottom": 1500, "low": 1620}[pos]
+            top = {"top": 170, "bottom": 1440, "low": 1530}[pos]
             fs = b.get("caption_size", 100 if b["scene"] == "host" else 92)
             caps.append(f'<div id="{cid}" class="cap" style="top:{top}px;font-size:{fs}px">{markup(b["caption"])}</div>')
             js.append(f'tl.fromTo("#{cid}",{{opacity:0,y:30}},{{opacity:1,y:0,duration:.3,ease:"power3.out"}},{s+0.1:.2f});tl.to("#{cid}",{{opacity:0,duration:.2}},{w-0.25:.2f});')
             if b.get("sub"):
-                caps.append(f'<div id="{cid}s" class="cap" style="top:1700px;font-size:64px">{markup(b["sub"])}</div>')
+                caps.append(f'<div id="{cid}s" class="cap" style="top:1608px;font-size:64px">{markup(b["sub"])}</div>')
                 js.append(f'tl.fromTo("#{cid}s",{{opacity:0,y:30}},{{opacity:1,y:0,duration:.3}},{s+1.6:.2f});tl.to("#{cid}s",{{opacity:0,duration:.2}},{w-0.25:.2f});')
         if b["scene"] == "host":
             act = b.get("host", "talk")
@@ -165,10 +176,13 @@ def build_html(ep, sch, P):
                 js.append(f'tl.fromTo("#tm{i}",{{opacity:0,scale:.6}},{{opacity:1,scale:1,duration:.3,ease:"back.out(2)"}},{e+0.1:.2f});tl.to("#tmr{i}",{{strokeDashoffset:0,duration:{max(1.0,w-e-0.6):.2f},ease:"none"}},{e+0.3:.2f});tl.to("#tm{i}",{{opacity:0,duration:.2}},{w-0.2:.2f});')
         elif b["scene"] == "room":
             if b.get("cam"):
-                x, y, sc = b["cam"]; x, y = clamp(x, y, sc * 1.07)
-                js.append(f'cam({x},{y},{sc},{s-0.15:.2f},.7);cam({x},{y},{sc*1.07:.3f},{s+0.55:.2f},{max(0.5,w-s-0.7):.2f},"none");')
+                x, y, sc = b["cam"]; x, y = clamp(x, y, sc)
+                js.append(f'cam({x},{y},{sc},{s-0.15:.2f},.7);')
+                # A full-beat push would overwrite the short tour tweens as soon as each ends.
+                if not b.get('tour'):
+                    js.append(f'cam({x},{y},{sc*1.07:.3f},{s+0.55:.2f},{max(0.5,w-s-0.7):.2f},"none");')
             if b.get("tour"):
-                stops = b["tour"]; t0 = s + (w - s) * 0.42; step = (w - 0.3 - t0) / len(stops)
+                stops = b["tour"]; t0 = s + max(.75, (w - s) * b.get("tour_start", 0.42)); step = (w - 0.3 - t0) / len(stops)
                 for k, (x, y, sc) in enumerate(stops):
                     x, y = clamp(x, y, sc)
                     js.append(f'cam({x},{y},{sc},{t0+k*step:.2f},.42);')
@@ -185,8 +199,8 @@ def build_html(ep, sch, P):
                     for pid in people:
                         js.append(f'tl.to("#{pid}_pup",{{x:-6,duration:.25}},{s+0.5:.2f});tl.to("#{pid}_pup",{{x:5,duration:.3}},{(s+e)/2:.2f});tl.to("#{pid}_pup",{{x:0,duration:.3}},{w-0.3:.2f});')
             if b.get("stamp"):
-                caps.append(f'<div id="st{i}" class="stamp"><span>{markup(b["stamp"])}</span></div>')
-                js.append(f'tl.fromTo("#st{i}",{{scale:2.4,opacity:0,rotation:-14}},{{scale:1,opacity:1,rotation:-8,duration:.22,ease:"power4.in"}},{s+0.5:.2f});tl.to("#st{i}",{{opacity:0,duration:.25}},{w-0.3:.2f});')
+                caps.append(f'<div id="st{i}" class="stamp" style="top:{b.get("stamp_y", 1110)}px;font-size:{116 if len(b["stamp"])>7 else 166}px"><span>{markup(b["stamp"])}</span></div>')
+                js.append(f'tl.fromTo("#st{i}",{{scale:1.16,opacity:0,rotation:-12}},{{scale:1,opacity:1,rotation:-8,duration:.22,ease:"power4.in"}},{s+0.5:.2f});tl.to("#st{i}",{{opacity:0,duration:.25}},{w-0.3:.2f});')
             if b.get("ring"):
                 x, y, rr = b["ring"]
                 js.append(f'tl.fromTo("#ring{i}",{{opacity:0,strokeDashoffset:{int(6.3*rr)}}},{{opacity:1,strokeDashoffset:0,duration:.6,ease:"power2.inOut"}},{s+0.5:.2f});tl.to("#ring{i}",{{opacity:0,duration:.2}},{w-0.2:.2f});')
@@ -199,14 +213,14 @@ def build_html(ep, sch, P):
     pup = f'<g id="pup"><g id="bob"><g id="sway">{H["puppet"]}<g id="hd">{H["head"]}</g></g></g></g>'
     html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{ep.get("title","saw_5tory")}</title><style>
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}}
-@font-face{{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}}
+@font-face{{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0000-00FF;}}
 html,body{{margin:0;background:#020309}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:#020309;font-family:"Cairo",sans-serif;direction:rtl}}
 .clip{{position:absolute;inset:0;overflow:hidden}}svg.full{{position:absolute;inset:0}}
-.cap{{position:absolute;left:60px;right:60px;text-align:center;font-weight:900;line-height:1.25;color:#fff;-webkit-text-stroke:8px #020309;paint-order:stroke fill;opacity:0}}
+.cap{{position:absolute;left:72px;right:72px;text-align:center;font-weight:900;line-height:1.25;color:#fff;-webkit-text-stroke:8px #020309;paint-order:stroke fill;opacity:0}}
 .r{{color:#ff3b3b}}.b{{color:#7cc6ff}}.y{{color:#ffd21f}}
 .shade{{position:absolute;left:0;right:0;top:0;height:440px;background:linear-gradient(#020309e6,#02030900)}}
 .stamp{{position:absolute;left:0;right:0;top:820px;text-align:center;font-weight:900;font-size:180px;color:#ff3b3b;opacity:0}}
-.stamp span{{display:inline-block;border:14px solid #ff3b3b;padding:0 40px 20px;border-radius:24px;background:#02030988}}
+.stamp span{{display:inline-block;white-space:nowrap;border:12px solid #ff3b3b;padding:0 40px 20px;border-radius:24px;background:#02030988}}
 .reveal{{position:absolute;left:40px;right:40px;top:1480px;text-align:center;font-weight:900;font-size:110px;color:#ffd21f;-webkit-text-stroke:9px #020309;paint-order:stroke fill;opacity:0}}
 #dip{{background:#000;opacity:0}}
 .timer{{position:absolute;left:50px;top:110px;opacity:0}}
@@ -223,7 +237,7 @@ html,body{{margin:0;background:#020309}}#root{{position:relative;width:1080px;he
 .case{{position:absolute;left:0;right:0;text-align:center;font-weight:900;color:#fff}}
 </style><script src="gsap.min.js"></script></head><body>
 <div id="root" data-composition-id="ep" data-start="0" data-duration="{D}" data-width="1080" data-height="1920">
- <div id="ROOM" class="clip" data-start="0" data-duration="{D}" data-track-index="1"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{H["defs"]}<g id="cam"><g id="roomart">{room}</g>{rings}</g></svg><div class="shade"></div></div>
+ <div id="ROOM" class="clip" data-start="0" data-duration="{D}" data-track-index="1"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920"><g id="cam"><g id="roomart">{room}</g>{rings}</g></svg><div class="shade"></div></div>
  <div id="HOST" class="clip" data-start="0" data-duration="{D}" data-track-index="2"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{H["defs"]}{H["bg"]}{pup}</svg></div>
  {extra}
  <div id="CAPS" class="clip" data-start="0" data-duration="{D}" data-track-index="7">{"".join(caps)}</div>
@@ -328,7 +342,7 @@ def sound(ep, sch, P):
         if "lightning" in b.get("fx", []): it.append({"file": "sfx/thunder.wav", "at": round(s + 0.3, 2), "gain": 0.25})
         if b.get("stamp"): it.append({"file": "sfx/hit.wav", "at": round(s + 0.7, 2), "gain": 0.3})
         if b.get("tour"):
-            t0 = s + (w - s) * 0.42; step = (w - 0.3 - t0) / len(b["tour"])
+            t0 = s + max(.75, (w - s) * b.get("tour_start", 0.42)); step = (w - 0.3 - t0) / len(b["tour"])
             it += [{"file": "sfx/bell.wav", "at": round(t0 + k * step, 2), "gain": 0.05} for k in range(len(b["tour"]))]
         if b.get("ring"): it.append({"file": "sfx/riser.wav", "at": round(s, 2), "gain": 0.12})
         if b.get("reveal"): it.append({"file": "sfx/hit.wav", "at": round(s + 0.9, 2), "gain": 0.3})
@@ -342,6 +356,21 @@ def sound(ep, sch, P):
     json.dump({"duration": D, "target_lufs": -14, "items": it}, open(os.path.join(P, "mix.json"), "w"))
     os.makedirs(os.path.join(P, "out"), exist_ok=True)
     sh([sys.executable, os.path.join(KIT, "scripts", "mix.py"), "mix.json", "out/mix.wav"], cwd=P, stdout=subprocess.DEVNULL)
+
+def finish_master(ep, P, OUT):
+    """Copy the picture untouched; final, measured two-pass voice/foley level from the PCM mix."""
+    mix = os.path.join(P, 'out', 'mix.wav'); master = os.path.join(OUT, 'video.mp4'); tmp = os.path.join(OUT, 'levelled.mp4')
+    target = 'loudnorm=I=-14:TP=-1.6:LRA=11'
+    first = sh(['ffmpeg','-hide_banner','-nostats','-i',mix,'-af',target+':print_format=json','-f','null','-'],capture_output=True,text=True)
+    vals = json.loads(re.findall(r'\{\s*"input_i".*?\}',first.stderr,re.S)[-1]); keys = [('I','input_i'),('TP','input_tp'),('LRA','input_lra'),('thresh','input_thresh')]
+    filt = target + ''.join(':measured_'+k+'='+vals[v] for k,v in keys) + ':offset='+vals['target_offset']+':linear=true'
+    try:
+        sh(['ffmpeg','-y','-v','error','-i',master,'-i',mix,'-map','0:v:0','-map','1:a:0','-c:v','copy','-af',filt,'-ar','48000','-ac','2','-c:a','aac','-b:a','192k','-t',str(ep['duration']),'-metadata','title='+ep['title']+' | '+str(ep['part']),'-metadata','artist=saw_5tory','-movflags','+faststart',tmp])
+        if abs(dur(tmp)-ep['duration'])>.01: raise ValueError('Incorrect master duration')
+        os.replace(tmp,master)
+    finally:
+        if os.path.isfile(tmp): os.unlink(tmp)
+
 
 # ------------------------------------------------------------------ thumbnail
 def thumbnail(ep, P, OUT):
@@ -413,35 +442,54 @@ def thumbnail(ep, P, OUT):
         body += '<rect width="1080" height="1920" fill="url(#tvig)"/>' + badge(label, 1450)
     html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>cover</title><style>
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}}
-@font-face{{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}}
+@font-face{{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0000-00FF;}}
 html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:#05060a}}.clip{{position:absolute;inset:0;overflow:hidden}}
-</style></head><body><div id="root" data-composition-id="thumb" data-start="0" data-duration="1" data-width="1080" data-height="1920">
+#root[data-part="1"] #file-properties-002{{visibility:hidden}}
+</style></head><body><div id="root" data-part="{part}" data-composition-id="thumb" data-start="0" data-duration="1" data-width="1080" data-height="1920">
 <div id="a" class="clip" data-start="0" data-duration="1" data-track-index="1"><svg width="1080" height="1920" viewBox="0 0 1080 1920" style="position:absolute;inset:0">{defs}{body}</svg></div></div>
 <script src="gsap.min.js"></script><script>const tl=gsap.timeline({{paused:true}});tl.to({{}},{{duration:1}},0);window.__timelines={{thumb:tl}};</script></body></html>'''
     open(os.path.join(T, "index.html"), "w").write(html)
     shutil.rmtree(os.path.join(T, "snap"), ignore_errors=True)
-    sh(["npx", "hyperframes", "snapshot", "--at", "0.5", "--no-end", "-o", "snap", "."], cwd=T, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    sh(hf("snapshot", "--at", "0.5", "--no-end", "-o", "snap", "."), cwd=T, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     png = [f for f in os.listdir(os.path.join(T, "snap")) if f.startswith("frame-")][0]
     sh(["ffmpeg", "-y", "-loglevel", "error", "-i", os.path.join(T, "snap", png), "-q:v", "2", os.path.join(OUT, "thumb.jpg")])
 
 # ------------------------------------------------------------------ main
 def main():
-    ep = json.load(open(sys.argv[1])); OUT = os.path.abspath(sys.argv[2]); preview = "--preview" in sys.argv
+    parser = argparse.ArgumentParser()
+    parser.add_argument('episode'); parser.add_argument('outdir'); parser.add_argument('--voice-dir')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--preview', action='store_true', help='Review using measured narration timings; do not render a master.')
+    mode.add_argument('--layout-proof', action='store_true', help='Silent visual blocking only, provisional timing. Cannot render a master.')
+    args = parser.parse_args()
+    ep = json.load(open(args.episode)); OUT = os.path.abspath(args.outdir)
     P = os.path.join(OUT, "project"); os.makedirs(P, exist_ok=True)
     tpl = os.path.join(KIT, "styles", "kinetic")
     shutil.copy(os.path.join(tpl, "gsap.min.js"), P); shutil.copytree(os.path.join(tpl, "fonts"), os.path.join(P, "fonts"), dirs_exist_ok=True)
-    print("1/5 voice..."); durs = voice(ep, P)
+    if args.layout_proof:
+        print('Layout proof ONLY: approximate timings, no speech or final video.')
+        durs = [min(5.7, max(2.2, len(b['line'].split()) / 2.4)) for b in ep['beats']]
+    else:
+        print("1/5 voice..."); durs = voice(ep, P, args.voice_dir)
     sch = schedule(ep, durs); json.dump(sch, open(os.path.join(P, "schedule.json"), "w"))
     print("2/5 html..."); build_html(ep, sch, P)
-    lint = subprocess.run(["npx", "hyperframes", "lint"], cwd=P, capture_output=True, text=True).stdout
-    if "✗" in lint: print(lint); sys.exit("LINT ERRORS")
-    times = ",".join(f"{(s+w)/2:.1f}" for s, e, w in sch)
-    print("3/5 look..."); subprocess.run(["npx", "hyperframes", "snapshot", "--at", times, "--no-end", "-o", "snaps", "."], cwd=P, capture_output=True)
+    lint = sh(hf('lint','.'), cwd=P, capture_output=True, text=True)
+    open(os.path.join(OUT, 'lint.txt'), 'w').write(lint.stdout + lint.stderr)
+    times = {(s+w)/2 for s, e, w in sch}
+    for b,(s,e,w) in zip(ep['beats'],sch):
+        if b.get('tour'):
+            t0 = s + max(.75,(w-s)*b.get('tour_start',.42)); step=(w-.3-t0)/len(b['tour'])
+            times.update(t0 + (k+.65)*step for k in range(len(b['tour'])))
+    times = ','.join(f'{t:.2f}' for t in sorted(times))
+    print("3/5 look..."); sh(hf('snapshot','--at',times,'--no-end','-o','snaps','.'),cwd=P,stdout=subprocess.DEVNULL)
     sheets = sorted(f for f in os.listdir(os.path.join(P, "snaps")) if f.startswith("contact"))
+    if not sheets: raise RuntimeError('No preview sheets were generated.')
     for k, f in enumerate(sheets): shutil.copy(os.path.join(P, "snaps", f), os.path.join(OUT, f"sheet{k+1}.jpg"))
-    if preview: print("preview done: look at", OUT); return
+    if args.layout_proof or args.preview: print("preview done: look at", OUT); return
     print("4/5 sound + render..."); sound(ep, sch, P)
-    sh(["sh", os.path.join(KIT, "scripts", "render.sh"), ".", "out/mix.wav", os.path.join(OUT, "video.mp4"), "24"], cwd=P, stdout=subprocess.DEVNULL)
+    with open(os.path.join(OUT, "render.log"), "w") as log:
+        sh(["sh", os.path.join(KIT, "scripts", "render.sh"), ".", "out/mix.wav", os.path.join(OUT, "video.mp4"), "24"], cwd=P, stdout=log, stderr=subprocess.STDOUT)
+    finish_master(ep, P, OUT)
     print("5/5 thumbnail..."); thumbnail(ep, P, OUT)
     print("DONE:", os.path.join(OUT, "video.mp4"), os.path.join(OUT, "thumb.jpg"))
 

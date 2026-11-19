@@ -1,0 +1,9 @@
+ART PROVENANCE — منشفة في المدار. No archive photograph or video frame is reproduced.
+
+Original AI-assisted anime model/background paintings created for this film, 2026-11-17; source plates saved losslessly as assets/paint/{character,observe,cabin,earth,desk,sink,wring}.webp. See PROMPTS.md. These are illustrated representations, not documentation of the appearance of the event. Original scene staging, cel animation, water and cloth contours, orbital station design, ink details, light, acting keys, music, and Foley were created in this project. Portrait is stylized, not a synthetic photograph.
+
+Image derivatives: astronaut.png / observe.png = isolated acting cels; grip-left.png / grip-right.png / wet-folds.png = ink and colour separations of the original wring painting. cabin.png, desk.png, earth.png, sink.png = ten-colour separations. All use tools/paint.py. Both thumbnails compose film drawings, not agency materials.
+
+Research only, no clip, still, audio or mark licensed or used from these pages: Canadian Space Agency, “Wringing out water on the ISS - for science!” https://www.asc-csa.gc.ca/eng/multimedia/search/video/17862 ; NASA/APOD https://science.nasa.gov/image-article/apod-2013-april-24-wringing-a-wet-towel-in-orbit/ . Press thumbnail results were visual reference for the ordinary navy polo, white cloth and left/right grip only; not present as source media in the composition.
+
+Cairo (Arabic/Latin font data): The Cairo Project Authors, SIL OFL 1.1, https://github.com/Gue3bara/Cairo ; licence and notice in ../fonts/. Local GSAP/studio-kit anime template in the repository. Soundtrack newly synthesized with the studio-kit/anime pluck/bell method. No stock-music, Pexels or Pixabay asset. Full research notes in ../FACTS.md. No endorsement by any institution.

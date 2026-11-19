@@ -16,7 +16,11 @@ async def one(text, voice, rate, out):
         try:
             await edge_tts.Communicate(text, voice, rate=rate).save(out); return
         except Exception as e:
-            if attempt == 2: raise
+            if attempt == 2 or getattr(e, "status", 0) in (401, 403):
+                # Exception strings from a speech client may contain signed URLs. Only report type/status.
+                msg = f"No narration written: {type(e).__name__} (HTTP {getattr(e, 'status', None) or 'n/a'})."
+                if os.environ.get("GITHUB_ACTIONS") == "true": print("::error title=Speech service::" + msg, file=sys.stderr)
+                raise RuntimeError(msg) from None
             await asyncio.sleep(2)
 
 def main():
