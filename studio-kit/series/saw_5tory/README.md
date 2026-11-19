@@ -37,7 +37,7 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 - room beats: `"cam": [x, y, scale]` (1.0 = whole room, 1.5–2.3 = close), `"tour": [[x,y,s],...]` quick equal stops (2–4), `"tags": ["<person id>", "outline"]` show name tags, `"fx": ["lightning", "flicker", "glance"]`, `"stamp": "يكذب!"` red stamp, `"caption_pos": "top"|"bottom"|"low"`, `"caption_size"`.
 - part 2 only: `"ring": [x, y, r]` red circle drawn on the decisive clue, `"reveal": "المظلة [r]جافة[/r]!"` big yellow line.
 
-**thumb**: `text` 2–4 words (part 1 asks, part 2 teases the answer without saying it), `focus` = what the background shows. Badge «الجزء 1: اللغز» / «الجزء 2: الحل» and `saw_5tory` are added automatically.
+**thumb**: `text` 2–4 words (part 1 asks, part 2 teases the answer without saying it), `focus` = what the background shows. Badge «اللغز» / «الحل» and `saw_5tory` are added automatically; all text stays inside the centre 1080×1350 (the area every platform keeps visible on covers).
 
 ## Five case formats (rotate them: never the same format twice in a row)
 | Format | Question | Scenes used | Example |
@@ -49,7 +49,7 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 | **howdunit** | «كيف فعلها؟» we know who; the clue shows how | title, host, room, cards | build like 001/002 |
 
 **Scene types**
-- `title`: case card. Keys: `case` ("005"), `title`, optional `subtitle`. Always the first beat.
+- `title`: title card: «اللغز» (part 1) or «الحل» (part 2) + the title. Keys: `title`, optional `subtitle`. No case numbers anywhere on screen. Always the first beat.
 - `host`: the puppet. `host`: enter | talk | point; `timer: true` shows a «فكّر» ring after the line (use on the last beat of part 1).
 - `room`: the scene (cam, tour, tags, fx, stamp, ring, reveal as above). A beat with `tags` puts its caption low automatically.
 - `cards`: 2–3 numbered evidence cards cropped live from the room: `"cards": [[x, y, scale, "label"], ...]`; part 2 adds `"pick": index` (0-based) to light the right card and dim the others.

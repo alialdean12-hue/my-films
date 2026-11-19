@@ -301,7 +301,7 @@ def build_extra(ep, sch, js, caps):
     for i, b in enumerate(beats):
         if b["scene"] != "title": continue
         s, e, w = sch[i]
-        tt.append(f'<div id="tc{i}" style="opacity:0"><div class="case" style="top:660px;font-size:70px;color:#ff3b3b;letter-spacing:4px">القضية {b.get("case","")}</div>'
+        tt.append(f'<div id="tc{i}" style="opacity:0"><div class="case" style="top:660px;font-size:80px;color:#ff3b3b">{"اللغز" if ep.get("part",1)==1 else "الحل"}</div>'
                   f'<div class="case" style="top:770px;font-size:150px;line-height:1.15;-webkit-text-stroke:8px #020309;paint-order:stroke fill">{markup(b.get("title", ep.get("title","")))}</div>'
                   f'<div class="case" style="top:1180px;font-size:52px;color:#7cc6ff">{markup(b.get("subtitle","saw_5tory"))}</div></div>')
         js.append(f'tl.fromTo("#tc{i}",{{opacity:0,scale:1.15}},{{opacity:1,scale:1,duration:.5,ease:"power3.out"}},{s:.2f});tl.to("#tc{i}",{{opacity:0,duration:.25}},{w-0.25:.2f});')
@@ -349,22 +349,22 @@ def thumbnail(ep, P, OUT):
     for f in ("gsap.min.js",): shutil.copy(os.path.join(P, f), T)
     shutil.copytree(os.path.join(P, "fonts"), os.path.join(T, "fonts"), dirs_exist_ok=True)
     x, y, s = th.get("focus", [540, 960, 1.2]); part = ep.get("part", 1)
-    badge = th.get("badge", "الجزء 1: اللغز" if part == 1 else "الجزء 2: الحل")
+    badge = "اللغز" if part == 1 else "الحل"
     html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>thumb</title><style>
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}}
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}}
 html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:#020309;font-family:"Cairo",sans-serif;direction:rtl}}
 .clip{{position:absolute;inset:0;overflow:hidden}}
-.big{{position:absolute;left:40px;right:40px;top:150px;text-align:center;font-weight:900;font-size:150px;line-height:1.15;color:#fff;-webkit-text-stroke:12px #020309;paint-order:stroke fill;text-shadow:0 10px 30px #000}}
+.big{{position:absolute;left:90px;right:90px;top:400px;text-align:center;font-weight:900;font-size:128px;line-height:1.15;color:#fff;-webkit-text-stroke:12px #020309;paint-order:stroke fill;text-shadow:0 10px 30px #000}}
 .r{{color:#ff3b3b}}.b{{color:#7cc6ff}}.y{{color:#ffd21f}}
-.badge{{position:absolute;bottom:200px;left:50%;transform:translateX(-50%);background:#ffd21f;color:#111;font-weight:900;font-size:70px;padding:4px 50px 16px;border-radius:999px;white-space:nowrap;box-shadow:0 10px 40px #000}}
-.brand{{position:absolute;bottom:110px;left:0;right:0;text-align:center;color:#7cc6ff;font-weight:900;font-size:48px;letter-spacing:2px;direction:ltr}}
+.badge{{position:absolute;top:1360px;left:50%;transform:translateX(-50%);background:#ffd21f;color:#111;font-weight:900;font-size:70px;padding:4px 50px 16px;border-radius:999px;white-space:nowrap;box-shadow:0 10px 40px #000}}
+.brand{{position:absolute;top:1500px;left:0;right:0;text-align:center;color:#7cc6ff;font-weight:900;font-size:48px;letter-spacing:2px;direction:ltr}}
 .vig{{background:radial-gradient(ellipse at 50% 50%,#0000 35%,#000d 100%)}}
 </style></head><body>
 <div id="root" data-composition-id="thumb" data-start="0" data-duration="1" data-width="1080" data-height="1920">
 <div id="a" class="clip" data-start="0" data-duration="1" data-track-index="1">
 <svg width="1080" height="1920" viewBox="0 0 1080 1920" style="position:absolute;inset:0">{H["defs"]}<g transform="translate({540-x*s} {960-y*s}) scale({s})">{room_svg(ep)}</g><rect width="1080" height="1920" fill="#020309" opacity=".35"/>
-<g transform="translate(470 560) scale(.78)">{H["puppet"]}{H["head"]}</g></svg>
+<g transform="translate(560 700) scale(.62)">{H["puppet"]}{H["head"]}</g></svg>
 <div class="clip vig"></div><div class="big">{markup(th.get("text", "هل تكشف [r]الكذبة[/r]؟"))}</div><div class="badge">{badge}</div><div class="brand">saw_5tory</div></div></div>
 <script src="gsap.min.js"></script><script>const tl=gsap.timeline({{paused:true}});tl.to({{}},{{duration:1}},0);window.__timelines={{thumb:tl}};</script></body></html>'''
     open(os.path.join(T, "index.html"), "w").write(html)
