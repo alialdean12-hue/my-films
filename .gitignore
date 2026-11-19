@@ -13,3 +13,4 @@ examples/*/out/
 examples/*/stills/
 examples/*/events.json
 examples/*/voice/.cache/
+__pycache__/
