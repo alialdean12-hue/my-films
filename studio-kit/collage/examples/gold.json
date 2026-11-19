@@ -1,0 +1,226 @@
+{
+ "title": "لماذا الذهب غالٍ؟",
+ "paper": "cream",
+ "voice": {
+  "name": "ar-SA-HamedNeural",
+  "rate": "+0%"
+ },
+ "assets": {
+  "gold": {
+   "src": "media/gold_bars.jpg",
+   "cut": true,
+   "query": "gold bars"
+  },
+  "man": {
+   "src": "media/banker.jpg",
+   "cut": true,
+   "query": "man suit serious"
+  },
+  "ring": {
+   "src": "media/gold_ring.jpg",
+   "cut": true,
+   "query": "gold ring"
+  },
+  "bank": {
+   "src": "media/bank.jpg",
+   "vintage": true,
+   "query": "bank building"
+  }
+ },
+ "beats": [
+  {
+   "bg": "kraft",
+   "line": "لماذا يدفع الناس ثروةً، مقابل معدنٍ أصفر؟",
+   "items": [
+    {
+     "type": "text",
+     "text": "لماذا الذهب [y]غالٍ[/y]؟",
+     "y": 400,
+     "size": 112,
+     "at": 0.1
+    },
+    {
+     "type": "cutout",
+     "asset": "gold",
+     "x": 540,
+     "y": 1060,
+     "h": 640,
+     "at": 0.5
+    },
+    {
+     "type": "underline",
+     "x": 540,
+     "y": 1450,
+     "w": 520,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "bg": "cream",
+   "line": "أولًا، لأنه نادرٌ جدًا.",
+   "items": [
+    {
+     "type": "text",
+     "text": "أولًا: [y]نادر[/y] جدًا",
+     "y": 400,
+     "at": 0.1
+    },
+    {
+     "type": "cutout",
+     "asset": "ring",
+     "x": 540,
+     "y": 1000,
+     "h": 520,
+     "at": 0.4
+    },
+    {
+     "type": "circle",
+     "x": 540,
+     "y": 1000,
+     "r": 290,
+     "at": 1.0
+    }
+   ]
+  },
+  {
+   "bg": "dark",
+   "line": "كلُّ الذهب الذي استُخرج عبر التاريخ، قد يتّسع في مكعّبٍ طوله نحو اثنين وعشرين مترًا.",
+   "items": [
+    {
+     "type": "text",
+     "style": "label",
+     "text": "كل ذهب التاريخ",
+     "y": 420,
+     "size": 88,
+     "at": 0.1
+    },
+    {
+     "type": "cutout",
+     "asset": "gold",
+     "x": 540,
+     "y": 960,
+     "h": 420,
+     "enter": "drop",
+     "at": 0.6
+    },
+    {
+     "type": "text",
+     "text": "مكعّب طوله [y]22 مترًا[/y] فقط",
+     "y": 1460,
+     "size": 96,
+     "at": 2.6
+    }
+   ]
+  },
+  {
+   "bg": "cream",
+   "line": "ثانيًا، لا يصدأ، ويبقى لامعًا آلاف السنين.",
+   "items": [
+    {
+     "type": "cutout",
+     "asset": "ring",
+     "x": 690,
+     "y": 980,
+     "h": 440,
+     "enter": "right",
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "style": "stamp",
+     "text": "لا يصدأ",
+     "x": 360,
+     "y": 880,
+     "size": 96,
+     "at": 0.9
+    },
+    {
+     "type": "text",
+     "text": "يبقى لامعًا [y]آلاف السنين[/y]",
+     "y": 1470,
+     "size": 92,
+     "at": 1.7
+    }
+   ]
+  },
+  {
+   "bg": "blue",
+   "line": "ولهذا تخزّنه البنوك والمستثمرون، كملاذٍ آمنٍ حين تهتزّ الأسواق.",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "bank",
+     "x": 600,
+     "y": 740,
+     "w": 780,
+     "at": 0.1
+    },
+    {
+     "type": "cutout",
+     "asset": "man",
+     "x": 300,
+     "y": 1260,
+     "h": 820,
+     "enter": "left",
+     "at": 0.8
+    },
+    {
+     "type": "arrow",
+     "from": [
+      430,
+      1060
+     ],
+     "to": [
+      620,
+      960
+     ],
+     "at": 1.8
+    },
+    {
+     "type": "text",
+     "style": "label",
+     "text": "ملاذ آمن",
+     "x": 740,
+     "y": 1460,
+     "size": 90,
+     "at": 2.4
+    }
+   ]
+  },
+  {
+   "bg": "kraft",
+   "line": "نادر، ثابت، ومطلوب… إذن غالٍ.",
+   "items": [
+    {
+     "type": "text",
+     "text": "نادر + ثابت + مطلوب",
+     "y": 420,
+     "size": 92,
+     "at": 0.1
+    },
+    {
+     "type": "cutout",
+     "asset": "gold",
+     "x": 540,
+     "y": 1000,
+     "h": 560,
+     "at": 0.9
+    },
+    {
+     "type": "text",
+     "style": "stamp",
+     "text": "= غالٍ",
+     "y": 1500,
+     "size": 110,
+     "at": 1.9
+    }
+   ]
+  }
+ ],
+ "cover": {
+  "asset": "gold",
+  "text": "لماذا الذهب\n[y]غالٍ[/y]؟",
+  "bg": "kraft"
+ }
+}
