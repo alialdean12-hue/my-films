@@ -37,7 +37,30 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 - room beats: `"cam": [x, y, scale]` (1.0 = whole room, 1.5–2.3 = close), `"tour": [[x,y,s],...]` quick equal stops (2–4), `"tags": ["<person id>", "outline"]` show name tags, `"fx": ["lightning", "flicker", "glance"]`, `"stamp": "يكذب!"` red stamp, `"caption_pos": "top"|"bottom"|"low"`, `"caption_size"`.
 - part 2 only: `"ring": [x, y, r]` red circle drawn on the decisive clue, `"reveal": "المظلة [r]جافة[/r]!"` big yellow line.
 
-**thumb**: `text` 2–4 words (part 1 asks, part 2 teases the answer without saying it), `focus` = what the background shows. Badge «الجزء 1: اللغز» / «الجزء 2: الحل» and `saw_5tory` are added automatically.
+**thumb** (covers are automatic, two designs): **face + clue** for one-suspect cases (big face of `suspect` + red magnifier: part 1 hides `mystery` [x,y,scale] behind «؟», part 2 reveals `clue` [x,y,scale] (default = the beat `ring`) with stamp «انكشف!») and **lineup** when the case has 3 suspects and a `cards` scene (headshots on a height chart, names, 1 2 3; part 2 dims the innocent and stamps the `liar`, default = the `pick` card). Keys: `text` (2–4 words, `\n` for two lines), optional `design`, `suspect`, `expression`, `mystery`, `clue`, `stamp`, `suspects`, `liar`, `focus` (blurred background). Badge «اللغز»/«الحل» added automatically; all text inside the centre 1080×1350.
+
+## Five case formats (rotate them: never the same format twice in a row)
+| Format | Question | Scenes used | Example |
+|---|---|---|---|
+| **classic** | «ما الذي كشف كذبته؟» one suspect, one lie, one visible clue | title, host, room | `examples/001` |
+| **lineup** | «من الكاذب؟ 1 أم 2 أم 3» three suspects, each one statement; one is contradicted by the room | title, host, room, cards | `examples/002` |
+| **slip** (زلة لسان) | «ما الكلمة التي كشفته؟» the suspect says something nobody told him | title, host, room, talk | `examples/003` |
+| **timeline** | «أين الخلل؟» times on a board do not fit the alibi | title, host, room, board | `examples/004` |
+| **howdunit** | «كيف فعلها؟» we know who; the clue shows how | title, host, room, cards | build like 001/002 |
+
+**Scene types**
+- `title`: title card: «اللغز» (part 1) or «الحل» (part 2) + the title. Keys: `title`, optional `subtitle`. No case numbers anywhere on screen. Always the first beat.
+- `host`: the puppet. `host`: enter | talk | point; `timer: true` shows a «فكّر» ring after the line (use on the last beat of part 1).
+- `room`: the scene (cam, tour, tags, fx, stamp, ring, reveal as above). A beat with `tags` puts its caption low automatically.
+- `cards`: 2–3 numbered evidence cards cropped live from the room: `"cards": [[x, y, scale, "label"], ...]`; part 2 adds `"pick": index` (0-based) to light the right card and dim the others.
+- `talk`: interrogation bubbles, one per beat, they stay on screen for the whole run (max 4, then a fresh page): `"say": ["detective" | <person id>, "text with [r]..[/r]"]`.
+- `board`: timeline notes. Put `"board": {"title": "...", "items": [["9:00", "..."], ...]}` at the top level (max 4 items); each board beat has `"show": n` (notes visible by its end) and, in part 2, `"mark": index`.
+
+**People (`person`)**: read `CHARACTERS.md` (24 ready characters with `"cast"`, plus thousands of combinations of face, eyes, nose, brows, hair, outfit, build, pose, expression and accessories; gallery in `CHARACTERS.jpg`). Put 2–3 people at x ≈ 320 / 560 / 790 (feet y 1530) or 1 person at x ≈ 490.
+
+**Places**: read `PLACES.md`: 51 interior and exterior places (`"place": "bank"`, `"time"`, `"weather"`), each drawn with its own furniture and Arabic sign. Old `"preset"` rooms still work.
+
+**Things**: read `THINGS.md`: vehicles and moving objects, animals, plants (all animated automatically) and `"atmosphere"` overlays (fog, sandstorm, blackout, police lights…).
 
 ## Rules that keep it good
 - Part 1 never circles or names the decisive clue: the `tour` visits the clue AND the red herrings equally.
@@ -47,7 +70,7 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 
 ### Case 002: «همسة خلف الستار»
 
-The two `cases/002-part*.json` files use the pilot’s original puppet and `ar-SA-HamedNeural` at −3%. Their compact, lossless takes are in `narration/002/part1` and `part2`. The builder automatically checks the line text, voice, sample counts, and FLAC/PCM digests, then applies the **same** doll filter as the pilot. No account or live speech service is needed to rebuild these takes. If the text changes, record and validate matching stems instead of silently reusing the old speech.
+The two `cases/002-part*.json` files use the pilot’s original puppet and `ar-SA-HamedNeural` at −3%. Their `voice.archive` points to the compact, lossless takes in `narration/002/part1` and `part2`. Without an explicit archive, lookup uses the full slug, so `examples/002` (a different story) cannot inherit this narration. The builder automatically checks the line text, voice, sample counts, and FLAC/PCM digests, then applies the **same** doll filter as the pilot. No account or live speech service is needed to rebuild these takes. If the text changes, record and validate matching stems instead of silently reusing the old speech.
 
 ```sh
 python3 make_episode.py cases/002-part1.json /tmp/saw002-part1 --preview
@@ -57,4 +80,4 @@ python3 make_episode.py cases/002-part2.json /tmp/saw002-part2 --preview
 
 `--layout-proof` is a silent storyboard with **provisional** timings, never a master. `--voice-dir DIR` accepts a matching manifest and its recorded data. For new recordings, `voice_stems.py CASE LOOSE-DIR` runs the kit’s speech client; `voice_stems.py pack CASE LOOSE-DIR ARCHIVE-DIR` preserves PCM losslessly. Keep render outputs outside the kit. Install FFmpeg/ffprobe, NumPy, Node 22+, HyperFrames and Chromium first; pin the same local tools for preview and final render.
 
-New SVG props for the backstage set: `stage_wings()`, `stage_ticket(x,y)`, `file_monitor(x,y)` and the optional `padded` stage chair. The monitor displays **file properties**, not device volume. `tour_start` changes when the equal-length stops begin; a tour never competes with a continuous push. The miniature titles omit the monitor properties so they do not give away the answer.
+New SVG props for the backstage set: `stage_wings()`, `stage_ticket(x,y)`, `file_monitor(x,y)` and the optional `padded` stage chair. The monitor displays **file properties**, not device volume. `tour_start` changes when the equal-length stops begin; a tour never competes with a continuous push. The puzzle cover hides the monitor properties so it does not give away the answer. New renders use the current character and cover designs; the exact published cut and covers were built with [ff5d523](https://github.com/alialdean12-hue/my-films/tree/ff5d523a6cd04cbecad65d2e6c3eb699801bbfb7).

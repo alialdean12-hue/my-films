@@ -5,7 +5,8 @@
   "duration": 50,
   "voice": {
     "name": "ar-SA-HamedNeural",
-    "rate": "-3%"
+    "rate": "-3%",
+    "archive": "002"
   },
   "room": {
     "wall": "#171b2d",
@@ -86,6 +87,7 @@
       "tags": [
         "outline"
       ],
+      "caption_pos": "top",
       "caption": "خلف [b]الستار[/b]"
     },
     {

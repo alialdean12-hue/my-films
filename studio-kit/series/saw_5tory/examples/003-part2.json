@@ -1,0 +1,94 @@
+{
+ "slug": "003-seventh-floor",
+ "title": "الطابق السابع",
+ "part": 2,
+ "duration": 50,
+ "voice": {
+  "name": "ar-SA-HamedNeural",
+  "rate": "-3%"
+ },
+ "room": {
+  "preset": "hotel",
+  "objects": [
+   {
+    "type": "window",
+    "x": 640,
+    "y": 300,
+    "rain": false
+   },
+   {
+    "type": "clock",
+    "x": 300,
+    "y": 430,
+    "time": "8:20"
+   },
+   {
+    "type": "door",
+    "x": 40,
+    "y": 700
+   },
+   {
+    "type": "person",
+    "id": "tarek",
+    "x": 520,
+    "y": 1530,
+    "name": "طارق",
+    "cast": "teen_gamer",
+    "expression": "nervous",
+    "pose": "pockets"
+   }
+  ]
+ },
+ "beats": [
+  {
+   "scene": "host",
+   "host": "enter",
+   "line": "هل التقطتَ الزلة؟ لنعد إلى الاستجواب.",
+   "caption": "هل التقطتَ [y]الزلة[/y]؟"
+  },
+  {
+   "scene": "talk",
+   "say": [
+    "detective",
+    "جارك وُجد ميتًا [y]في المصعد[/y]."
+   ],
+   "line": "المحقق قال: في المصعد، ولم يذكر أي طابق."
+  },
+  {
+   "scene": "talk",
+   "say": [
+    "tarek",
+    "لم أقترب من [r]الطابق السابع[/r] أبدًا!"
+   ],
+   "line": "لكن طارق قال: الطابق السابع."
+  },
+  {
+   "scene": "room",
+   "line": "فكيف عرف أين توقف المصعد؟ لأنه كان هناك.",
+   "stamp": "كيف عرف؟",
+   "cam": [
+    520,
+    1100,
+    1.5
+   ],
+   "tags": [
+    "tarek"
+   ]
+  },
+  {
+   "scene": "host",
+   "host": "point",
+   "line": "هل أصبت؟ أخبرنا، وانتظر القضية القادمة.",
+   "caption": "هل [y]أصبت[/y]؟",
+   "sub": "تابع للقضية القادمة"
+  }
+ ],
+ "thumb": {
+  "text": "الزلة\n[y]هنا[/y]!",
+  "focus": [
+   520,
+   1150,
+   1.2
+  ]
+ }
+}

@@ -1,0 +1,204 @@
+{
+ "slug": "002-open-safe",
+ "title": "الخزنة المفتوحة",
+ "part": 2,
+ "duration": 50,
+ "voice": {
+  "name": "ar-SA-HamedNeural",
+  "rate": "-3%"
+ },
+ "room": {
+  "preset": "office",
+  "objects": [
+   {
+    "type": "window",
+    "x": 640,
+    "y": 300,
+    "rain": true
+   },
+   {
+    "type": "clock",
+    "x": 300,
+    "y": 430,
+    "time": "10:15"
+   },
+   {
+    "type": "door",
+    "x": 40,
+    "y": 700
+   },
+   {
+    "type": "umbrella",
+    "x": 190,
+    "y": 1200,
+    "wet": true,
+    "note": "red herring: Abu Fahd really came in the rain"
+   },
+   {
+    "type": "cup",
+    "x": 900,
+    "y": 1300,
+    "steam": true,
+    "note": "red herring: Majed's coffee is hot"
+   },
+   {
+    "type": "footprints",
+    "x1": 250,
+    "y1": 1560,
+    "x2": 520,
+    "y2": 1575,
+    "kind": "wet",
+    "n": 6,
+    "note": "THE CLUE"
+   },
+   {
+    "type": "safe",
+    "x": 990,
+    "y": 1760,
+    "open_": true,
+    "empty": true
+   },
+   {
+    "type": "person",
+    "id": "abufahd",
+    "x": 320,
+    "y": 1530,
+    "name": "أبو فهد",
+    "cast": "sheikh",
+    "expression": "smug",
+    "accessories": []
+   },
+   {
+    "type": "person",
+    "id": "reem",
+    "x": 560,
+    "y": 1540,
+    "name": "ريم",
+    "cast": "artist_f",
+    "expression": "nervous",
+    "shoes": "wet",
+    "note": "THE CLUE: wet shoes"
+   },
+   {
+    "type": "person",
+    "id": "majed",
+    "x": 790,
+    "y": 1530,
+    "name": "ماجد",
+    "cast": "businessman",
+    "pose": "pockets"
+   }
+  ]
+ },
+ "beats": [
+  {
+   "scene": "host",
+   "host": "enter",
+   "line": "هل عرفتَ الكاذب؟ لنراجع الأدلة.",
+   "caption": "هل عرفتَ [y]الكاذب[/y]؟"
+  },
+  {
+   "scene": "cards",
+   "line": "الكاذبة هي ريم، صاحبة الصورة الثانية.",
+   "caption": "الكاذبة: [r]ريم[/r]",
+   "caption_size": 80,
+   "cards": [
+    [
+     330,
+     1350,
+     1.3,
+     "أبو فهد"
+    ],
+    [
+     560,
+     1450,
+     1.3,
+     "ريم"
+    ],
+    [
+     800,
+     1250,
+     1.3,
+     "ماجد"
+    ]
+   ],
+   "pick": 1
+  },
+  {
+   "scene": "room",
+   "line": "حذاؤها مبلل، وآثار أقدامها المبللة تبدأ من الباب.",
+   "cam": [
+    480,
+    1500,
+    1.8
+   ],
+   "ring": [
+    420,
+    1555,
+    190
+   ],
+   "reveal": "حذاؤها [b]مبلل[/b]!"
+  },
+  {
+   "scene": "room",
+   "line": "والمطر بدأ قبل نصف ساعة فقط، إذن خرجت ودخلت للتو.",
+   "caption": "المطر بدأ قبل [y]نصف ساعة[/y]",
+   "cam": [
+    540,
+    1200,
+    1.1
+   ],
+   "fx": [
+    "lightning"
+   ],
+   "tags": [
+    "reem"
+   ]
+  },
+  {
+   "scene": "room",
+   "line": "أما مظلة أبي فهد فمبللة لأنه جاء تحت المطر فعلًا.",
+   "caption": "مظلة مبللة = [y]صادق[/y]",
+   "cam": [
+    280,
+    1300,
+    1.5
+   ],
+   "ring": [
+    190,
+    1380,
+    130
+   ]
+  },
+  {
+   "scene": "room",
+   "line": "وقهوة ماجد ما زالت ساخنة، فكلامه صحيح.",
+   "caption": "القهوة [y]ساخنة[/y]",
+   "cam": [
+    860,
+    1260,
+    1.8
+   ],
+   "ring": [
+    900,
+    1240,
+    100
+   ]
+  },
+  {
+   "scene": "host",
+   "host": "point",
+   "line": "هل أصبت؟ أخبرنا، وانتظر القضية القادمة.",
+   "caption": "هل [y]أصبت[/y]؟",
+   "sub": "تابع للقضية القادمة"
+  }
+ ],
+ "thumb": {
+  "text": "الكاذب\n[y]انكشف[/y]!",
+  "focus": [
+   560,
+   1300,
+   1.2
+  ]
+ }
+}
