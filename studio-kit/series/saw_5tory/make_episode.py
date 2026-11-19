@@ -63,13 +63,20 @@ def schedule(ep, durs):
 
 # ------------------------------------------------------------------ html
 def room_svg(ep):
-    r = ep["room"]; parts = [props.room_shell(r.get("wall", "#0c1628"), r.get("wall2", "#1a2a44"), r.get("floor_y", 1380))]
+    r = ep["room"]; pre = props.PRESETS.get(r.get("preset", "none"), props.PRESETS["none"]); fy = r.get("floor_y", 1380)
+    parts = [props.room_shell(r.get("wall", pre["wall"]), r.get("wall2", pre["wall2"]), fy), props.wall_pattern(r.get("pattern", pre["pattern"]), fy)]
+    furn = [] if r.get("no_furniture") else pre["furniture"]
+    for kind, kw in furn:
+        if kind != "blinds": parts.append(props.PROPS[kind](**kw))
     for o in r["objects"]:
         o = dict(o); kind = o.pop("type")
         if kind == "person": o["id_"] = o.pop("id", "p1")
         if kind == "door" and "open" in o: o["open_"] = o.pop("open")
         o.pop("note", None)
         parts.append(props.PROPS[kind](**o))
+    for kind, kw in furn:
+        if kind == "blinds" and any(o["type"] == "window" for o in r["objects"]):
+            w = [o for o in r["objects"] if o["type"] == "window"][0]; parts.append(props.blinds(w.get("x", 640), w.get("y", 300)))
     parts.append(props.shade())
     svg = "".join(parts)
     tags = re.findall(r'<g id="tag_[^"]+" opacity="0">.*?</g>', svg)  # name tags always on top
@@ -88,13 +95,15 @@ def build_html(ep, sch, P):
     js.append('const tl=gsap.timeline({paused:true});')
     js.append('const cam=(x,y,s,t,d,e)=>tl.to("#cam",{x:540-x*s,y:960-y*s,scale:s,duration:d,ease:e||"power2.inOut",transformOrigin:"0px 0px"},t);')
     # scene visibility
-    first = beats[0]["scene"]
-    js.append(f'tl.set("#HOST",{{opacity:{1 if first=="host" else 0}}},0);tl.set("#ROOM",{{opacity:{0 if first=="host" else 1}}},0);')
+    CONT = dict(host="HOST", room="ROOM", cards="CARDS", talk="TALK", board="BOARD", title="TITLE")
+    show = lambda sc, t: "".join(f'tl.set("#{c}",{{opacity:{1 if k==sc else 0}}},{t:.2f});' for k, c in CONT.items())
+    js.insert(0, "".join(f'gsap.set("#{c}",{{opacity:{1 if k==beats[0]["scene"] else 0}}});' for k, c in CONT.items()))
+    js.append(show(beats[0]["scene"], 0))
     for i in range(1, len(beats)):
         if beats[i]["scene"] != beats[i-1]["scene"]:
             t = sch[i][0] - 0.3
-            js.append(f'tl.to("#dip",{{opacity:1,duration:.18,ease:"power2.in"}},{t-0.2:.2f});tl.set("#HOST",{{opacity:{1 if beats[i]["scene"]=="host" else 0}}},{t:.2f});'
-                      f'tl.set("#ROOM",{{opacity:{0 if beats[i]["scene"]=="host" else 1}}},{t:.2f});tl.to("#dip",{{opacity:0,duration:.3}},{t+0.02:.2f});')
+            js.append(f'tl.to("#dip",{{opacity:1,duration:.18,ease:"power2.in"}},{t-0.2:.2f});' + show(beats[i]["scene"], t) + f'tl.to("#dip",{{opacity:0,duration:.3}},{t+0.02:.2f});')
+    extra = build_extra(ep, sch, js, caps)
     # ambience (whole film)
     js.append(f'if(document.querySelector("#rain"))tl.fromTo("#rain",{{y:0}},{{y:{2*520/2},duration:.6,ease:"none",repeat:{int(D/0.6)}}},0);')
     js.append(f'if(document.querySelector("#steam"))tl.fromTo("#steam",{{y:0,opacity:.7}},{{y:-14,opacity:.3,duration:1.2,ease:"sine.inOut",yoyo:true,repeat:{int(D/1.2)}}},0);')
@@ -115,7 +124,7 @@ def build_html(ep, sch, P):
         s, e, w = sch[i]
         cid = f"cap{i}"
         if b.get("caption"):
-            pos = b.get("caption_pos", "bottom" if b["scene"] == "host" else "top")
+            pos = b.get("caption_pos", "bottom" if b["scene"] == "host" else ("low" if b.get("tags") else "top"))
             top = {"top": 120, "bottom": 1500, "low": 1620}[pos]
             fs = b.get("caption_size", 100 if b["scene"] == "host" else 92)
             caps.append(f'<div id="{cid}" class="cap" style="top:{top}px;font-size:{fs}px">{markup(b["caption"])}</div>')
@@ -133,7 +142,10 @@ def build_html(ep, sch, P):
             else:
                 js.append(f'tl.to("#rarm",{{rotation:-14,duration:.3,ease:"sine.inOut",yoyo:true,repeat:5,svgOrigin:"706 712"}},{s+0.4:.2f});')
             js.append(f'tl.to("#eyes",{{opacity:.15,duration:.06,yoyo:true,repeat:3}},{e-0.4:.2f});')
-        else:
+            if b.get("timer"):
+                caps.append(f'<svg id="tm{i}" class="timer" width="260" height="260" viewBox="-130 -130 260 260"><circle r="100" fill="#020309cc" stroke="#ffffff22" stroke-width="16"/><circle id="tmr{i}" r="100" fill="none" stroke="#ff3b3b" stroke-width="16" stroke-dasharray="629" stroke-dashoffset="629" transform="rotate(-90)" stroke-linecap="round"/><text y="22" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="64" fill="#fff">فكّر</text></svg>')
+                js.append(f'tl.fromTo("#tm{i}",{{opacity:0,scale:.6}},{{opacity:1,scale:1,duration:.3,ease:"back.out(2)"}},{e+0.1:.2f});tl.to("#tmr{i}",{{strokeDashoffset:0,duration:{max(1.0,w-e-0.6):.2f},ease:"none"}},{e+0.3:.2f});tl.to("#tm{i}",{{opacity:0,duration:.2}},{w-0.2:.2f});')
+        elif b["scene"] == "room":
             if b.get("cam"):
                 x, y, sc = b["cam"]; x, y = clamp(x, y, sc * 1.07)
                 js.append(f'cam({x},{y},{sc},{s-0.15:.2f},.7);cam({x},{y},{sc*1.07:.3f},{s+0.55:.2f},{max(0.5,w-s-0.7):.2f},"none");')
@@ -179,15 +191,104 @@ html,body{{margin:0;background:#020309}}#root{{position:relative;width:1080px;he
 .stamp span{{display:inline-block;border:14px solid #ff3b3b;padding:0 40px 20px;border-radius:24px;background:#02030988}}
 .reveal{{position:absolute;left:40px;right:40px;top:1480px;text-align:center;font-weight:900;font-size:110px;color:#ffd21f;-webkit-text-stroke:9px #020309;paint-order:stroke fill;opacity:0}}
 #dip{{background:#000;opacity:0}}
+.timer{{position:absolute;left:50px;top:110px;opacity:0}}
+.bub{{position:absolute;width:820px;padding:18px 34px 26px;border-radius:34px;font-weight:800;font-size:54px;line-height:1.35;opacity:0;box-shadow:0 14px 40px #000a}}
+.bub b{{display:block;font-size:34px;font-weight:900;margin-bottom:4px}}
+.bub.d{{right:60px;background:#13284d;color:#fff;border:4px solid #7cc6ff}}.bub.d b{{color:#7cc6ff}}
+.bub.s{{left:60px;background:#f3efe6;color:#111;border:4px solid #ffd21f}}.bub.s b{{color:#9a5a00}}
+.note::before{{content:"";position:absolute;top:-14px;left:50%;width:28px;height:28px;margin-left:-14px;border-radius:50%;background:#c4262e;box-shadow:0 4px 8px #000}}
+.note{{position:absolute;width:640px;padding:22px 30px 28px;background:#f4efe2;color:#111;font-weight:800;font-size:48px;line-height:1.3;box-shadow:0 16px 40px #000c;opacity:0}}
+.note .tm{{display:block;font-size:64px;font-weight:900;color:#c4262e;direction:ltr;text-align:right}}
+.note.mk{{outline:10px solid #ff3b3b;outline-offset:8px}}
+.cnum{{position:absolute;width:110px;height:110px;border-radius:50%;background:#ffd21f;color:#111;font-weight:900;font-size:72px;text-align:center;line-height:104px;box-shadow:0 8px 24px #000}}
+.clab{{position:absolute;left:0;right:0;text-align:center;font-weight:900;font-size:50px;color:#fff;-webkit-text-stroke:6px #020309;paint-order:stroke fill}}
+.case{{position:absolute;left:0;right:0;text-align:center;font-weight:900;color:#fff}}
 </style><script src="gsap.min.js"></script></head><body>
 <div id="root" data-composition-id="ep" data-start="0" data-duration="{D}" data-width="1080" data-height="1920">
- <div id="ROOM" class="clip" data-start="0" data-duration="{D}" data-track-index="1"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{H["defs"]}<g id="cam">{room}{rings}</g></svg><div class="shade"></div></div>
+ <div id="ROOM" class="clip" data-start="0" data-duration="{D}" data-track-index="1"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{H["defs"]}<g id="cam"><g id="roomart">{room}</g>{rings}</g></svg><div class="shade"></div></div>
  <div id="HOST" class="clip" data-start="0" data-duration="{D}" data-track-index="2"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{H["defs"]}{H["bg"]}{pup}</svg></div>
- <div id="CAPS" class="clip" data-start="0" data-duration="{D}" data-track-index="3">{"".join(caps)}</div>
- <div id="dip" class="clip" data-start="0" data-duration="{D}" data-track-index="4"></div>
+ {extra}
+ <div id="CAPS" class="clip" data-start="0" data-duration="{D}" data-track-index="7">{"".join(caps)}</div>
+ <div id="dip" class="clip" data-start="0" data-duration="{D}" data-track-index="8"></div>
 </div>
 <script>{"".join(js)}</script></body></html>'''
     open(os.path.join(P, "index.html"), "w").write(html)
+
+def build_extra(ep, sch, js, caps):
+    """cards / talk / board / title scenes. Returns their container html."""
+    beats = ep["beats"]; D = ep.get("duration", 50); out = []
+    persons = {o.get("id", "p1"): o for o in ep["room"]["objects"] if o["type"] == "person"}
+    # ---- CARDS: crops of the room (live, via <use>) numbered 1..3
+    cards_html = []
+    for i, b in enumerate(beats):
+        if b["scene"] != "cards": continue
+        s, e, w = sch[i]; cs = b["cards"]; n = len(cs)
+        H_ = 440 if n == 3 else 560; tops = [330, 820, 1310] if n == 3 else [380, 1040]
+        g = ""
+        for k, (x, y, sc, lab) in enumerate(cs):
+            vw, vh = 860 / sc, H_ / sc
+            g += (f'<g id="cd{i}_{k}" opacity="0"><rect x="100" y="{tops[k]-10}" width="880" height="{H_+20}" rx="18" fill="#f4efe2"/>'
+                  f'<svg x="110" y="{tops[k]}" width="860" height="{H_}" viewBox="{x-vw/2:.1f} {y-vh/2:.1f} {vw:.1f} {vh:.1f}"><use href="#roomart"/></svg>'
+                  f'<rect id="cdx{i}_{k}" x="100" y="{tops[k]-10}" width="880" height="{H_+20}" rx="18" fill="none" stroke="#ff3b3b" stroke-width="14" opacity="0"/>'
+                  f'<rect x="110" y="{tops[k]+H_-80}" width="860" height="80" fill="#020309" opacity=".7"/>'
+                  f'<text x="540" y="{tops[k]+H_-24}" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="48" fill="#fff" direction="rtl">{lab}</text>'
+                  f'<circle cx="920" cy="{tops[k]+40}" r="56" fill="#ffd21f" stroke="#020309" stroke-width="6"/><text x="920" y="{tops[k]+66}" text-anchor="middle" font-family="Cairo" font-weight="900" font-size="72" fill="#111">{k+1}</text></g>')
+            js.append(f'tl.fromTo("#cd{i}_{k}",{{opacity:0,y:60}},{{opacity:1,y:0,duration:.35,ease:"back.out(1.6)"}},{s+0.2+k*0.55:.2f});tl.to("#cd{i}_{k}",{{opacity:0,duration:.2}},{w-0.2:.2f});')
+            if b.get("pick") is not None:
+                if k == b["pick"]: js.append(f'tl.to("#cdx{i}_{k}",{{opacity:1,duration:.2}},{s+1.6:.2f});tl.to("#cdx{i}_{k}",{{opacity:.2,duration:.2,yoyo:true,repeat:3}},{s+1.9:.2f});')
+                else: js.append(f'tl.to("#cd{i}_{k}",{{opacity:.28,duration:.3}},{s+1.6:.2f});')
+        cards_html.append(g)
+    out.append(f'<div id="CARDS" class="clip" data-start="0" data-duration="{D}" data-track-index="3" style="opacity:0;background:radial-gradient(ellipse at 50% 40%,#13284d,#020309 75%)"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{"".join(cards_html)}</svg></div>')
+    # ---- TALK: interrogation bubbles accumulate within a run of talk beats (max 4 on screen)
+    talk = []; slot = 0; run_end = None
+    for i, b in enumerate(beats):
+        if b["scene"] != "talk": slot = 0; continue
+        s, e, w = sch[i]
+        j = i
+        while j + 1 < len(beats) and beats[j+1]["scene"] == "talk": j += 1
+        run_end = sch[j][2]
+        if slot == 4:
+            js.append(f'tl.to("#TALK .bub",{{opacity:0,duration:.2}},{s-0.1:.2f});'); slot = 0
+        who, text = b["say"][0], b["say"][1]
+        side = "d" if who in ("detective", "المحقق") else "s"
+        name = "المحقق" if side == "d" else persons.get(who, {}).get("name", who)
+        top = 250 + slot * 330
+        talk.append(f'<div id="bb{i}" class="bub {side}" style="top:{top}px"><b>{name}</b>{markup(text)}</div>')
+        js.append(f'tl.fromTo("#bb{i}",{{opacity:0,y:40,scale:.9}},{{opacity:1,y:0,scale:1,duration:.3,ease:"back.out(1.8)"}},{s+0.05:.2f});tl.to("#bb{i}",{{opacity:0,duration:.25}},{run_end-0.25:.2f});')
+        slot += 1
+    out.append(f'<div id="TALK" class="clip" data-start="0" data-duration="{D}" data-track-index="4" style="opacity:0;background:radial-gradient(ellipse at 50% 0%,#3a3020 0%,#0a0c12 55%,#020309 100%)">'
+               '<svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920"><path d="M540,0 V120" stroke="#222" stroke-width="6"/><path d="M470,120 L610,120 L640,170 L440,170 Z" fill="#2a2a2a"/><polygon points="440,170 640,170 1000,1920 80,1920" fill="#ffe2a0" opacity=".08"/>'
+               '<rect x="0" y="1640" width="1080" height="280" fill="#1a120c"/><rect x="0" y="1630" width="1080" height="20" fill="#3a2a1a"/></svg>' + "".join(talk) + '</div>')
+    # ---- BOARD: timeline notes pinned on a dark board, string between them
+    bd = ep.get("board", {}); items = bd.get("items", []); notes = []; shown = 0
+    for k, (tm, txt) in enumerate(items):
+        top = 300 + k * 290; left = 80 if k % 2 == 0 else 360
+        notes.append(f'<div id="nt{k}" class="note" style="top:{top}px;left:{left}px;transform:rotate({-2 if k%2==0 else 2}deg)"><span class="tm">{tm}</span>{markup(txt)}</div>')
+    for i, b in enumerate(beats):
+        if b["scene"] != "board": continue
+        s, e, w = sch[i]; upto = min(b.get("show", len(items)), len(items))
+        new = list(range(shown, upto)); step = max(0.6, (e - s) / max(1, len(new)))
+        for n_, k in enumerate(new): js.append(f'tl.fromTo("#nt{k}",{{opacity:0,scale:1.25}},{{opacity:1,scale:1,duration:.3,ease:"power3.out"}},{s+0.1+n_*step:.2f});')
+        shown = max(shown, upto)
+        if b.get("mark") is not None:
+            js.append(f'tl.set("#nt{b["mark"]}",{{className:"note mk"}},{s+0.8:.2f});tl.fromTo("#nt{b["mark"]}",{{scale:1}},{{scale:1.06,duration:.25,yoyo:true,repeat:3}},{s+0.8:.2f});')
+    pins = "".join(f'<circle cx="{(80 if k%2==0 else 360)+320}" cy="{300+k*290+6}" r="14" fill="#c4262e"/>' for k in range(len(items)))
+    string = "M" + " L".join(f'{(80 if k%2==0 else 360)+320},{300+k*290+6}' for k in range(len(items))) if items else ""
+    out.append(f'<div id="BOARD" class="clip" data-start="0" data-duration="{D}" data-track-index="5" style="opacity:0;background:#2a1e14">'
+               f'<svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920"><g opacity=".18" fill="#000">' + "".join(f'<circle cx="{(k*97)%1080}" cy="{(k*233)%1920}" r="5"/>' for k in range(260)) + '</g>'
+               + '</svg>'
+               + f'<div class="case" style="top:110px;font-size:80px;-webkit-text-stroke:6px #020309;paint-order:stroke fill">{markup(bd.get("title",""))}</div>' + "".join(notes) + '</div>')
+    # ---- TITLE: case card
+    tt = []
+    for i, b in enumerate(beats):
+        if b["scene"] != "title": continue
+        s, e, w = sch[i]
+        tt.append(f'<div id="tc{i}" style="opacity:0"><div class="case" style="top:660px;font-size:70px;color:#ff3b3b;letter-spacing:4px">القضية {b.get("case","")}</div>'
+                  f'<div class="case" style="top:770px;font-size:150px;line-height:1.15;-webkit-text-stroke:8px #020309;paint-order:stroke fill">{markup(b.get("title", ep.get("title","")))}</div>'
+                  f'<div class="case" style="top:1180px;font-size:52px;color:#7cc6ff">{markup(b.get("subtitle","saw_5tory"))}</div></div>')
+        js.append(f'tl.fromTo("#tc{i}",{{opacity:0,scale:1.15}},{{opacity:1,scale:1,duration:.5,ease:"power3.out"}},{s:.2f});tl.to("#tc{i}",{{opacity:0,duration:.25}},{w-0.25:.2f});')
+    out.append(f'<div id="TITLE" class="clip" data-start="0" data-duration="{D}" data-track-index="6" style="opacity:0;background:radial-gradient(ellipse at 50% 45%,#1d2f5a,#020309 70%)">' + "".join(tt) + '</div>')
+    return "\n".join(out)
 
 # ------------------------------------------------------------------ sound
 def sound(ep, sch, P):
@@ -213,6 +314,13 @@ def sound(ep, sch, P):
             it += [{"file": "sfx/bell.wav", "at": round(t0 + k * step, 2), "gain": 0.05} for k in range(len(b["tour"]))]
         if b.get("ring"): it.append({"file": "sfx/riser.wav", "at": round(s, 2), "gain": 0.12})
         if b.get("reveal"): it.append({"file": "sfx/hit.wav", "at": round(s + 0.9, 2), "gain": 0.3})
+        if b["scene"] == "cards":
+            it += [{"file": "sfx/hit.wav", "at": round(s + 0.25 + k * 0.55, 2), "gain": 0.12} for k in range(len(b["cards"]))]
+            if b.get("pick") is not None: it += [{"file": "sfx/riser.wav", "at": round(s + 0.6, 2), "gain": 0.12}, {"file": "sfx/hit.wav", "at": round(s + 1.6, 2), "gain": 0.3}]
+        if b["scene"] == "talk": it.append({"file": "sfx/bell.wav", "at": round(s + 0.05, 2), "gain": 0.04})
+        if b["scene"] == "board": it.append({"file": "sfx/bell.wav", "at": round(s + 0.1, 2), "gain": 0.05})
+        if b["scene"] == "title": it += [{"file": "sfx/hit.wav", "at": round(s, 2), "gain": 0.3}, {"file": "sfx/riser.wav", "at": round(max(0, s - 0.2), 2), "gain": 0.1}]
+        if b.get("timer"): it.append({"file": "sfx/riser.wav", "at": round(e + 0.3, 2), "gain": 0.12})
     json.dump({"duration": D, "target_lufs": -14, "items": it}, open(os.path.join(P, "mix.json"), "w"))
     os.makedirs(os.path.join(P, "out"), exist_ok=True)
     sh([sys.executable, os.path.join(KIT, "scripts", "mix.py"), "mix.json", "out/mix.wav"], cwd=P, stdout=subprocess.DEVNULL)
