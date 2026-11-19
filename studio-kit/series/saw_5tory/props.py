@@ -421,3 +421,7 @@ PROPS = dict(window=window, clock=clock, digital_clock=digital_clock, calendar=c
 # people v3 (different face / body shapes, poses, accessories, ready cast) replaces the simple person above
 from people import person, SKINS, CAST  # noqa: E402
 PROPS["person"] = person
+
+# moving objects, animals, plants (things.py) — "dog" is replaced by the animated version
+import things  # noqa: E402
+PROPS.update(things.THINGS)

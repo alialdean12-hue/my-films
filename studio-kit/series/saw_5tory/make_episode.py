@@ -10,7 +10,7 @@ import json, os, re, shutil, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 KIT = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, HERE)
-import props, host, places
+import props, host, places, things
 
 GAP, SWITCH, LEAD, TAIL = 0.45, 0.35, 0.4, 2.0
 
@@ -81,6 +81,9 @@ def room_svg(ep):
     for kind, kw in furn:
         if kind == "blinds" and any(o["type"] == "window" for o in r["objects"]):
             w = [o for o in r["objects"] if o["type"] == "window"][0]; parts.append(props.blinds(w.get("x", 640), w.get("y", 300)))
+    for a in r.get("atmosphere", []):
+        a = {"kind": a} if isinstance(a, str) else a
+        parts.append(things.atmosphere(a["kind"], a.get("x", 540), a.get("y", 900)))
     parts.append(props.shade())
     svg = "".join(parts)
     tags = re.findall(r'<g id="tag_[^"]+" opacity="0">.*?</g>', svg)  # name tags always on top
@@ -110,6 +113,16 @@ def build_html(ep, sch, P):
     extra = build_extra(ep, sch, js, caps)
     # ambience (whole film)
     js.append(f'if(document.querySelector("#rain"))tl.fromTo("#rain",{{y:0}},{{y:{2*520/2},duration:.6,ease:"none",repeat:{int(D/0.6)}}},0);')
+    js.append("const DUR=" + str(D) + ";const Q=c=>Array.from(document.querySelectorAll(c));"
+              "Q('.a-spin').forEach(el=>{const o=el.dataset.o,t=360*(+el.dataset.s||1)*DUR;tl.fromTo(el,{attr:{transform:`rotate(0 ${o})`}},{attr:{transform:`rotate(${t} ${o})`},duration:DUR,ease:'none'},0);});"
+              "Q('.a-sway').forEach((el,i)=>{const o=el.dataset.o,a=+el.dataset.a||5,p=+el.dataset.p||2;tl.fromTo(el,{attr:{transform:`rotate(${-a} ${o})`}},{attr:{transform:`rotate(${a} ${o})`},duration:p/2,ease:'sine.inOut',yoyo:true,repeat:Math.ceil(DUR/(p/2))},0);});"
+              "Q('.a-bob').forEach(el=>{const d=+el.dataset.d||4,p=+el.dataset.p||1.5;tl.fromTo(el,{attr:{transform:'translate(0 0)'}},{attr:{transform:`translate(0 ${-d})`},duration:p/2,ease:'sine.inOut',yoyo:true,repeat:Math.ceil(DUR/(p/2))},0);});"
+              "Q('.a-drift').forEach(el=>{const a=+el.dataset.x0,b=+el.dataset.x1,p=+el.dataset.p||6;tl.fromTo(el,{attr:{transform:`translate(${a} 0)`}},{attr:{transform:`translate(${b} 0)`},duration:p,ease:'none',repeat:Math.ceil(DUR/p)},0);});"
+              "Q('.a-fall').forEach(el=>{const h=+el.dataset.h||600,p=+el.dataset.p||4;tl.fromTo(el,{attr:{transform:'translate(0 0)'},opacity:1},{attr:{transform:`translate(0 ${h})`},opacity:0,duration:p,ease:'none',repeat:Math.ceil(DUR/p)},0);});"
+              "Q('.a-blink').forEach((el,i)=>{const p=+el.dataset.p||3;for(let t=p*.6+i*.37;t<DUR;t+=p){tl.set(el,{opacity:0},t);tl.set(el,{opacity:1},t+.12);}});"
+              "Q('.a-flashA').forEach(el=>{for(let t=0;t<DUR;t+=.8){tl.set(el,{opacity:1},t);tl.set(el,{opacity:.15},t+.4);}});"
+              "Q('.a-flashB').forEach(el=>{for(let t=0;t<DUR;t+=.8){tl.set(el,{opacity:.15},t);tl.set(el,{opacity:1},t+.4);}});"
+              "Q('.a-flicker').forEach(el=>{tl.fromTo(el,{opacity:1},{opacity:.82,duration:.09,ease:'none',yoyo:true,repeat:Math.ceil(DUR/.09)},0);});")
     js.append(f'if(document.querySelector("#snow"))tl.fromTo("#snow",{{y:0}},{{y:520,duration:3,ease:"none",repeat:{int(D/3)}}},0);')
     js.append(f'if(document.querySelector("#steam"))tl.fromTo("#steam",{{y:0,opacity:.7}},{{y:-14,opacity:.3,duration:1.2,ease:"sine.inOut",yoyo:true,repeat:{int(D/1.2)}}},0);')
     js.append(f'if(document.querySelector("#smoke"))tl.fromTo("#smoke",{{y:0,opacity:.75}},{{y:-20,opacity:.3,duration:1.4,ease:"sine.inOut",yoyo:true,repeat:{int(D/1.4)}}},0);')
