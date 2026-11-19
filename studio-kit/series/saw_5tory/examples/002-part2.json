@@ -64,12 +64,9 @@
     "x": 320,
     "y": 1530,
     "name": "أبو فهد",
-    "age": "old",
-    "outfit": "thobe",
-    "hair_style": "shemagh",
-    "facial": "beard",
-    "skin": "tan",
-    "expression": "smug"
+    "cast": "sheikh",
+    "expression": "smug",
+    "accessories": []
    },
    {
     "type": "person",
@@ -77,12 +74,7 @@
     "x": 560,
     "y": 1540,
     "name": "ريم",
-    "gender": "f",
-    "hair_style": "long",
-    "hair": "#4a2416",
-    "outfit": "dress",
-    "coat": "#2f5a7a",
-    "skin": "light",
+    "cast": "artist_f",
     "expression": "nervous",
     "shoes": "wet",
     "note": "THE CLUE: wet shoes"
@@ -93,11 +85,8 @@
     "x": 790,
     "y": 1530,
     "name": "ماجد",
-    "outfit": "suit",
-    "facial": "mustache",
-    "hair_style": "short",
-    "skin": "brown",
-    "body": "heavy"
+    "cast": "businessman",
+    "pose": "pockets"
    }
   ]
  },

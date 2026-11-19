@@ -56,7 +56,7 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 - `talk`: interrogation bubbles, one per beat, they stay on screen for the whole run (max 4, then a fresh page): `"say": ["detective" | <person id>, "text with [r]..[/r]"]`.
 - `board`: timeline notes. Put `"board": {"title": "...", "items": [["9:00", "..."], ...]}` at the top level (max 4 items); each board beat has `"show": n` (notes visible by its end) and, in part 2, `"mark": index`.
 
-**People (`person`)**: vary them every case: `gender` m|f · `age` young|adult|old · `hair_style` short|spiky|long|bun|bald|hijab|shemagh|curly · `facial` beard|mustache|stubble · `outfit` coat|suit|thobe|uniform|sweater|dress|apron|hoodie · `coat` / `accent` colours · `skin` light|medium|tan|brown|dark · `body` normal|tall|short|heavy|thin · `expression` neutral|nervous|smug|scared|angry · `wet`, `shoes` wet|mud, `glasses`, `fog`. Put 2–3 people at x ≈ 320 / 560 / 790 (feet y 1530) or 1 person at x ≈ 490.
+**People (`person`)**: read `CHARACTERS.md` (24 ready characters with `"cast"`, plus thousands of combinations of face, eyes, nose, brows, hair, outfit, build, pose, expression and accessories; gallery in `CHARACTERS.jpg`). Put 2–3 people at x ≈ 320 / 560 / 790 (feet y 1530) or 1 person at x ≈ 490.
 
 **Rooms**: `"preset"`: living | office | hotel | kitchen | warehouse | shop (wall colours, wall pattern and furniture added automatically; `"no_furniture": true` to skip). Extra furniture props: `sofa rug desk bookshelf bed fridge counter painting crates safe lamp_stand blinds hanging_bulb shelf_items`.
 

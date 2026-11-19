@@ -417,3 +417,7 @@ PROPS = dict(window=window, clock=clock, digital_clock=digital_clock, calendar=c
              glass_shards=glass_shards, book=book, dog=dog, person=person,
              sofa=sofa, rug=rug, desk=desk, bookshelf=bookshelf, bed=bed, fridge=fridge, counter=counter, painting=painting,
              crates=crates, safe=safe, lamp_stand=lamp_stand, blinds=blinds, hanging_bulb=hanging_bulb, shelf_items=shelf_items)
+
+# people v3 (different face / body shapes, poses, accessories, ready cast) replaces the simple person above
+from people import person, SKINS, CAST  # noqa: E402
+PROPS["person"] = person

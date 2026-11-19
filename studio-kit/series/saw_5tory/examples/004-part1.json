@@ -33,13 +33,12 @@
     "x": 470,
     "y": 1530,
     "name": "سامر",
-    "outfit": "suit",
-    "coat": "#2a2a3a",
-    "accent": "#2f6bd8",
-    "hair_style": "short",
+    "cast": "businessman",
     "glasses": true,
-    "skin": "light",
-    "expression": "smug"
+    "expression": "smug",
+    "face": "long",
+    "hair_style": "receding",
+    "build": "slim"
    },
    {
     "type": "paper",

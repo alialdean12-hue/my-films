@@ -33,12 +33,9 @@
     "x": 520,
     "y": 1530,
     "name": "طارق",
-    "outfit": "hoodie",
-    "coat": "#2f3a5a",
-    "hair_style": "curly",
-    "skin": "medium",
+    "cast": "teen_gamer",
     "expression": "nervous",
-    "body": "thin"
+    "pose": "pockets"
    }
   ]
  },
