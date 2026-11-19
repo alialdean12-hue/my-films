@@ -60,6 +60,8 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 
 **Places**: read `PLACES.md`: 51 interior and exterior places (`"place": "bank"`, `"time"`, `"weather"`), each drawn with its own furniture and Arabic sign. Old `"preset"` rooms still work.
 
+**Things**: read `THINGS.md`: vehicles and moving objects, animals, plants (all animated automatically) and `"atmosphere"` overlays (fog, sandstorm, blackout, police lights…).
+
 ## Rules that keep it good
 - Part 1 never circles or names the decisive clue: the `tour` visits the clue AND the red herrings equally.
 - Part 2 opens by recalling the lie, shows the clue with `ring` + `reveal`, explains in 2 lines, dismisses the red herrings, ends with a question + «تابع للغز القادم».
