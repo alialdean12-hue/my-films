@@ -72,24 +72,73 @@ def schedule(ep, durs):
     return out, D
 
 # ------------------------------------------------------------------ items
-def item_svg(it, A, bid, k, bg_dark):
-    kind = it["type"]; iid = f"i{bid}_{k}"; x, y = it.get("x", 540), it.get("y", 960); tilt = it.get("tilt", rnd(bid * 31 + k) * 4)
-    boil = ' class="boil"' if it.get("boil", True) else ""
-    if kind == "cutout":
-        a = A[it["asset"]]; w0, h0 = a["size"]; hh = it.get("h", 800); ww = w0 * hh / h0
-        if "w" in it: ww = it["w"]; hh = h0 * ww / w0
-        return (f'<g transform="translate({x} {y})"><g id="{iid}" data-tilt="{tilt:.1f}" transform="translate(0 0) rotate({tilt:.1f}) scale(1 1)"><g{boil}><image href="{a["file"]}" x="{-ww/2:.0f}" y="{-hh/2:.0f}" width="{ww:.0f}" height="{hh:.0f}" filter="url(#shd)"/></g></g></g>')
-    if kind == "photo":
-        a = A[it["asset"]]; w0, h0 = a["size"]; ww = it.get("w", 760); hh = h0 * ww / w0
-        if "h" in it: hh = it["h"]
-        seed = bid * 13 + k
+import motions as M
+SIZES = {"hero": .62, "main": .45, "small": .32, "icon": .13}   # share of the frame width
+
+def fit(it, w0, h0, dflt_h):
+    if it.get("size") in SIZES:
+        ww = W * SIZES[it["size"]]; hh = h0 * ww / w0
+        if hh > 1150: hh = 1150; ww = w0 * hh / h0
+        return ww, hh
+    hh = it.get("h", dflt_h); ww = w0 * hh / h0
+    if "w" in it: ww = it["w"]; hh = h0 * ww / w0 if "h" not in it else it["h"]
+    return ww, hh
+
+def content(it, A, iid, seed):
+    """the drawn item around 0,0 -> (svg, w, h)."""
+    k = it["type"]
+    if k == "cutout":
+        a = A[it["asset"]]; ww, hh = fit(it, *a["size"], 800)
+        return f'<image href="{a["file"]}" x="{-ww/2:.0f}" y="{-hh/2:.0f}" width="{ww:.0f}" height="{hh:.0f}" filter="url(#shd)"/>', ww, hh
+    if k == "photo":
+        a = A[it["asset"]]; w0, h0 = a["size"]
+        ww = W * SIZES[it["size"]] if it.get("size") in SIZES else it.get("w", 760); hh = it.get("h", h0 * ww / w0)
         inner, outer = torn(ww, hh, seed, 8), torn(ww + 40, hh + 40, seed + 7, 12)
-        tape = ""
-        if it.get("tape", True):
-            tape = "".join(f'<rect x="{cx-70}" y="{-hh/2-36}" width="140" height="46" fill="#f4e8b0" fill-opacity=".8" transform="rotate({r} {cx} {-hh/2-13})"/>' for cx, r in ((-ww/2+60, -18), (ww/2-60, 14)))
-        return (f'<g transform="translate({x} {y})"><g id="{iid}" data-tilt="{tilt:.1f}" transform="translate(0 0) rotate({tilt:.1f}) scale(1 1)"><g{boil}><path d="{outer}" fill="#fbf8f0" filter="url(#shd)"/>'
-                f'<clipPath id="c{iid}"><path d="{inner}"/></clipPath><image href="{a["file"]}" x="{-ww/2:.0f}" y="{-hh/2:.0f}" width="{ww:.0f}" height="{hh:.0f}" preserveAspectRatio="xMidYMid slice" clip-path="url(#c{iid})"/>'
-                f'<path d="{inner}" fill="url(#ht)"/>{tape}</g></g></g>')
+        tp = M.tape(ww, hh, seed) if it.get("tape", True) else ""
+        return (f'<path d="{outer}" fill="#fbf8f0" filter="url(#shd)"/><clipPath id="ph{iid}"><path d="{inner}"/></clipPath>'
+                f'<image href="{a["file"]}" x="{-ww/2:.0f}" y="{-hh/2:.0f}" width="{ww:.0f}" height="{hh:.0f}" preserveAspectRatio="xMidYMid slice" clip-path="url(#ph{iid})"/><path d="{inner}" fill="url(#ht)"/>{tp}'), ww, hh
+    if k == "montage":   # 73 fast cuts between photos
+        ww = W * SIZES.get(it.get("size", "main"), .45) if "w" not in it else it["w"]; hh = it.get("h", ww * 1.25)
+        imgs = "".join(f'<image class="mt" href="{A[n]["file"]}" x="{-ww/2:.0f}" y="{-hh/2:.0f}" width="{ww:.0f}" height="{hh:.0f}" preserveAspectRatio="xMidYMid slice" opacity="{1 if j==0 else 0}"/>' for j, n in enumerate(it["assets"]))
+        return f'<rect x="{-ww/2-18:.0f}" y="{-hh/2-18:.0f}" width="{ww+36:.0f}" height="{hh+36:.0f}" fill="#fbf8f0" filter="url(#shd)"/>{imgs}', ww, hh
+    if k == "pin":
+        return M.pin_svg() + '<path d="M0,22 V64" stroke="#111" stroke-width="5"/>', 44, 44
+    return "", 0, 0
+
+def item_svg(it, A, bid, k, bg_dark, s, js):
+    """svg item: translate(x y) > #iid (enter/exit) > #iidL (loop) > effect(content). appends its js."""
+    kind = it["type"]; iid = f"i{bid}_{k}"; x, y = it.get("x", 540), it.get("y", 960); seed = bid * 13 + k
+    at = s + it.get("at", 0.15 + 0.4 * k)
+    if kind in ("circle", "arrow", "underline"):   # 52 53 54 hand-drawn marks (absolute coords)
+        js.append(f'tl.to("#{iid} .draw",{{strokeDashoffset:0,duration:.55,ease:"power2.inOut",stagger:.08}},{at:.2f});')
+        if kind == "arrow": js.append(f'tl.to("#{iid} .head",{{opacity:1,duration:.1}},{at+0.5:.2f});')
+        return old_mark(it, iid, x, y, bg_dark)
+    if kind in ("map", "timeline", "chart", "clock", "calendar", "check", "cross", "strike", "string"):
+        body, ij, w, h = M.info_item(it, iid, at, seed); js += ij
+        tilt = it.get("tilt", 0)
+    else:
+        body, w, h = content(it, A, iid, seed); tilt = it.get("tilt", rnd(bid * 31 + k) * 4 if kind != "pin" else 0)
+        if kind == "montage":
+            n = len(it["assets"]); per = it.get("every", .3)
+            js.append(f'for(let t={at+.3:.2f},j=1;t<{s+it.get("until",6):.2f};t+={per},j++){{const q=j%{n};tl.set("#{iid} .mt",{{opacity:0}},t);tl.set(document.querySelectorAll("#{iid} .mt")[q],{{opacity:1}},t);}}')
+    if it.get("effect"):
+        body, ej = M.effect(it["effect"], iid, body, w, h, s + it.get("effect_at", it.get("at", .15 + .4 * k) + 1.0), it.get("fx", {}), seed); js += ej
+    en = it.get("enter", "pop" if kind == "cutout" else "drop")
+    extra = ""
+    if en == "pin":   # 22 dropped, then a pin is pushed in
+        extra = f'<g id="P{iid}" transform="translate(0 {-h/2+20:.0f}) scale(0)">{M.pin_svg()}</g>'
+        js.append(f'tl.to("#P{iid}",{{attr:{{transform:"translate(0 {-h/2+20:.0f}) scale(1)"}},duration:.25,ease:"back.out(3)"}},{at+.5:.2f});'); en = "drop"
+    if en == "tape":  # 21 laid down, tape slapped on
+        js.append(f'tl.fromTo("#{iid} .tp",{{opacity:0}},{{opacity:1,duration:.08,stagger:.18}},{at+.4:.2f});'); en = "pop"
+    js += M.enter(en, f"#{iid}", at, tilt, it)
+    if it.get("loop"):
+        js += M.loop(it["loop"], f"#{iid}L", at + .9, s + it.get("until", 8), seed, it)
+    if it.get("exit"):
+        js += M.exit_(it["exit"], f"#{iid}", s + it["exit_at"], tilt)
+    return (f'<g transform="translate({x} {y})"><g id="{iid}" transform="{M.T(0,0,tilt)}"><g id="{iid}L" transform="{M.T()}">{body}</g>{extra}</g></g>')
+
+def old_mark(it, iid, x, y, bg_dark):
+    kind = it["type"]
     if kind == "circle":
         r = it.get("r", 150); rx, ry = r * it.get("sx", 1.15), r
         p1 = f"M{x+rx},{y} A{rx},{ry} 0 1,1 {x+rx-1},{y-6}"; p2 = f"M{x+rx-10},{y+12} A{rx+8},{ry-6} 0 1,1 {x+rx},{y-14}"
@@ -101,90 +150,86 @@ def item_svg(it, A, bid, k, bg_dark):
         hx1, hy1 = x2 - 46 * math.cos(ang - 0.45), y2 - 46 * math.sin(ang - 0.45); hx2, hy2 = x2 - 46 * math.cos(ang + 0.45), y2 - 46 * math.sin(ang + 0.45)
         col = it.get("color", "#111" if not bg_dark else "#fbf8f0")
         return f'<g id="{iid}"><path class="draw" d="M{x1},{y1} Q{cx_:.0f},{cy_:.0f} {x2},{y2}" fill="none" stroke="{col}" stroke-width="10" stroke-linecap="round" stroke-dasharray="{L}" stroke-dashoffset="{L}"/><path class="head" d="M{hx1:.0f},{hy1:.0f} L{x2},{y2} L{hx2:.0f},{hy2:.0f}" fill="none" stroke="{col}" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0"/></g>'
-    if kind == "underline":
-        w = it.get("w", 400); pts = " ".join(f"{x-w/2+j*w/12:.0f},{y+(8 if j%2 else -8)}" for j in range(13))
-        return f'<g id="{iid}"><polyline class="draw" points="{pts}" fill="none" stroke="{it.get("color", "#e5322d")}" stroke-width="9" stroke-linecap="round" stroke-dasharray="{w*1.6:.0f}" stroke-dashoffset="{w*1.6:.0f}"/></g>'
-    if kind == "pin":
-        return f'<g transform="translate({x} {y})"><g id="{iid}" data-tilt="0" transform="translate(0 0) rotate(0) scale(1 1)"><circle r="26" fill="#e5322d" stroke="#111" stroke-width="4"/><circle cx="-8" cy="-8" r="7" fill="#fff" opacity=".6"/><path d="M0,26 V70" stroke="#111" stroke-width="5"/></g></g>'
-    return ""
+    w = it.get("w", 400); pts = " ".join(f"{x-w/2+j*w/12:.0f},{y+(8 if j%2 else -8)}" for j in range(13))
+    return f'<g id="{iid}"><polyline class="draw" points="{pts}" fill="none" stroke="{it.get("color", "#e5322d")}" stroke-width="9" stroke-linecap="round" stroke-dasharray="{w*1.6:.0f}" stroke-dashoffset="{w*1.6:.0f}"/></g>'
 
-def item_html(it, bid, k, bg_dark):
-    """text items are HTML (crisp Arabic, marker spans)."""
+def item_html(it, bid, k, bg_dark, s, js):
+    """text items are HTML (crisp Arabic). enter: pop | slam (11 stamp) | type (67 typewriter) | stick (59 sticky note) | slide."""
     iid = f"i{bid}_{k}"; x, y = it.get("x", 540), it.get("y", 300); st = it.get("style", "big"); size = it.get("size", 104)
-    fg = "#fbf8f0" if bg_dark else "#151515"
+    at = s + it.get("at", 0.15 + 0.4 * k); fg = "#fbf8f0" if bg_dark else "#151515"
+    en = it.get("enter", {"stamp": "slam", "note": "stick"}.get(st, "pop"))
+    txt = markup(it["text"])
+    if en == "type":
+        parts = re.split(r"(<[^>]+>)", txt); out = []
+        for p_ in parts:
+            out.append(p_ if p_.startswith("<") else re.sub(r"(\S+)", r'<span class="wd" style="opacity:0">\1</span>', p_))
+        txt = "".join(out)
     css = f"position:absolute;left:{x-470}px;width:940px;top:{y-size}px;text-align:center;font-weight:900;font-size:{size}px;line-height:1.25;opacity:0;"
-    if st == "label":
-        return f'<div id="{iid}" style="{css}"><span style="background:#151515;color:#fbf8f0;padding:4px 28px 14px;box-shadow:8px 8px 0 #e5322d">{markup(it["text"])}</span></div>'
-    if st == "stamp":
-        return f'<div id="{iid}" style="{css}color:#e5322d;transform:rotate(-8deg)"><span style="border:12px solid #e5322d;padding:0 30px 14px;border-radius:14px">{markup(it["text"])}</span></div>'
-    if st == "note":
-        return f'<div id="{iid}" style="{css}"><span style="display:inline-block;background:#f7e27a;color:#151515;padding:26px 34px 34px;box-shadow:0 18px 30px #0006;transform:rotate(-3deg);font-size:{int(size*0.75)}px">{markup(it["text"])}</span></div>'
-    return f'<div id="{iid}" class="tx" style="{css}color:{fg}">{markup(it["text"])}</div>'
-
-def enter_js(sel, kind, tilt, at):
-    """entrance as an attribute tween (item drawn around 0,0 inside a translated parent)."""
-    T = lambda dx, dy, r, sx, sy: f"translate({dx} {dy}) rotate({r:.1f}) scale({sx} {sy})"
-    end = T(0, 0, tilt, 1, 1)
-    start, ease, d, op = {
-        "pop":   (T(0, 0, tilt - 12, 0.02, 0.02), "back.out(2.2)", .45, 1),
-        "drop":  (T(0, -380, tilt + 12, 1, 1), "back.out(1.4)", .55, 0),
-        "left":  (T(-900, 0, tilt, 1, 1), "power3.out", .5, 1),
-        "right": (T(900, 0, tilt, 1, 1), "power3.out", .5, 1),
-        "grow":  (T(0, 0, tilt, 1, 0.02), "power3.out", .45, 1),
-        "fade":  (end, "none", .4, 0),
-    }[kind]
-    return f'tl.fromTo("{sel}",{{attr:{{transform:"{start}"}},opacity:{op}}},{{attr:{{transform:"{end}"}},opacity:1,duration:{d},ease:"{ease}"}},{at:.2f});'
+    if st == "label":   body = f'<span style="background:#151515;color:#fbf8f0;padding:4px 28px 14px;box-shadow:8px 8px 0 #e5322d">{txt}</span>'; css += ""
+    elif st == "stamp": body = f'<span style="display:inline-block;border:12px solid #e5322d;padding:0 30px 14px;border-radius:14px;transform:rotate(-8deg)">{txt}</span>'; css += "color:#e5322d;"
+    elif st == "note":  body = f'<span style="display:inline-block;background:#f7e27a;color:#151515;padding:26px 34px 34px;box-shadow:0 18px 30px #0006;transform:rotate(-3deg);font-size:{int(size*0.75)}px">{txt}</span>'
+    elif st == "typed": body = f'<span style="display:inline-block;background:#fbf8f0;color:#151515;padding:18px 30px;font-family:monospace,Cairo;font-size:{int(size*.7)}px;box-shadow:0 12px 24px #0005">{txt}</span>'
+    else: body = txt; css += f"color:{fg};"
+    sel = f"#{iid}"
+    if en == "slam":
+        js.append(f'tl.fromTo("{sel}",{{opacity:0,scale:3.2}},{{opacity:1,scale:1,duration:.22,ease:"power4.in"}},{at:.2f});')
+        js += M.camera("shake", f"#K{bid}", None, at + .22)
+    elif en == "stick":
+        js.append(f'tl.fromTo("{sel}",{{opacity:0,rotation:-25,x:300,y:-200,scale:.6}},{{opacity:1,rotation:0,x:0,y:0,scale:1,duration:.5,ease:"back.out(1.6)"}},{at:.2f});')
+    elif en == "type":
+        js.append(f'tl.set("{sel}",{{opacity:1}},{at:.2f});tl.to("{sel} .wd",{{opacity:1,duration:.01,stagger:{it.get("speed",.16)}}},{at:.2f});')
+    elif en == "slide":
+        js.append(f'tl.fromTo("{sel}",{{opacity:0,x:-900}},{{opacity:1,x:0,duration:.45,ease:"power3.out"}},{at:.2f});')
+    else:
+        js.append(f'tl.fromTo("{sel}",{{opacity:0,y:40,scale:1.15}},{{opacity:1,y:0,scale:1,duration:.35,ease:"back.out(2)"}},{at:.2f});')
+    js.append(f'tl.fromTo("{sel} .mk",{{backgroundSize:"0% 42%"}},{{backgroundSize:"100% 42%",duration:.4,ease:"power2.out"}},{at+0.4:.2f});')   # 56 marker
+    if it.get("exit"): js.append(f'tl.to("{sel}",{{opacity:0,duration:.3}},{s+it["exit_at"]:.2f});')
+    return f'<div id="{iid}" style="{css}">{body}</div>'
 
 # ------------------------------------------------------------------ html
 def build(ep, A, sch, D, P):
-    beats = ep["beats"]; clips, js = [], ['const tl=gsap.timeline({paused:true});']
+    beats = ep["beats"]; clips, js = [], ['const tl=gsap.timeline({paused:true});']; overlays = []
     for i, b in enumerate(beats):
-        s, e, w = sch[i]; c0 = 0 if i == 0 else s - 0.15; c1 = w if i + 1 < len(beats) else D
+        s, e, w = sch[i]; c0 = 0 if i == 0 else s - 1.0; c1 = sch[i+1][0] + 0.5 if i + 1 < len(beats) else D
         bg = b.get("bg", ep.get("paper", "cream")); dark = bg in DARK_BG; col = PAPER.get(bg, bg)
         svg_items, html_items = [], []
         for k, it in enumerate(b.get("items", [])):
-            if it["type"] == "text": html_items.append(item_html(it, i, k, dark))
-            else: svg_items.append(item_svg(it, A, i, k, dark))
+            if it["type"] == "text": html_items.append(item_html(it, i, k, dark, s, js))
+            else: svg_items.append(item_svg(it, A, i, k, dark, s, js))
+        css = ""
+        if i > 0:
+            kind = b.get("transition", M.TRANSITIONS[(i - 1) % len(M.TRANSITIONS)])
+            css, tj, ov = M.transition(kind, f"#B{i}", f"#K{i-1}", s, col, *b.get("transition_at", [540, 900])); js += tj
+            if ov and ov.split('"')[1] not in "".join(overlays): overlays.append(ov)
         halftone = '<rect width="1080" height="1920" fill="url(#ht)"/>' if b.get("halftone", ep.get("halftone", True)) else ""
-        clips.append(f'<div id="B{i}" class="clip" data-start="{c0:.2f}" data-duration="{c1-c0:.2f}" data-track-index="{1 + i % 2}">'
+        clips.append(f'<div id="B{i}" class="clip" style="--paper:{col};{css}" data-start="{c0:.2f}" data-duration="{c1-c0:.2f}" data-track-index="{1 + i % 2}"><div id="K{i}" class="cam">'
                      f'<svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920"><rect width="1080" height="1920" fill="{col}"/><rect width="1080" height="1920" filter="url(#grain)" opacity="{".5" if dark else "1"}"/>{halftone}'
-                     f'<g id="cam{i}">{"".join(svg_items)}</g></svg>{"".join(html_items)}</div>')
+                     f'<g id="cam{i}">{"".join(svg_items)}</g></svg>{"".join(html_items)}</div></div>')
         js.append(f'tl.fromTo("#cam{i}",{{scale:1}},{{scale:{b.get("zoom", 1.06)},duration:{c1-c0:.2f},ease:"none",transformOrigin:"50% 50%"}},{c0:.2f});')
-        for k, it in enumerate(b.get("items", [])):
-            iid = f"#i{i}_{k}"; at = s + it.get("at", 0.15 + 0.4 * k)
-            if it["type"] in ("circle", "arrow", "underline"):
-                js.append(f'tl.to("{iid} .draw",{{strokeDashoffset:0,duration:.55,ease:"power2.inOut",stagger:.08}},{at:.2f});')
-                if it["type"] == "arrow": js.append(f'tl.to("{iid} .head",{{opacity:1,duration:.1}},{at+0.5:.2f});')
-                continue
-            if it["type"] == "text":
-                js.append(f'tl.fromTo("{iid}",{{opacity:0,y:40,scale:1.15}},{{opacity:1,y:0,scale:1,duration:.35,ease:"back.out(2)"}},{at:.2f});')
-                js.append(f'tl.fromTo("{iid} .mk",{{backgroundSize:"0% 42%"}},{{backgroundSize:"100% 42%",duration:.4,ease:"power2.out"}},{at+0.35:.2f});')
-                continue
-            tilt = float(re.search(r'data-tilt="([-0-9.]+)"', item_svg(it, A, i, k, dark)).group(1)) if it["type"] in ("cutout", "photo", "pin") else 0
-            js.append(enter_js(iid, it.get("enter", "pop" if it["type"] == "cutout" else "drop"), tilt, at))
-        if i > 0:  # paper-tear wipe in the colour of this scene
-            js.append(f'tl.fromTo("#wipe",{{x:1250}},{{x:-60,duration:.32,ease:"power2.in"}},{s-0.47:.2f});tl.set("#wipe path",{{attr:{{fill:"{col}"}}}},{s-0.47:.2f});tl.to("#wipe",{{x:-1400,duration:.34,ease:"power2.out"}},{s-0.13:.2f});')
-    # stop-motion boil: every 1/12 s each paper item shifts a hair
-    js.append(f'const DUR={D};let n=0;document.querySelectorAll(".boil").forEach((el,j)=>{{for(let t=0;t<DUR;t+=1/12){{n++;const a=Math.sin(n*12.9898+j)*43758.5453,f=a-Math.floor(a);'
-              f'tl.set(el,{{attr:{{transform:`translate(${{(f*4-2).toFixed(2)}} ${{((f*7%1)*4-2).toFixed(2)}}) rotate(${{((f*13%1)*1.4-.7).toFixed(2)}})`}}}},t);}}}});')
+        for cm in b.get("camera", []):   # 68-72
+            cm = {"kind": cm} if isinstance(cm, str) else cm
+            js += M.camera(cm["kind"], f"#K{i}", None, s + cm.get("at", .5), cm)
     js.append(f'tl.to({{}},{{duration:.01}},{D-0.01});window.__timelines=window.__timelines||{{}};window.__timelines["c"]=tl;')
-    wipe = torn(1300, 2100, 999, 30, 40)
+    wipe = torn(1300, 2100, 999, 30, 40); sheet = torn(1240, 2080, 555, 26, 40)
     html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{ep.get("title","collage")}</title><style>
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}}
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}}
 html,body{{margin:0;background:#111}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:"Cairo",sans-serif;direction:rtl}}
-.clip{{position:absolute;inset:0;overflow:hidden}}svg.full{{position:absolute;inset:0}}
+.clip{{position:absolute;inset:0;overflow:hidden}}.cam{{position:absolute;inset:0}}svg.full{{position:absolute;inset:0}}
 .mk{{background:linear-gradient(#ffd21f,#ffd21f) no-repeat 100% 88%/0% 42%;padding:0 8px;color:inherit}}.rd{{color:#e5322d}}
-.tx{{-webkit-text-stroke:0;}}
+#flash{{position:absolute;inset:0;background:#fff}}#spot{{position:absolute;inset:0;background:#000c;--sx:540px;--sy:900px;-webkit-mask-image:radial-gradient(circle 300px at var(--sx) var(--sy),transparent 92%,#000 100%);mask-image:radial-gradient(circle 300px at var(--sx) var(--sy),transparent 92%,#000 100%)}}
 </style><script src="gsap.min.js"></script></head><body>
 <div id="root" data-composition-id="c" data-start="0" data-duration="{D}" data-width="1080" data-height="1920">
 <svg width="0" height="0" style="position:absolute"><defs>
 <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="4"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .10"/></feComponentTransfer></filter>
 <pattern id="ht" width="12" height="12" patternUnits="userSpaceOnUse"><circle cx="6" cy="6" r="1.6" fill="#000" opacity=".09"/></pattern>
+<filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
+<linearGradient id="rollgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".1"/><stop offset=".5" stop-color="#fff" stop-opacity=".4"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></linearGradient>
 <filter id="shd" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="10" dy="16" stdDeviation="7" flood-opacity=".42"/></filter></defs></svg>
 {"".join(clips)}
-<div id="W" class="clip" data-start="0" data-duration="{D}" data-track-index="3"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920"><g id="wipe" transform="translate(1250 0)"><g transform="translate(650 960)"><path d="{wipe}" fill="#efe6d2" filter="url(#shd)"/></g></g></svg></div>
-</div><script>{"".join(js)}</script></body></html>'''
+<div id="W" class="clip" data-start="0" data-duration="{D}" data-track-index="3"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{"".join(overlays)}<g id="sheetfall" transform="translate(0 -2100) rotate(0 540 960)"><g transform="translate(540 960)"><path d="{sheet}" fill="#efe6d2" filter="url(#shd)"/></g></g><g id="wipe" transform="translate(1250 0)"><g transform="translate(650 960)"><path d="{wipe}" fill="#efe6d2" filter="url(#shd)"/></g></g></svg>
+<div id="spot" style="opacity:0"></div><div id="flash" style="opacity:0"></div></div>
+</div><script>gsap.set("#flash,#spot",{{opacity:0}});{"".join(js)}</script></body></html>'''
     open(os.path.join(P, "index.html"), "w").write(html)
 
 # ------------------------------------------------------------------ sound
@@ -193,6 +238,13 @@ def sound(ep, sch, D, P):
     sys.path.insert(0, os.path.join(KIT, "scripts")); import sfx_lib as S
     sd = os.path.join(P, "sfx"); os.makedirs(sd, exist_ok=True)
     S.save(os.path.join(sd, "whoosh.wav"), S.whoosh(0.35)); S.save(os.path.join(sd, "pop.wav"), S.hit(0.18)); S.save(os.path.join(sd, "scr.wav"), S.whoosh(0.5) * 0.5)
+    rng = np.random.default_rng(7); sr = 48000
+    def noise(d, lo, hi, gr=None):
+        n = rng.standard_normal(int(sr * d)); n = S.lp(n, lo) - S.lp(n, hi) if hi else S.lp(n, lo)
+        env = np.ones_like(n) if gr is None else (rng.random(len(n) // 400 + 1) > gr).repeat(400)[:len(n)] * 1.0
+        return S.norm(n * env * np.linspace(1, .2, len(n)), .6)
+    S.save(os.path.join(sd, "rip.wav"), noise(.45, .5, .05, .35)); S.save(os.path.join(sd, "crum.wav"), noise(.8, .4, .03, .6))
+    S.save(os.path.join(sd, "snip.wav"), noise(.12, .7, .2)); S.save(os.path.join(sd, "thud.wav"), S.hit(0.4))
     notes = [220.0, 261.63, 293.66, 329.63, 392.0]
     for n, f in enumerate(notes): S.save(os.path.join(sd, f"n{n}.wav"), S.pluck(f, 1.2))
     it = [{"file": f"voice/b{i}.wav", "at": sch[i][0]} for i in range(len(sch))]
@@ -204,8 +256,17 @@ def sound(ep, sch, D, P):
         if i: it.append({"file": "sfx/whoosh.wav", "at": round(s - 0.45, 2), "gain": 0.22})
         for k2, x in enumerate(b.get("items", [])):
             at = s + x.get("at", 0.15 + 0.4 * k2)
-            if x["type"] in ("cutout", "photo"): it.append({"file": "sfx/pop.wav", "at": round(at, 2), "gain": 0.16})
-            if x["type"] in ("circle", "arrow", "underline"): it.append({"file": "sfx/scr.wav", "at": round(at, 2), "gain": 0.1})
+            if x["type"] in ("circle", "arrow", "underline", "strike", "check", "cross", "string"): it.append({"file": "sfx/scr.wav", "at": round(at, 2), "gain": 0.1})
+            elif x.get("enter") in ("left", "right", "top", "bottom", "slide", "toss", "spin", "string"): it.append({"file": "sfx/whoosh.wav", "at": round(at, 2), "gain": 0.15})
+            elif x.get("enter") == "slam" or x.get("style") == "stamp": it.append({"file": "sfx/thud.wav", "at": round(at + .22, 2), "gain": 0.3})
+            elif x["type"] != "text": it.append({"file": "sfx/pop.wav", "at": round(at, 2), "gain": 0.16})
+            if x.get("effect"):
+                ea = s + x.get("effect_at", x.get("at", 0.15 + 0.4 * k2) + 1.0)
+                f = {"tear": "rip", "strip": "rip", "shred_out": "rip", "shatter": "rip", "hole": "rip", "shredder": "rip", "crumple": "crum", "uncrumple": "crum", "scissors": "snip"}.get(x["effect"], "scr")
+                it.append({"file": f"sfx/{f}.wav", "at": round(ea, 2), "gain": 0.22})
+        for cm in b.get("camera", []):
+            cm = {"kind": cm} if isinstance(cm, str) else cm
+            if cm["kind"] in ("flash", "shake", "snap_zoom"): it.append({"file": "sfx/thud.wav" if cm["kind"] != "flash" else "sfx/pop.wav", "at": round(s + cm.get("at", .5), 2), "gain": 0.25})
     json.dump({"duration": D, "target_lufs": -14, "items": it}, open(os.path.join(P, "mix.json"), "w"))
     os.makedirs(os.path.join(P, "out"), exist_ok=True)
     sh([sys.executable, os.path.join(KIT, "scripts", "mix.py"), "mix.json", "out/mix.wav"], cwd=P, stdout=subprocess.DEVNULL)
