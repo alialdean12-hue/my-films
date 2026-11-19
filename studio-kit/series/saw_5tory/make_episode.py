@@ -10,7 +10,7 @@ import json, os, re, shutil, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 KIT = os.path.abspath(os.path.join(HERE, "..", ".."))
 sys.path.insert(0, HERE)
-import props, host
+import props, host, places
 
 GAP, SWITCH, LEAD, TAIL = 0.45, 0.35, 0.4, 2.0
 
@@ -64,8 +64,12 @@ def schedule(ep, durs):
 # ------------------------------------------------------------------ html
 def room_svg(ep):
     r = ep["room"]; pre = props.PRESETS.get(r.get("preset", "none"), props.PRESETS["none"]); fy = r.get("floor_y", 1380)
-    parts = [props.room_shell(r.get("wall", pre["wall"]), r.get("wall2", pre["wall2"]), fy), props.wall_pattern(r.get("pattern", pre["pattern"]), fy)]
-    furn = [] if r.get("no_furniture") else pre["furniture"]
+    if r.get("place"):
+        bg, fy = places.place(r["place"], r.get("time", "night"), r.get("weather"))
+        parts = [bg]; furn = []
+    else:
+        parts = [props.room_shell(r.get("wall", pre["wall"]), r.get("wall2", pre["wall2"]), fy), props.wall_pattern(r.get("pattern", pre["pattern"]), fy)]
+        furn = [] if r.get("no_furniture") else pre["furniture"]
     for kind, kw in furn:
         if kind != "blinds": parts.append(props.PROPS[kind](**kw))
     for o in r["objects"]:
@@ -106,6 +110,7 @@ def build_html(ep, sch, P):
     extra = build_extra(ep, sch, js, caps)
     # ambience (whole film)
     js.append(f'if(document.querySelector("#rain"))tl.fromTo("#rain",{{y:0}},{{y:{2*520/2},duration:.6,ease:"none",repeat:{int(D/0.6)}}},0);')
+    js.append(f'if(document.querySelector("#snow"))tl.fromTo("#snow",{{y:0}},{{y:520,duration:3,ease:"none",repeat:{int(D/3)}}},0);')
     js.append(f'if(document.querySelector("#steam"))tl.fromTo("#steam",{{y:0,opacity:.7}},{{y:-14,opacity:.3,duration:1.2,ease:"sine.inOut",yoyo:true,repeat:{int(D/1.2)}}},0);')
     js.append(f'if(document.querySelector("#smoke"))tl.fromTo("#smoke",{{y:0,opacity:.75}},{{y:-20,opacity:.3,duration:1.4,ease:"sine.inOut",yoyo:true,repeat:{int(D/1.4)}}},0);')
     js.append(f'if(document.querySelector("#flame"))tl.fromTo("#flame",{{scaleY:1}},{{scaleY:.82,duration:.18,ease:"sine.inOut",yoyo:true,repeat:{int(D/0.18)},transformOrigin:"50% 100%"}},0);')

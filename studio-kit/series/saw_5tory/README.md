@@ -58,7 +58,7 @@ Frame is 1080×1920; floor starts at y 1380. Standard layout that always reads w
 
 **People (`person`)**: read `CHARACTERS.md` (24 ready characters with `"cast"`, plus thousands of combinations of face, eyes, nose, brows, hair, outfit, build, pose, expression and accessories; gallery in `CHARACTERS.jpg`). Put 2–3 people at x ≈ 320 / 560 / 790 (feet y 1530) or 1 person at x ≈ 490.
 
-**Rooms**: `"preset"`: living | office | hotel | kitchen | warehouse | shop (wall colours, wall pattern and furniture added automatically; `"no_furniture": true` to skip). Extra furniture props: `sofa rug desk bookshelf bed fridge counter painting crates safe lamp_stand blinds hanging_bulb shelf_items`.
+**Places**: read `PLACES.md`: 51 interior and exterior places (`"place": "bank"`, `"time"`, `"weather"`), each drawn with its own furniture and Arabic sign. Old `"preset"` rooms still work.
 
 ## Rules that keep it good
 - Part 1 never circles or names the decisive clue: the `tour` visits the clue AND the red herrings equally.
