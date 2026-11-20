@@ -1,30 +1,42 @@
 {
  "title": "الحوت الأزرق",
+ "character": "whale",
  "beats": [
   {
    "line": "هل تعلم؟ قلبُ الحوت الأزرق، بحجم سيارةٍ صغيرة!",
    "cap": "قلبه بحجم<br/><span style='color:#ffd21f'>سيارة</span>!",
-   "k": "car"
+   "k": "compare",
+   "a": [
+    "heart",
+    "القلب"
+   ],
+   "b": [
+    "car",
+    "سيارة"
+   ]
   },
   {
    "line": "ونبضُه يُسمَع من بعد ثلاثة كيلومترات تحت الماء.",
    "cap": "نبضه يُسمع<br/>من <span style='color:#ffd21f'>3 كم</span>",
-   "k": "beat"
+   "k": "rings"
   },
   {
    "line": "يأكل كلَّ يوم أربعة أطنان من حيواناتٍ صغيرةٍ اسمها الكريل.",
    "cap": "يأكل <span style='color:#ffd21f'>4 أطنان</span><br/>يوميًا",
-   "k": "eat"
+   "k": "swarm",
+   "icon": "dot"
   },
   {
    "line": "وصوته أعلى من محرّك طائرةٍ نفّاثة!",
    "cap": "أعلى من<br/><span style='color:#ffd21f'>طائرة</span>!",
-   "k": "loud"
+   "k": "flyby",
+   "icon": "plane"
   },
   {
    "line": "إنه أضخمُ حيوانٍ عاش على الأرض، أكبر حتى من الديناصورات.",
    "cap": "أضخم من<br/><span style='color:#ffd21f'>الديناصور</span>",
-   "k": "dino"
+   "k": "grow",
+   "icon": "dino"
   },
   {
    "line": "تابعنا لمعلومةٍ جديدة كلَّ يوم!",
