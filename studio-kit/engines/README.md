@@ -2,6 +2,16 @@
 
 One JSON → narrated vertical video (1080×1920) with voice (edge-tts), music bed, sound effects. Same quality as the approved samples.
 
+**First time on a machine:** `sh ~/my-films/studio-kit/scripts/doctor.sh` (checks and installs everything; must end with READY).
+**One command for every style:** `python3 ~/my-films/studio-kit/make.py <style 1-10> video.json ~/out/<name> [--preview]`.
+
+Every finished run gives: `video.mp4` (master), **`video_phone.mp4` (send this)**, `video_16x9.mp4` (YouTube horizontal), `video_1x1.mp4` (square), `cover.jpg` + `cover_check.jpg` (safe-area check), `CAPTION.md` (4 copy blocks: YouTube title, YouTube description, Instagram, TikTok).
+- **Quality check (automatic):** before rendering, every beat is checked; text outside the frame or too long stops the render and prints exactly which caption to fix (`--force` renders anyway, `"qa": false` turns it off).
+- **Music:** `"music"`: epic mystery calm sad happy tech kids horror news islamic suspense inspire none (default chosen per style), `"music_gain"` (default 0.16).
+- **Cover:** `"cover": {"text": "سؤال [y]مثير[/y]؟", "tag": "شرح", "beat": 1, "size": 136, "color": "#ffd21f"}`; the background is a clean frame of that beat.
+- **Caption doc:** `"caption_doc": {"title", "description", "question", "hashtags"}` (defaults come from the lines) and `"tags": ["كلمة", ...]`.
+- `"formats": false` skips the 16:9 and 1:1 files.
+
 ```sh
 cd ~/my-films/studio-kit/engines
 python3 <engine>.py examples/<engine>.json ~/out/<name> --preview   # look at sheet.jpg first

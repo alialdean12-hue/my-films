@@ -206,7 +206,7 @@ def gen_place(name, i):
     s = f'<linearGradient id="gp{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{t}"/><stop offset="1" stop-color="{b2}"/></linearGradient><rect width="1080" height="1920" fill="url(#gp{i})"/>'
     if not out: s += "".join(f'<rect x="{k*135}" y="0" width="68" height="{fy}" fill="#000" opacity=".025"/>' for k in range(8))
     s += f'<rect y="{fy}" width="1080" height="{1920-fy}" fill="{fl}" stroke="#151515" stroke-width="8"/>'
-    s += "".join(f'<g transform="translate({x} {y})">{icon(n, sc, "#151515")}</g>' for n, x, y, sc in ic)
+    s += "".join(f'<g transform="translate({x} {y})">{icon(n, min(sc * 1.6, 2.6), "#151515")}</g>' for n, x, y, sc in ic)
     s += "".join(F(k, x, fy if k != "window" else 900, sc, col) for k, x, sc, col in furn_)
     return s
 PLACES = ["elevator", "house", "kitchen", "street", "forest", "sea", "office", "car"] + list(GEN)
@@ -288,7 +288,7 @@ def scene(i, b, s, e, c0, c1):
         if f in ("shake", "open", "walk"): continue
         if f not in FX:
             fx_x, fx_y = b.get("fx_at") or (hx, hy)
-            over += f'<g class="fx{i}" transform="translate({fx_x} {fx_y})"><g>{icon(f, .55, "#151515")}</g></g>'; js += fx_js("pop", i, s, e); continue
+            over += f'<g class="fx{i}" transform="translate({fx_x} {fx_y})"><g>{icon(f, .8, "#151515")}</g></g>'; js += fx_js("pop", i, s, e); continue
         svg = FX[f](*(b.get("fx_at") or ((p0.get("x", 420), 1700) if f in ("fire", "smoke") else (hx, hy))), i)
         over += svg
         js += fx_js(f, i, s, e)
