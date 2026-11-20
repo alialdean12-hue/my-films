@@ -1,0 +1,79 @@
+import json, os, re, shutil, subprocess, sys, math
+KIT = "/home/user/my-films/studio-kit"
+sys.path.insert(0, KIT + "/scripts")
+
+def sh(c, **k): return subprocess.run(c, check=True, **k)
+def dur(p): return float(subprocess.check_output(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", p]))
+def R(seed):
+    x = math.sin(seed * 12.9898 + 78.233) * 43758.5453
+    return (x - math.floor(x)) * 2 - 1
+def mk(s, hl="#ffd21f"):
+    s = s.replace("\n", "<br/>")
+    s = re.sub(r"\[y\](.*?)\[/y\]", rf'<span style="color:{hl}">\1</span>', s)
+    return re.sub(r"\[r\](.*?)\[/r\]", r'<span style="color:#ff3b3b">\1</span>', s)
+
+FONT = '''@font-face{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}
+@font-face{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}'''
+
+def load():
+    if len(sys.argv) < 3: sys.exit("usage: python <engine>.py video.json OUTDIR [--preview]")
+    ep = json.load(open(sys.argv[1])); ep["_dir"] = os.path.dirname(os.path.abspath(sys.argv[1])); return ep
+
+def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="+0%", D=30.0, bed="pluck", extra_sfx=None, overlay="", pre_js=""):
+    """beats: list of dicts with 'line'. scene(i,b,s,e,c0,c1)->(html, js list). returns video path."""
+    OUT = os.path.abspath(sys.argv[2]); P = OUT + "/project"
+    ep = json.load(open(sys.argv[1])); voice = ep.get("voice", {}).get("name", voice); rate = ep.get("voice", {}).get("rate", rate); D = float(ep.get("duration", D))
+    os.makedirs(P + "/voice", exist_ok=True)
+    shutil.copy(KIT + "/styles/kinetic/gsap.min.js", P); shutil.copytree(KIT + "/styles/kinetic/fonts", P + "/fonts", dirs_exist_ok=True)
+    json.dump([{"id": f"b{i}", "text": b["line"]} for i, b in enumerate(beats)], open(P + "/lines.json", "w"), ensure_ascii=False)
+    if not all(os.path.exists(f"{P}/voice/b{i}.wav") for i in range(len(beats))):
+        sh([sys.executable, KIT + "/scripts/tts_edge.py", P + "/lines.json", P + "/voice", "--voice", voice, f"--rate={rate}"], stdout=subprocess.DEVNULL)
+    durs = [dur(f"{P}/voice/b{i}.wav") for i in range(len(beats))]
+    tot = sum(durs); gap = max(.3, (D - 0.6 - 1.0 - tot) / max(1, len(beats) - 1))
+    if tot + .3 * (len(beats) - 1) + 1.6 > D: D = round(tot + .3 * (len(beats) - 1) + 1.6, 2); gap = .3
+    sch, t = [], .5
+    for d in durs: sch.append((round(t, 2), round(t + d, 2))); t += d + gap
+    clips, js = [], ["const tl=gsap.timeline({paused:true});"]
+    for i, b in enumerate(beats):
+        s, e = sch[i]; c0 = 0 if i == 0 else s - .35; c1 = sch[i+1][0] + .1 if i + 1 < len(beats) else D
+        h, j = scene(i, b, s, e, c0, c1); js += j
+        clips.append(f'<div id="S{i}" class="clip" data-start="{c0:.2f}" data-duration="{c1-c0:.2f}" data-track-index="{1+i%2}">{h}</div>')
+    js.append(f'tl.to({{}},{{duration:.01}},{D-.01});window.__timelines=window.__timelines||{{}};window.__timelines["c"]=tl;')
+    html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{name}</title><style>{FONT}
+html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:{bg};font-family:"Cairo",sans-serif;direction:rtl}}
+.clip{{position:absolute;inset:0;overflow:hidden}}svg.full{{position:absolute;inset:0}}{css}</style><script src="gsap.min.js"></script></head><body>
+<div id="root" data-composition-id="c" data-start="0" data-duration="{D}" data-width="1080" data-height="1920">{"".join(clips)}{overlay}</div><script>{pre_js}{"".join(js)}</script></body></html>'''
+    open(P + "/index.html", "w").write(html)
+    lint = subprocess.run(["npx", "hyperframes", "lint"], cwd=P, capture_output=True, text=True).stdout
+    if "✗" in lint: print(lint); sys.exit("LINT")
+    times = ",".join(f"{min(sch[i+1][0]-.4 if i+1<len(sch) else D-.3, s+1.8):.1f}" for i, (s, e) in enumerate(sch))
+    shutil.rmtree(P + "/snaps", ignore_errors=True)
+    subprocess.run(["npx", "hyperframes", "snapshot", "--at", times, "--no-end", "-o", "snaps", "."], cwd=P, capture_output=True)
+    for f in os.listdir(P + "/snaps"):
+        if f.startswith("contact"): shutil.copy(P + "/snaps/" + f, OUT + "/sheet.jpg")
+    if "--preview" in sys.argv: print("sheet", OUT); return
+    import sfx_lib as S
+    sd = P + "/sfx"; os.makedirs(sd, exist_ok=True)
+    S.save(sd + "/whoosh.wav", S.whoosh(.35)); S.save(sd + "/hit.wav", S.hit(.3)); S.save(sd + "/bell.wav", S.bell(880, .8)); S.save(sd + "/riser.wav", S.riser(1.0))
+    it = [{"file": f"voice/b{i}.wav", "at": sch[i][0]} for i in range(len(beats))]
+    if bed == "pluck":
+        notes = [220.0, 261.63, 293.66, 329.63, 392.0]
+        for n, f in enumerate(notes): S.save(f"{sd}/n{n}.wav", S.pluck(f, 1.2))
+        t, k = .2, 0
+        while t < D - 1: it.append({"file": f"sfx/n{[0,2,4,2,1,3,4,3][k%8]}.wav", "at": round(t, 2), "gain": .07}); t += .5; k += 1
+    elif bed == "drone":
+        import numpy as np
+        sr = 48000; tt = np.arange(int(sr * D)) / sr
+        x = .5 * np.sin(2*np.pi*55*tt) + .3 * np.sin(2*np.pi*82.4*tt) + .2*np.sin(2*np.pi*110*tt*(1+.002*np.sin(tt)))
+        S.save(sd + "/bed.wav", S.norm(x * np.minimum(1, tt / 2) * np.minimum(1, (D - tt) / 2), .5)); it.append({"file": "sfx/bed.wav", "at": 0, "gain": .12})
+    elif bed == "beat":
+        t = .5
+        while t < D - .5: it.append({"file": "sfx/hit.wav", "at": round(t, 2), "gain": .14}); t += .5
+    for i in range(1, len(beats)): it.append({"file": "sfx/whoosh.wav", "at": round(sch[i][0] - .4, 2), "gain": .14})
+    for x in (extra_sfx(sch) if extra_sfx else []): it.append(x)
+    json.dump({"duration": D, "target_lufs": -14, "items": it}, open(P + "/mix.json", "w"))
+    os.makedirs(P + "/out", exist_ok=True)
+    sh([sys.executable, KIT + "/scripts/mix.py", "mix.json", "out/mix.wav"], cwd=P, stdout=subprocess.DEVNULL)
+    sh(["sh", KIT + "/scripts/render.sh", ".", "out/mix.wav", OUT + "/video.mp4", "30"], cwd=P, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    sh(["ffmpeg", "-y", "-loglevel", "error", "-i", OUT + "/video.mp4", "-vf", "scale=720:-2", "-c:v", "libx264", "-profile:v", "main", "-crf", "26", "-preset", "fast", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", OUT + "/video_phone.mp4"])
+    print("DONE", OUT + "/video.mp4", OUT + "/video_phone.mp4")
