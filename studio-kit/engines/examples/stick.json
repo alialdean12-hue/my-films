@@ -1,0 +1,47 @@
+{
+ "title": "المصعد",
+ "beats": [
+  {
+   "line": "ماذا تفعل لو علِقتَ في مصعد؟",
+   "cap": "ماذا تفعل لو<br/>علِقتَ في <span style='color:#e5322d'>مصعد</span>؟",
+   "pose": "panic",
+   "face": "fear",
+   "fx": "shake"
+  },
+  {
+   "line": "أولًا: لا تذعر. الهواء يكفيك، والمصعد لن يسقط.",
+   "cap": "<span class='n'>1</span><br/>لا تذعر",
+   "pose": "breathe",
+   "face": "calm",
+   "fx": "air"
+  },
+  {
+   "line": "ثانيًا: اضغط زر الطوارئ مع الجرس، واتصل بالرقم المكتوب.",
+   "cap": "<span class='n'>2</span><br/>زر الطوارئ",
+   "pose": "press",
+   "face": "ok",
+   "fx": "bell"
+  },
+  {
+   "line": "ثالثًا: لا تحاول فتح الباب بالقوة، ولا تخرج من السقف.",
+   "cap": "<span class='n'>3</span><br/>لا تفتح الباب",
+   "pose": "no",
+   "face": "fear",
+   "fx": "cross"
+  },
+  {
+   "line": "رابعًا: اجلس واحفظ طاقتك، فالمساعدة في الطريق.",
+   "cap": "<span class='n'>4</span><br/>اجلس وانتظر",
+   "pose": "sit",
+   "face": "calm",
+   "fx": "clock"
+  },
+  {
+   "line": "وعندما يُفتح الباب، اخرج بهدوء. شارك المعلومة مع من تحب.",
+   "cap": "خرجتَ <span style='color:#2f9a46'>بأمان</span>!",
+   "pose": "wave",
+   "face": "ok",
+   "fx": "open"
+  }
+ ]
+}
