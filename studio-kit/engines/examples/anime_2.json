@@ -1,0 +1,43 @@
+{
+ "title": "آخر قطار",
+ "sky": "sunset",
+ "character": {
+  "hair": "black",
+  "eyes": "blue",
+  "gender": "boy",
+  "shirt": "#3a2a1a"
+ },
+ "music": "inspire",
+ "beats": [
+  {
+   "line": "كان يركض كل يوم ليلحق آخر قطار.",
+   "k": "run",
+   "sub": "آخر قطار"
+  },
+  {
+   "line": "لكن اليوم، توقّف فجأة.",
+   "k": "closeup",
+   "emotion": "surprised",
+   "sky": "sunset",
+   "sub": "توقّف…"
+  },
+  {
+   "line": "رأى المدينة تحت الغروب لأول مرة.",
+   "k": "establish",
+   "sky": "sunset",
+   "sub": "لأول مرة"
+  },
+  {
+   "line": "فقرّر أن يمشي ببطء.",
+   "k": "back",
+   "sky": "dusk",
+   "sub": "ببطء"
+  },
+  {
+   "line": "أحيانًا، الحياة لا تحتاج أن نركض.",
+   "k": "title",
+   "sky": "dusk",
+   "title": "لا تركض"
+  }
+ ]
+}

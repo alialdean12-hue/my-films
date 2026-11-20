@@ -1,0 +1,42 @@
+{
+ "title": "اختفاء أميليا",
+ "grade": "cold",
+ "caption": "lower",
+ "music": "mystery",
+ "beats": [
+  {
+   "line": "في عام ألفٍ وتسعمئةٍ وسبعةٍ وثلاثين، أقلعت أميليا إيرهارت حول العالم.",
+   "query": "vintage airplane",
+   "cap": "رحلة حول العالم",
+   "date": "1937",
+   "overlay": "letterbox"
+  },
+  {
+   "line": "كانت أوّل امرأةٍ تعبر المحيط الأطلسي وحدها.",
+   "query": "atlantic ocean",
+   "cap": "أول امرأة",
+   "overlay": "counter",
+   "number": 1932
+  },
+  {
+   "line": "فوق المحيط الهادئ، انقطع الاتصال بطائرتها.",
+   "query": "pacific ocean clouds",
+   "cap": "انقطع الاتصال",
+   "overlay": "vhs",
+   "transition": "glitch"
+  },
+  {
+   "line": "بحثت السفن أسابيع، ولم تجد شيئًا.",
+   "query": "navy ship sea",
+   "cap": "لا أثر",
+   "grade": "bw"
+  },
+  {
+   "line": "وبقي اختفاؤها لغزًا حتى اليوم. ما رأيك فيما حدث؟",
+   "query": "small island ocean",
+   "cap": "لغزٌ حتى اليوم",
+   "overlay": "quote",
+   "quote": "سأعود قريبًا"
+  }
+ ]
+}

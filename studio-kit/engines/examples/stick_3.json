@@ -1,0 +1,87 @@
+{
+ "title": "في الصحراء",
+ "music": "suspense",
+ "beats": [
+  {
+   "line": "ماذا تفعل لو تهت في الصحراء؟",
+   "cap": "تهتَ في الصحراء؟",
+   "place": "desert",
+   "people": [
+    {
+     "look": "thobe",
+     "x": 420,
+     "pose": "scared",
+     "face": "fear"
+    }
+   ],
+   "fx": [
+    "sweat"
+   ]
+  },
+  {
+   "line": "ابقَ في الظل وقت الظهيرة.",
+   "cap": "<span class='n'>1</span><br/>ابقَ في الظل",
+   "place": "desert",
+   "people": [
+    {
+     "look": "thobe",
+     "x": 760,
+     "pose": "sit",
+     "face": "calm"
+    }
+   ],
+   "fx": [
+    "sun"
+   ]
+  },
+  {
+   "line": "لا تشرب الماء كله دفعةً واحدة.",
+   "cap": "<span class='n'>2</span><br/>وفّر الماء",
+   "place": "desert",
+   "people": [
+    {
+     "look": "thobe",
+     "x": 420,
+     "pose": "drink",
+     "face": "ok"
+    }
+   ],
+   "fx": [
+    "drop"
+   ]
+  },
+  {
+   "line": "امشِ ليلًا واتبع النجوم.",
+   "cap": "<span class='n'>3</span><br/>امشِ ليلًا",
+   "place": "camp",
+   "people": [
+    {
+     "look": "thobe",
+     "x": 200,
+     "pose": "walk1",
+     "face": "ok",
+     "walk_to": 700
+    }
+   ],
+   "fx": [
+    "star"
+   ]
+  },
+  {
+   "line": "وستصل بأمان. احفظ الفيديو.",
+   "cap": "وصلتَ <span style='color:#2f9a46'>بأمان</span>",
+   "place": "village",
+   "people": [
+    {
+     "look": "thobe",
+     "x": 420,
+     "pose": "cheer",
+     "face": "happy"
+    }
+   ],
+   "fx": [
+    "heart"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,31 @@
+{
+ "title": "الذهب",
+ "object": "gold_bar",
+ "sky": "studio",
+ "music": "epic",
+ "beats": [
+  {
+   "line": "لماذا يلمع الذهب منذ آلاف السنين؟",
+   "k": "intro",
+   "cap": "سرّ <span style='color:#f2c94c'>الذهب</span>"
+  },
+  {
+   "line": "لأنه لا يصدأ أبدًا.",
+   "k": "spin",
+   "cap": "لا يصدأ",
+   "object": "coin",
+   "label": "Au"
+  },
+  {
+   "line": "وأثقل من الماء بتسعة عشر ضعفًا.",
+   "k": "water",
+   "cap": "<span style='color:#f2c94c'>19</span> ضعفًا"
+  },
+  {
+   "line": "ويُستخدم حتى في الهواتف.",
+   "k": "end",
+   "cap": "حتى في هاتفك",
+   "object": "gem"
+  }
+ ]
+}

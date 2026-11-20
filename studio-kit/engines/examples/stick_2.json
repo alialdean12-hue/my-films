@@ -1,0 +1,90 @@
+{
+ "title": "مقابلة العمل",
+ "music": "inspire",
+ "beats": [
+  {
+   "line": "عندك مقابلة عمل غدًا؟",
+   "cap": "مقابلة عمل؟",
+   "place": "bedroom",
+   "people": [
+    {
+     "look": "man3",
+     "x": 420,
+     "pose": "think",
+     "face": "think"
+    }
+   ],
+   "fx": [
+    "question"
+   ]
+  },
+  {
+   "line": "أولًا: نَم جيدًا الليلة.",
+   "cap": "<span class='n'>1</span><br/>نَم جيدًا",
+   "place": "bedroom",
+   "people": [
+    {
+     "look": "man3",
+     "x": 640,
+     "pose": "sleep",
+     "face": "sleepy"
+    }
+   ],
+   "fx": [
+    "zzz"
+   ]
+  },
+  {
+   "line": "ثانيًا: اعرف كل شيء عن الشركة.",
+   "cap": "<span class='n'>2</span><br/>اعرف الشركة",
+   "place": "office2",
+   "people": [
+    {
+     "look": "man3",
+     "x": 300,
+     "pose": "read",
+     "face": "ok"
+    }
+   ],
+   "fx": [
+    "laptop"
+   ]
+  },
+  {
+   "line": "ثالثًا: ابتسم وصافح بثقة.",
+   "cap": "<span class='n'>3</span><br/>ثقة",
+   "place": "meeting",
+   "people": [
+    {
+     "look": "man3",
+     "x": 300,
+     "pose": "wave",
+     "face": "happy"
+    },
+    {
+     "look": "businesswoman",
+     "x": 760,
+     "pose": "wave",
+     "face": "happy",
+     "flip": true
+    }
+   ]
+  },
+  {
+   "line": "وحصلت على الوظيفة! شارك النصائح.",
+   "cap": "مبروك!",
+   "place": "office2",
+   "people": [
+    {
+     "look": "man3",
+     "x": 500,
+     "pose": "cheer",
+     "face": "laugh"
+    }
+   ],
+   "fx": [
+    "trophy"
+   ]
+  }
+ ]
+}
