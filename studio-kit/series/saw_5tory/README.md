@@ -24,7 +24,7 @@ Working examples: `examples/001-part1.json`, `examples/001-part2.json` (copy the
 }
 ```
 
-**Voice**: always Hamed; the builder adds the approved «doll» layer (octave-down copy at 38 % + light echo). Do not change it.
+**Voice**: always Hamed; the builder makes it slightly deeper and warm (pitch ×0.92, no second layer, no echo; rate -8 %); effects are kept low under the voice. Do not change it.
 
 **room.objects**: props from `props.py` (one dict per prop, `"type"` = function name, other keys = its arguments; `"note"` is ignored, use it to mark the clue / red herrings):
 `window(x,y,rain,broken,day)` · `clock(x,y,time)` · `digital_clock(x,y,text,blink)` · `calendar(x,y,month,day)` · `photo_frame(x,y,shadow:long|short)` · `door(x,y,chain)` · `doormat(x,y,wet,mud)` · `table(x,y,w)` · `chair_over(x,y)` · `outline(x,y,name)` · `umbrella(x,y,wet)` · `cup_broken(x,y)` · `cup(x,y,steam,lipstick,skin,empty)` · `ice_glass(x,y,ice)` · `candle(x,y,height,lit,smoke)` · `phone(x,y,battery,screen,lit)` · `paper(x,y,kind:ticket|receipt|newspaper|note,title,lines,rot)` · `plant(x,y,wet,wilted)` · `dusty_box(x,y,handprint)` · `shoes(x,y,mud,wet)` · `footprints(x1,y1,x2,y2,kind:wet|mud|sand,n)` · `glass_shards(x,y)` · `book(x,y,page)` · `dog(x,y,asleep)` · `person(id,x,y,name,coat,hair,skin,wet,glasses,fog)`.

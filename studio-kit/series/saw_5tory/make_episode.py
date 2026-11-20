@@ -44,13 +44,13 @@ def voice(ep, P, stems=None):
         materialize(ep, stems, vd)
     else:
         sh([sys.executable, os.path.join(KIT, "scripts", "tts_edge.py"), os.path.join(P, "lines.json"), vd,
-            "--voice", v.get("name", "ar-SA-HamedNeural"), f"--rate={v.get('rate', '-3%')}"], stdout=subprocess.DEVNULL)
-    low = v.get("puppet_layer", 0.38)  # the approved «doll» voice: Hamed + an octave-down copy at 38 % + light echo
+            "--voice", v.get("name", "ar-SA-HamedNeural"), f"--rate={v.get('rate', '-8%')}"], stdout=subprocess.DEVNULL)
+    # approved voice (sample 3, Nov 2026): Hamed slightly deeper (pitch x0.92, tempo kept), warm bass, no second layer, no echo
     out = []
     for i in range(len(lines)):
         src, dst = os.path.join(vd, f"b{i}.wav"), os.path.join(vd, f"v{i}.wav")
-        sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-filter_complex",
-            f"[0]aresample=44100,asplit[a][b];[b]asetrate=44100*0.7,aresample=44100,atempo=1.4286,volume={low}[low];[a][low]amix=2:normalize=0,aecho=0.8:0.4:60:0.12,aresample=48000",
+        sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-af",
+            "aresample=44100,asetrate=44100*0.92,aresample=44100,atempo=1.087,bass=g=3,aresample=48000",
             "-ac", "1", dst])
         out.append(dur(dst))
     return out
@@ -353,6 +353,8 @@ def sound(ep, sch, P):
         if b["scene"] == "board": it.append({"file": "sfx/bell.wav", "at": round(s + 0.1, 2), "gain": 0.05})
         if b["scene"] == "title": it += [{"file": "sfx/hit.wav", "at": round(s, 2), "gain": 0.3}, {"file": "sfx/riser.wav", "at": round(max(0, s - 0.2), 2), "gain": 0.1}]
         if b.get("timer"): it.append({"file": "sfx/riser.wav", "at": round(e + 0.3, 2), "gain": 0.12})
+    for x in it:  # effects sit well under the voice
+        if x["file"].startswith("sfx/"): x["gain"] = round(x.get("gain", 1) * 0.6, 3)
     json.dump({"duration": D, "target_lufs": -14, "items": it}, open(os.path.join(P, "mix.json"), "w"))
     os.makedirs(os.path.join(P, "out"), exist_ok=True)
     sh([sys.executable, os.path.join(KIT, "scripts", "mix.py"), "mix.json", "out/mix.wav"], cwd=P, stdout=subprocess.DEVNULL)
