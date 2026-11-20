@@ -72,7 +72,7 @@ def scene(i, b, s, e, c0, c1):
     sv += f'<g id="L2{i}">{pyrs}</g><g id="L3{i}">{dune(1420, 60, i+3, mid)}</g>'
     ex = b.get("extras", ["camels"] if k in ("intro", "tall", "end") and lmk == "pyramids" else [])
     for n_, x_ in enumerate(ex): sv += f'<g id="ex{i}_{n_}">{EXTRAS[x_]()}</g>' 
-    if k == "tall": sv += f'<g id="ruler{i}" opacity="0"><path d="M60,1230 V810" stroke="#c0392b" stroke-width="10"/><path d="M30,810 h60 M30,1230 h60" stroke="#c0392b" stroke-width="10"/><text x="90" y="1000" font-size="64" font-weight="900" fill="#c0392b" font-family="Cairo">{b.get("measure","")}</text></g>'
+    if k == "tall": sv += f'<g id="ruler{i}" opacity="0"><path d="M60,1230 V810" stroke="#c0392b" stroke-width="10"/><path d="M30,810 h60 M30,1230 h60" stroke="#c0392b" stroke-width="10"/><text x="90" y="1000" text-anchor="end" font-size="64" font-weight="900" fill="#c0392b" font-family="Cairo">{b.get("measure","")}</text></g>'
     sv += f'<g id="L4{i}">{dune(1660, 70, i+7, near)}</g><rect width="1080" height="1920" filter="url(#gr)"/></svg>'
     h = sv + f'<div class="cap" id="cp{i}" style="opacity:0"><span>{b["cap"]}</span></div>'
     js.append(f'tl.fromTo("#cp{i}",{{opacity:0,y:-200,rotation:-6}},{{opacity:1,y:0,rotation:-2,duration:.6,ease:"back.out(1.5)"}},{s:.2f});')

@@ -46,6 +46,14 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     open(P + "/index.html", "w").write(html)
     lint = subprocess.run(["npx", "hyperframes", "lint"], cwd=P, capture_output=True, text=True).stdout
     if "✗" in lint: print(lint); sys.exit("LINT")
+    json.dump({"sch": sch, "D": D}, open(P + "/schedule.json", "w"))
+    import post
+    if ep.get("qa", True):
+        probs = post.qa(P, sch, D)
+        if probs:
+            print("QA PROBLEMS (fix the JSON: shorter captions / smaller size / move x):\n  " + "\n  ".join(probs[:20]))
+            if "--preview" not in sys.argv and "--force" not in sys.argv: sys.exit("QA FAILED: video not rendered. Fix and run again (or add --force).")
+        else: print("QA OK")
     times = ",".join(f"{min(sch[i+1][0]-.4 if i+1<len(sch) else D-.3, s+1.8):.1f}" for i, (s, e) in enumerate(sch))
     shutil.rmtree(P + "/snaps", ignore_errors=True)
     subprocess.run(["npx", "hyperframes", "snapshot", "--at", times, "--no-end", "-o", "snaps", "."], cwd=P, capture_output=True)
@@ -69,6 +77,13 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     elif bed == "beat":
         t = .5
         while t < D - .5: it.append({"file": "sfx/hit.wav", "at": round(t, 2), "gain": .14}); t += .5
+    MOOD = {"doc": "mystery", "voxflat": "inspire", "kinetic": "tech", "threed": "epic", "paper": "calm", "stick": "happy", "cartoon": "kids"}
+    mood = ep.get("music", MOOD.get(name, "calm"))
+    if mood and mood != "none":
+        import music
+        music.save(sd + "/music.wav", music.compose(mood, D, seed=len(ep.get("title", "x"))))
+        it.append({"file": "sfx/music.wav", "at": 0, "gain": ep.get("music_gain", .16)})
+        it = [x for x in it if not (x["file"].startswith("sfx/n") or x["file"] == "sfx/bed.wav")] if ep.get("music_only", True) else it
     for i in range(1, len(beats)): it.append({"file": "sfx/whoosh.wav", "at": round(sch[i][0] - .4, 2), "gain": .14})
     for x in (extra_sfx(sch) if extra_sfx else []): it.append(x)
     json.dump({"duration": D, "target_lufs": -14, "items": it}, open(P + "/mix.json", "w"))
@@ -76,4 +91,8 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     sh([sys.executable, KIT + "/scripts/mix.py", "mix.json", "out/mix.wav"], cwd=P, stdout=subprocess.DEVNULL)
     sh(["sh", KIT + "/scripts/render.sh", ".", "out/mix.wav", OUT + "/video.mp4", "30"], cwd=P, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     sh(["ffmpeg", "-y", "-loglevel", "error", "-i", OUT + "/video.mp4", "-vf", "scale=720:-2", "-c:v", "libx264", "-profile:v", "main", "-crf", "26", "-preset", "fast", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", OUT + "/video_phone.mp4"])
-    print("DONE", OUT + "/video.mp4", OUT + "/video_phone.mp4")
+    post.caption(ep, OUT, name)
+    if ep.get("formats", True): post.formats(OUT)
+    try: post.cover(ep, P, OUT, sch, D)
+    except Exception as ex: print("cover failed:", ex)
+    print("DONE", OUT, ": video.mp4 video_phone.mp4 video_16x9.mp4 video_1x1.mp4 cover.jpg cover_check.jpg CAPTION.md")

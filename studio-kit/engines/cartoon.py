@@ -64,6 +64,10 @@ def ch_animal(spec):
               "tuft": lambda sx: f'<path d="M{sx*150},-210 L{sx*200},-320 L{sx*80},-240Z" fill="{c}" {SW}/>',
               "none": lambda sx: ""}[ears]
         s += er(-1) + er(1)
+        if spec.get("neck"): s += f'<rect x="-70" y="-420" width="140" height="520" rx="60" fill="{c}" {SW}/>' + "".join(f'<circle cx="{x}" cy="{y}" r="22" fill="{spec.get("pc", "#c96a1a")}"/>' for x, y in ((-30, -340), (30, -240), (-20, -120)))
+        if spec.get("bwings"): s += "".join(f'<ellipse cx="{sx*190}" cy="{dy}" rx="170" ry="{r_}" fill="{spec["bwings"]}" {SW} transform="rotate({sx*20} {sx*190} {dy})"/>' for sx in (-1, 1) for dy, r_ in ((-120, 200), (160, 130)))
+        if spec.get("shell"): s += f'<path d="M-260,220 A260,260 0 0,1 260,220Z" fill="{spec["shell"]}" {SW}/>' + "".join(f'<path d="M{x},220 Q{x+40},40 {x+90},220" stroke="{K}" stroke-width="6" fill="none"/>' for x in (-200, -80, 40))
+        if spec.get("wool"): s += "".join(f'<circle cx="{x}" cy="{y}" r="{r_}" fill="{spec["wool"]}" {SW}/>' for x, y, r_ in ((-200, 120, 110), (0, 90, 130), (200, 120, 110), (-110, 260, 110), (110, 260, 110), (-150, -220, 70), (0, -270, 80), (150, -220, 70)))
         if spec.get("mane"): s += f'<circle cx="0" cy="-60" r="300" fill="{spec["mane"]}" {SW}/>'
         s += f'<ellipse cx="0" cy="-60" rx="{spec.get("hw", 240)}" ry="{spec.get("hh", 200)}" fill="{c}" stroke="{K}" stroke-width="12"/>'
         if pat == "spots": s += "".join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{spec.get("pc", "#151515")}" opacity=".85"/>' for x, y, r in ((-150, -140, 30), (140, -10, 26), (-170, 30, 20), (120, -170, 22)))
@@ -79,6 +83,8 @@ def ch_animal(spec):
         s += eyes(i, (-90, 90), -90, spec.get("er", 40)) + (f'<path id="mo{i}" d="M-40,90 Q0,140 40,90" fill="#e85a6a" {SW}/>' if mz != "beak" else f'<path id="mo{i}" d="M-30,70 Q0,100 30,70" fill="#e85a6a" stroke="{K}" stroke-width="6"/>')
         if spec.get("whisk"): s += f'<path d="M-100,30 h-140 M-100,50 l-130,30 M100,30 h140 M100,50 l130,30" stroke="{K}" stroke-width="6"/>'
         if spec.get("glasses"): s += f'<circle cx="-90" cy="-90" r="60" fill="none" stroke="{K}" stroke-width="10"/><circle cx="90" cy="-90" r="60" fill="none" stroke="{K}" stroke-width="10"/><path d="M-30,-90 H30" stroke="{K}" stroke-width="10"/>'
+        if spec.get("antenna"): s += f'<path d="M-60,-240 Q-100,-380 -160,-400 M60,-240 Q100,-380 160,-400" stroke="{K}" stroke-width="12" fill="none"/><circle cx="-160" cy="-400" r="22" fill="{K}"/><circle cx="160" cy="-400" r="22" fill="{K}"/>'
+        if spec.get("unihorn"): s += f'<path d="M-30,-250 L0,-460 L30,-250Z" fill="#ffd21f" {SW}/>'
         if spec.get("hat"): s += f'<path d="M-150,-230 H150 L120,-260 H-120Z M-90,-260 V-380 H90 V-260Z" fill="{spec["hat"]}" {SW}/>'
         return s
     return f
@@ -98,17 +104,17 @@ ANIMALS = {
  "hamster": dict(c="#f2b24c", c2="#fff", ears="round", muzzle="small", hw=280),
  "pig": dict(c="#ffb3c6", c2="#ffd9e0", ears="cat", tail="curl", muzzle="snout"),
  "cow": dict(c="#fff", c2="#ffd9e0", ears="horn", pat="spots", pc="#151515", muzzle="snout", nc="#ffb3c6"),
- "sheep": dict(c="#f4f4f4", c2="#3a3a3a", ears="floppy", ec="#3a3a3a", muzzle="big", mane="#f4f4f4"),
+ "sheep": dict(c="#3a3a3a", c2="#5a5a5a", ears="floppy", ec="#3a3a3a", muzzle="none", wool="#f4f4f4", hw=170, hh=180),
  "goat": dict(c="#e8dcc8", c2="#fff", ears="horn", muzzle="big"),
  "horse": dict(c="#8a5a33", c2="#c98f45", ears="cat", tail="long", muzzle="snout", nc="#c98f45", hh=230),
  "camel": dict(c="#d9a85a", c2="#f4e3c4", ears="round", muzzle="big", tail="long"),
  "elephant": dict(c="#9aa8b6", c2="#c9d4e0", ears="big", muzzle="trunk"),
- "giraffe": dict(c="#ffd27a", c2="#fff", ears="horn", pat="spots", pc="#c96a1a", muzzle="snout", nc="#f4e3c4"),
+ "giraffe": dict(c="#ffd27a", c2="#fff", ears="horn", pat="spots", pc="#c96a1a", muzzle="snout", nc="#f4e3c4", neck=True),
  "zebra": dict(c="#fff", c2="#fff", ears="cat", pat="stripes", pc="#151515", muzzle="snout", nc="#3a3a3a"),
  "monkey": dict(c="#8a5a33", c2="#f1c7a0", ears="round", tail="curl", muzzle="big"),
  "gorilla": dict(c="#3a3a40", c2="#6a6a70", ears="round", muzzle="big", bw=260),
  "frog": dict(c="#6fcf4f", c2="#c8f0b0", ears="none", muzzle="none", er=58, legs=False),
- "turtle": dict(c="#6fcf4f", c2="#c98f45", ears="none", muzzle="none", pat="", legs=True),
+ "turtle": dict(c="#6fcf4f", c2="#6fcf4f", ears="none", muzzle="none", legs=True, shell="#3f8a3a", hw=170, hh=150),
  "owl": dict(c="#8a5a33", c2="#f4e3c4", ears="tuft", muzzle="beak", er=60, wings=True),
  "chick": dict(c="#ffd21f", c2="#fff3b0", ears="none", muzzle="beak", wings=True, legs=False),
  "chicken": dict(c="#fff", c2="#fff", ears="none", muzzle="beak", pat="comb", wings=True, tail="fan"),
@@ -121,11 +127,11 @@ ANIMALS = {
  "seal": dict(c="#9aa8b6", c2="#c9d4e0", ears="none", muzzle="small", whisk=True, tail="fin", legs=False),
  "crab": dict(c="#e5322d", c2="#ff8a7a", ears="none", muzzle="none", legs=True, er=46),
  "ladybug": dict(c="#e5322d", c2="#151515", ears="none", pat="spots", pc="#151515", muzzle="none", legs=False),
- "butterfly": dict(c="#c45adb", c2="#ffd21f", ears="none", wings=True, wc="#ffd21f", muzzle="none", legs=False),
- "ant": dict(c="#3a2a2a", c2="#5a4a4a", ears="none", muzzle="none", legs=True),
- "snail": dict(c="#c8e090", c2="#d98f45", ears="none", muzzle="none", legs=False, mane="#d98f45"),
+ "butterfly": dict(c="#c45adb", c2="#ffd21f", ears="none", bwings="#ffd21f", muzzle="none", legs=False, hw=150, hh=150, bw=90),
+ "ant": dict(c="#3a2a2a", c2="#5a4a4a", ears="none", muzzle="none", legs=True, antenna=True, hw=180, hh=170),
+ "snail": dict(c="#c8e090", c2="#c8e090", ears="none", muzzle="none", legs=False, shell="#d98f45", hw=170, hh=160),
  "dragon": dict(c="#2fbf6a", c2="#ffd21f", ears="horn", wings=True, wc="#2f8a3a", tail="long", muzzle="big"),
- "unicorn": dict(c="#fff", c2="#ffd9f0", ears="cat", tail="long", muzzle="snout", nc="#ffd9f0", hat=None),
+ "unicorn": dict(c="#fff", c2="#ffd9f0", ears="cat", tail="long", muzzle="snout", nc="#ffd9f0", unihorn=True, mane="#c4a8ff"),
  "robot": dict(c="#9aa8b6", c2="#dff1ff", ears="none", muzzle="none", legs=True, er=46),
  "alien": dict(c="#7fdf6f", c2="#c8f0b0", ears="long", muzzle="none", er=60),
  "monster": dict(c="#7a4fd1", c2="#c4a8ff", ears="horn", muzzle="big", pat="spots", pc="#5a2fb1"),
@@ -176,7 +182,7 @@ def bg(name, i):
     if name in SCENE:
         t, b2, g, deco, bub = SCENE[name]
         return (f'<linearGradient id="sk{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{t}"/><stop offset="1" stop-color="{b2}"/></linearGradient><rect width="1080" height="1920" fill="url(#sk{i})"/>'
-                f'<path d="M0,1520 Q540,1420 1080,1520 V1920 H0Z" fill="{g}" stroke="{K}" stroke-width="10"/>' + "".join(f'<g transform="translate({x} {y})">{icon(n, sc)}</g>' for n, x, y, sc in deco)), bub
+                f'<path d="M0,1520 Q540,1420 1080,1520 V1920 H0Z" fill="{g}" stroke="{K}" stroke-width="10"/>' + "".join(f'<g transform="translate({x} {y})">{icon(n, min(sc * 1.4, 3.6))}</g>' for n, x, y, sc in deco)), bub
     return ('<rect width="1080" height="1920" fill="#0b0f2a"/>' + "".join(f'<circle cx="{(R(k)+1)*540:.0f}" cy="{(R(k+70)+1)*960:.0f}" r="{2+abs(R(k+5))*4:.1f}" fill="#fff"/>' for k in range(120)) +
             '<circle cx="880" cy="1650" r="260" fill="#ff8a5a" stroke="#0b2a4a" stroke-width="10"/><circle cx="800" cy="1580" r="40" fill="#e0703f"/><circle cx="950" cy="1720" r="60" fill="#e0703f"/>'), "#bfd0ff"
 from icons import ICONS as ICON, icon as _icon
