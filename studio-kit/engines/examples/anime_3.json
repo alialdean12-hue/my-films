@@ -1,0 +1,47 @@
+{
+ "title": "ربيع",
+ "sky": "day",
+ "place": "hills",
+ "character": {
+  "hair": "blonde",
+  "eyes": "green",
+  "gender": "girl",
+  "shirt": "#ffffff"
+ },
+ "music": "calm",
+ "beats": [
+  {
+   "line": "جاء الربيع إلى التلال.",
+   "k": "sakura",
+   "sky": "day",
+   "sub": "جاء الربيع"
+  },
+  {
+   "line": "وابتسمت لأول مرة منذ الشتاء.",
+   "k": "closeup",
+   "emotion": "happy",
+   "sky": "day",
+   "sub": "ابتسمت",
+   "petals": true
+  },
+  {
+   "line": "لكن غيومًا داكنة اقتربت.",
+   "k": "rain",
+   "sky": "storm",
+   "sub": "غيوم داكنة"
+  },
+  {
+   "line": "لم تخف. فبعد كل مطر، يعود الربيع.",
+   "k": "closeup",
+   "emotion": "determined",
+   "sky": "dawn",
+   "sub": "لم تخف"
+  },
+  {
+   "line": "ربيع.",
+   "k": "title",
+   "sky": "dawn",
+   "title": "ربيع"
+  }
+ ]
+}

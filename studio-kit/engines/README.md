@@ -1,4 +1,4 @@
-# Style engines (styles 1, 3, 4, 5, 6, 7, 9)
+# Style engines (styles 1, 3, 4, 5, 6, 7, 8, 9)
 
 One JSON → narrated vertical video (1080×1920) with voice (edge-tts), music bed, sound effects. Same quality as the approved samples.
 
@@ -18,7 +18,7 @@ cd ~/my-films/studio-kit/engines
 python3 <engine>.py examples/<engine>.json ~/out/<name> --preview   # look at sheet.jpg first
 python3 <engine>.py examples/<engine>.json ~/out/<name>             # video.mp4 + video_phone.mp4
 ```
-Behind a TLS proxy set `SSL_CERT_FILE`. **Always copy the example JSON and change it**, never start from empty.
+Behind a TLS proxy set `SSL_CERT_FILE`. **Always copy an example JSON and change it** (each style has 3: `examples/<style>.json`, `<style>_2.json`, `<style>_3.json`), never start from empty.
 Common keys: `title`, `beats` (5–7 beats, one spoken `line` each, ≤ 14 words), optional `voice: {name, rate}`, `duration` (default 30; grows if the voice is longer). In captions `[y]..[/y]` = yellow, `[r]..[/r]` = red, `<br/>` = new line.
 
 | Style | Engine | Beat keys |
@@ -29,6 +29,7 @@ Common keys: `title`, `beats` (5–7 beats, one spoken `line` each, ≤ 14 words
 | 5 ثلاثي الأبعاد | `threed.py` | top level `bands` (7 colours), `rings` (true/false). Beats: `line`, `cap`, `sub`, `k`: `intro` (zoom in) · `ring` (fly along the rings) · `water` (drops into water and floats) · `spin` (fast rotation) · `moons` (orbiting moons) · `end` |
 | 6 ورق مقصوص | `paper.py` | `line`, `cap`, `sky` [top, bottom colour], `sun` [x, y, colour], `k`: `intro` (layers rise, caravan) · `build` (blocks stack into a pyramid) · `river` (boat on the Nile) · `tall` (sunset + `measure` ruler) · `night` (stars) · `end` |
 | 7 رجل أعواد | `stick.py` | `line`, `cap` (`<span class='n'>1</span><br/>` = numbered step), `place`: elevator house kitchen street forest sea office car, `people`: list of {`look`: man woman hijab boy girl old worker doctor police chef, `x` (120–900), `pose`: stand panic phone press point sit wave breathe no think cheer run drive carry fall sad, `face`: ok happy fear calm sad angry wow, optional `walk_to` (x), `flip`, `colors` {shirt, pants, skin, hair}}, `fx` list: fire smoke rain idea question exclaim heart zzz sweat check cross phone bell clock air money shake open, optional `fx_at` [x, y] |
+| 8 أنمي | `anime.py` | `line`, `sub`, `k`: establish back closeup tear run sky rain sakura title, top level `character` {hair, eyes, gender}, `sky` (see CATALOG.md) |
 | 9 كرتون «هل تعلم؟» | `cartoon.py` | top level `character`: whale cat octopus bee penguin kid (each has its own home background), optional `bg`: ocean garden ice room space, `tag`. Beats: `line`, `cap`, `k`: `intro` · `compare` (`a`/`b` = [icon, label], `sign`) · `rings` · `swarm` (`icon`, `n`, `icon_scale`: icons fly into the character) · `flyby` (`icon` crosses + shake) · `grow` (`icon` rises beside it, character grows) · `count` (`number`, `unit`: counting number) · `end`. Icons: heart car plane dino house bus star apple fish drop brain clock moon leaf eye dot. A beat may change `character`/`bg`. |
 
 **Full list of every option (places, looks, poses, characters, icons, themes, landmarks, grades…): `CATALOG.md`.** The table below is a summary; the catalog wins.

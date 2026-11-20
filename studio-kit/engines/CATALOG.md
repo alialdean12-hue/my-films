@@ -47,3 +47,8 @@ Use these names in the JSON keys. Mix freely. Engines: see README.md.
 - **transition**: `fade`, `cut`, `slide`, `up`, `zoom`, `blur`, `flash`, `glitch`
 - **overlay** (list): `circle` (at [x,y,r]), `arrow` (arrow [[x1,y1],[x2,y2]]), `route`, `zoombox` (box [x,y,w]), `redact`, `film`, `letterbox`, `vhs`, `counter` (number, unit), `stamp` (stamp), `quote` (quote), `split` (img2 or query2)
 - per beat: `img` or `query`, `cap`, `date`, `flash`
+
+## 8 · Anime (`anime.py`)
+- top level `character`: {`hair`: black brown blonde pink blue silver red green, `eyes`: brown blue green red gold purple, `gender`: girl/boy, `long` (hair), `shirt`, `skin`}, `sky`, `place`: city / hills
+- **k**: `establish` (city or hills under the sky), `back` (character from behind), `closeup` (face; `emotion`: calm happy sad surprised determined angry), `tear` (close-up with a falling tear), `run` (speed lines), `sky` (shooting stars), `rain`, `sakura` (falling petals), `title` (big glowing title `title`)
+- **sky**: night sunset day dawn storm dusk space · per beat: `sub` (subtitle), `petals: true`, `rain: true`

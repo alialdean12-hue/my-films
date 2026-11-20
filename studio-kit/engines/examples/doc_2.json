@@ -1,0 +1,68 @@
+{
+ "title": "سرقة الموناليزا",
+ "grade": "noir",
+ "caption": "news",
+ "music": "suspense",
+ "cover": {
+  "text": "سُرقت [y]الموناليزا[/y]!",
+  "tag": "قصة حقيقية"
+ },
+ "beats": [
+  {
+   "line": "صباح يومٍ من عام ألفٍ وتسعمئةٍ وأحد عشر، اختفت الموناليزا.",
+   "query": "mona lisa painting",
+   "cap": "اختفت الموناليزا",
+   "date": "21 أغسطس 1911",
+   "transition": "fade",
+   "overlay": "film"
+  },
+  {
+   "line": "مكانها على جدار متحف اللوفر صار فارغًا.",
+   "query": "louvre museum",
+   "cap": "جدارٌ فارغ",
+   "cam": "in",
+   "transition": "cut",
+   "overlay": [
+    "zoombox"
+   ],
+   "box": [
+    390,
+    700,
+    300
+   ]
+  },
+  {
+   "line": "اتّهمت الشرطة شاعرًا شهيرًا، ثم أطلقته.",
+   "query": "old police",
+   "cap": "متّهم خطأ",
+   "grade": "old_film",
+   "overlay": "stamp",
+   "stamp": "بريء"
+  },
+  {
+   "line": "بعد عامين، حاول عاملٌ بيعها في إيطاليا.",
+   "query": "florence italy",
+   "cap": "بعد عامين",
+   "transition": "slide",
+   "overlay": "route"
+  },
+  {
+   "line": "كان قد خبّأها تحت سريره طوال تلك المدة.",
+   "query": "old bed room",
+   "cap": "تحت السرير!",
+   "flash": true,
+   "overlay": "circle",
+   "at": [
+    540,
+    1000,
+    240
+   ]
+  },
+  {
+   "line": "وعادت إلى اللوفر، أشهرَ مما كانت. هل كنت تعرف القصة؟",
+   "query": "mona lisa painting",
+   "cap": "أشهر لوحة في العالم",
+   "transition": "zoom"
+  }
+ ]
+}
