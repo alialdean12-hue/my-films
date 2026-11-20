@@ -26,8 +26,17 @@ def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="
     os.makedirs(P + "/voice", exist_ok=True)
     shutil.copy(KIT + "/styles/kinetic/gsap.min.js", P); shutil.copytree(KIT + "/styles/kinetic/fonts", P + "/fonts", dirs_exist_ok=True)
     json.dump([{"id": f"b{i}", "text": b["line"]} for i, b in enumerate(beats)], open(P + "/lines.json", "w"), ensure_ascii=False)
+    vf = ep.get("voice_files")   # folder with b0.wav/mp3/flac... made by another TTS (when edge-tts is blocked)
+    if vf:
+        vf = vf if os.path.isabs(vf) else os.path.join(ep["_dir"], vf)
+        for i in range(len(beats)):
+            src = next((f"{vf}/b{i}.{x}" for x in ("wav", "mp3", "flac", "ogg", "m4a") if os.path.exists(f"{vf}/b{i}.{x}")), None)
+            if not src: sys.exit(f"voice_files: missing b{i}.wav (or .mp3/.flac) in {vf}")
+            sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-ac", "1", "-ar", "48000", f"{P}/voice/b{i}.wav"])
     if not all(os.path.exists(f"{P}/voice/b{i}.wav") for i in range(len(beats))):
-        sh([sys.executable, KIT + "/scripts/tts_edge.py", P + "/lines.json", P + "/voice", "--voice", voice, f"--rate={rate}"], stdout=subprocess.DEVNULL)
+        r_ = subprocess.run([sys.executable, KIT + "/scripts/tts_edge.py", P + "/lines.json", P + "/voice", "--voice", voice, f"--rate={rate}"], capture_output=True, text=True)
+        if r_.returncode: sys.exit("VOICE FAILED (edge-tts cannot reach its server here). Make one audio file per beat with your own TTS, Arabic male voice, "
+                                   "named b0.wav b1.wav ... (one per line, same text), put them in a folder and add  \"voice_files\": \"<folder>\"  to the json. Then run again.\n" + r_.stderr[-300:])
     durs = [dur(f"{P}/voice/b{i}.wav") for i in range(len(beats))]
     tot = sum(durs); gap = max(.3, (D - 0.6 - 1.0 - tot) / max(1, len(beats) - 1))
     if tot + .3 * (len(beats) - 1) + 1.6 > D: D = round(tot + .3 * (len(beats) - 1) + 1.6, 2); gap = .3
