@@ -3,22 +3,66 @@ CSS = ('.ph{position:absolute;inset:-6%;background-size:cover;background-positio
        '.cap{position:absolute;left:80px;right:80px;top:1240px;text-align:center;font-weight:900;font-size:84px;line-height:1.25;color:#fff;text-shadow:0 6px 24px #000}.dt{position:absolute;left:0;right:0;top:300px;text-align:center}.dt span{background:#c9a24a;color:#111;font-weight:900;font-size:62px;padding:2px 30px 10px}'
        '.bar{position:absolute;left:300px;right:300px;top:1215px;height:8px;background:#c9a24a}')
 ep = load(); B = ep["beats"]
+GRADES = {"sepia": "sepia(.35) contrast(1.1) saturate(.8) brightness(.85)", "bw": "grayscale(1) contrast(1.2) brightness(.85)", "cold": "saturate(.7) hue-rotate(15deg) brightness(.85) contrast(1.1)",
+          "warm": "sepia(.2) saturate(1.2) brightness(.9)", "noir": "grayscale(1) contrast(1.6) brightness(.7)", "vivid": "saturate(1.4) contrast(1.15) brightness(.9)", "faded": "saturate(.5) contrast(.85) brightness(1.05)",
+          "green": "sepia(.3) hue-rotate(60deg) saturate(.9) brightness(.8)", "red": "sepia(.4) hue-rotate(-30deg) saturate(1.4) brightness(.75)", "night": "saturate(.6) hue-rotate(190deg) brightness(.6) contrast(1.2)",
+          "old_film": "sepia(.8) contrast(1.3) brightness(.8)", "clean": "brightness(.9)"}
+CAMS = {"in": (1.0, 1.18, 0, 0), "out": (1.2, 1.0, 0, 0), "left": (1.15, 1.15, 60, 0), "right": (1.15, 1.15, -60, 0), "up": (1.15, 1.15, 0, 60), "down": (1.15, 1.15, 0, -60), "still": (1.05, 1.05, 0, 0), "fast_in": (1.0, 1.4, 0, 0)}
+CAPS = {  # caption looks
+ "gold": ('top:1240px;color:#fff;text-shadow:0 6px 24px #000', True), "box": ('top:1260px;color:#111;', False), "lower": ('top:1500px;text-align:right;color:#fff;font-size:66px', False),
+ "news": ('top:1300px;color:#fff;', False), "type": ('top:1280px;color:#f4ecd8;font-family:monospace,Cairo;font-size:64px', False), "big": ('top:780px;color:#fff;font-size:150px;text-shadow:0 10px 40px #000', False),
+ "top": ('top:320px;color:#fff;text-shadow:0 6px 24px #000', False), "red": ('top:1260px;color:#fff;', False),
+}
+def capdiv(i, b):
+    st = b.get("caption", ep.get("caption", "gold")); css, bar = CAPS.get(st, CAPS["gold"]); t = b.get("cap", "")
+    if st == "box": t = f'<span style="background:#f4ecd8;padding:6px 30px 16px;box-shadow:10px 10px 0 #c9a24a">{t}</span>'
+    if st == "news": t = f'<span style="background:#c0392b;padding:6px 30px 16px">{t}</span>'
+    if st == "red": t = f'<span style="background:#e5322d;padding:6px 30px 16px;transform:rotate(-2deg);display:inline-block">{t}</span>'
+    if st == "lower": t = f'<span style="border-right:16px solid #c9a24a;padding-right:24px;background:linear-gradient(270deg,#000c,#0000)">{t}</span>'
+    return (f'<div class="bar" id="br{i}"></div>' if bar else "") + f'<div class="cap" id="cp{i}" style="opacity:0;{css}">{t}</div>', bar
+def overlay(i, b, s, e):
+    o = b.get("overlay"); h, js = "", []
+    if not o: return h, js
+    o = [o] if isinstance(o, str) else o
+    sv = ""
+    for k in o:
+        if k == "circle": x, y, r = b.get("at", [540, 900, 220]); L = int(6.4 * r); sv += f'<path id="oc{i}" d="M{x+r},{y} A{r},{r*.9} 0 1,1 {x+r-1},{y-6}" fill="none" stroke="#e5322d" stroke-width="12" stroke-dasharray="{L}" stroke-dashoffset="{L}"/>'; js.append(f'tl.to("#oc{i}",{{strokeDashoffset:0,duration:.7}},{s+.6:.2f});')
+        if k == "arrow": (x1, y1), (x2, y2) = b.get("arrow", [[200, 600], [520, 880]]); sv += f'<path id="oa{i}" d="M{x1},{y1} L{x2},{y2}" stroke="#ffd21f" stroke-width="16" stroke-linecap="round" stroke-dasharray="900" stroke-dashoffset="900" marker-end="url(#ah{i})"/><marker id="ah{i}" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6Z" fill="#ffd21f"/></marker>'; js.append(f'tl.to("#oa{i}",{{strokeDashoffset:0,duration:.6}},{s+.6:.2f});')
+        if k == "route": sv += f'<path id="rt{i}" d="M260,820 C420,700 640,720 860,900" fill="none" stroke="#e5322d" stroke-width="12" stroke-dasharray="26 16"/><circle cx="260" cy="820" r="20" fill="#e5322d"/><circle id="dot{i}" cx="860" cy="900" r="22" fill="#e5322d" opacity="0"/>'; js += [f'tl.fromTo("#rt{i}",{{strokeDashoffset:900}},{{strokeDashoffset:0,duration:2,ease:"none"}},{s+.3:.2f});', f'tl.to("#dot{i}",{{opacity:1,duration:.2}},{s+2.3:.2f});']
+        if k == "zoombox": x, y, w = b.get("box", [400, 700, 300]); sv += f'<rect id="zb{i}" x="{x}" y="{y}" width="{w}" height="{w}" fill="none" stroke="#ffd21f" stroke-width="10" opacity="0"/>'; js.append(f'tl.fromTo("#zb{i}",{{opacity:0,scale:1.6,transformOrigin:"50% 50%"}},{{opacity:1,scale:1,duration:.4}},{s+.5:.2f});')
+        if k == "redact": sv += "".join(f'<rect class="rd{i}" x="{150+R(j)*40:.0f}" y="{600+j*90}" width="{500+R(j+5)*200:.0f}" height="50" fill="#111"/>' for j in range(4)); js.append(f'tl.fromTo("#S{i} .rd{i}",{{scaleX:0,transformOrigin:"0% 50%"}},{{scaleX:1,duration:.3,stagger:.2}},{s+.4:.2f});')
+        if k == "film": sv += '<rect width="1080" height="1920" fill="none" stroke="#000" stroke-width="80"/>' + "".join(f'<rect x="{x}" y="{y}" width="30" height="40" rx="6" fill="#ddd"/>' for x in (10, 1040) for y in range(20, 1920, 80))
+        if k == "letterbox": sv += '<rect width="1080" height="260" fill="#000"/><rect y="1660" width="1080" height="260" fill="#000"/>'
+        if k == "vhs": sv += "".join(f'<rect class="vh{i}" x="0" y="{(R(j)+1)*960:.0f}" width="1080" height="{4+abs(R(j+3))*10:.0f}" fill="#fff" opacity=".12"/>' for j in range(10)) + '<text x="70" y="140" font-size="56" font-family="monospace" fill="#fff" opacity=".8">▶ PLAY</text>'; js.append(f'tl.fromTo("#S{i} .vh{i}",{{y:0}},{{y:300,duration:.5,repeat:{int((e-s)/.5)+2},ease:"none"}},{s-.3:.2f});')
+        if k == "counter": h += f'<div class="cap" id="cn{i}" style="top:640px;font-size:220px;color:#ffd21f;text-shadow:0 10px 40px #000">0</div>'; js.append(f'const o{i}={{v:0}};tl.to(o{i},{{v:{b.get("number",100)},duration:1.6,ease:"power2.out",onUpdate:()=>{{document.getElementById("cn{i}").textContent=Math.round(o{i}.v).toLocaleString("en")+"{b.get("unit","")}"}}}},{s+.3:.2f});')
+        if k == "stamp": h += f'<div class="cap" id="sp{i}" style="top:700px;font-size:120px;color:#e5322d"><span style="border:14px solid #e5322d;padding:0 30px 14px;display:inline-block;transform:rotate(-10deg)">{b.get("stamp","سرّي")}</span></div>'; js.append(f'tl.fromTo("#sp{i}",{{opacity:0,scale:3}},{{opacity:1,scale:1,duration:.25,ease:"power4.in"}},{s+.8:.2f});')
+        if k == "quote": h += f'<div class="cap" id="qt{i}" style="top:560px;font-size:76px;color:#f4ecd8;font-style:italic">«{b.get("quote","")}»</div>'; js.append(f'tl.fromTo("#qt{i}",{{opacity:0}},{{opacity:1,duration:.8}},{s+.3:.2f});')
+        if k == "split" and b.get("img2_ready"): h += f'<div id="sp2{i}" style="position:absolute;left:540px;top:0;width:540px;height:1920px;background:url(img/{i}b.jpg) center/cover;border-left:10px solid #fff;filter:{GRADES.get(b.get("grade", ep.get("grade", "sepia")))}"></div>'; js.append(f'tl.fromTo("#sp2{i}",{{x:540}},{{x:0,duration:.6,ease:"power3.out"}},{s+.5:.2f});')
+    if sv: h = f'<svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{sv}</svg>' + h
+    return h, js
 def scene(i, b, s, e, c0, c1):
-    D = c1 - c0; js = []; a, z, dx, dy = b.get("cam", [(1.0, 1.18, -40, 0), (1.2, 1.0, 0, 30), (1.0, 1.15, 30, -20), (1.15, 1.0, 0, -30)][i % 4])
-    h = f'<div class="ph" id="ph{i}" style="background-image:url(img/{i}.jpg);filter:sepia(.35) contrast(1.1) saturate(.8) brightness(.85)"></div><div class="vg"></div>'
-    if b.get("route"):
-        h += '<svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920"><path id="rt%d" d="M260,820 C420,700 640,720 860,900" fill="none" stroke="#e5322d" stroke-width="12" stroke-dasharray="26 16"/><circle cx="260" cy="820" r="20" fill="#e5322d"/><circle id="dot%d" cx="860" cy="900" r="22" fill="#e5322d" opacity="0"/></svg>' % (i, i)
+    D = c1 - c0; js = []
+    cam = b.get("cam", ep.get("cam")); a, z, dx, dy = CAMS[cam] if isinstance(cam, str) else (cam or [(1.0, 1.18, -40, 0), (1.2, 1.0, 0, 30), (1.0, 1.15, 30, -20), (1.15, 1.0, 0, -30)][i % 4])
+    g = GRADES.get(b.get("grade", ep.get("grade", "sepia")), GRADES["sepia"])
+    h = f'<div class="ph" id="ph{i}" style="background-image:url(img/{i}.jpg);filter:{g}"></div><div class="vg"></div>'
+    oh, oj = overlay(i, b, s, e); h += oh; js += oj
+    if b.get("route"): o2, j2 = overlay(i, {"overlay": "route"}, s, e); h += o2; js += j2
     if b.get("date"): h += f'<div class="dt" id="dt{i}" style="opacity:0"><span>{b["date"]}</span></div>'
-    h += f'<div class="bar" id="br{i}"></div><div class="cap" id="cp{i}" style="opacity:0">{b["cap"]}</div>'
+    ch, bar = capdiv(i, b); h += ch
     if b.get("flash"): h += f'<div id="fl{i}" style="position:absolute;inset:0;background:#fff;opacity:0"></div>'
-    js += [f'tl.fromTo("#ph{i}",{{scale:{a},x:{dx},y:{dy}}},{{scale:{z},x:{-dx},y:{-dy},duration:{D:.2f},ease:"none"}},{c0:.2f});',
-           f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.45}},{c0:.2f});' if i else "",
-           f'tl.fromTo("#br{i}",{{scaleX:0}},{{scaleX:1,duration:.5,ease:"power2.out"}},{s+.1:.2f});',
-           f'tl.fromTo("#cp{i}",{{opacity:0,y:30}},{{opacity:1,y:0,duration:.6,ease:"power2.out"}},{s+.3:.2f});']
+    tr = b.get("transition", ep.get("transition", "fade"))
+    js.append(f'tl.fromTo("#ph{i}",{{scale:{a},x:{dx},y:{dy}}},{{scale:{z},x:{-dx},y:{-dy},duration:{D:.2f},ease:"none"}},{c0:.2f});')
+    if i:
+        js.append({"fade": f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.45}},{c0:.2f});', "cut": f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.05}},{c0+.3:.2f});',
+                   "slide": f'tl.fromTo("#S{i}",{{x:1080}},{{x:0,duration:.45,ease:"power3.out"}},{c0:.2f});', "up": f'tl.fromTo("#S{i}",{{y:1920}},{{y:0,duration:.45,ease:"power3.out"}},{c0:.2f});',
+                   "zoom": f'tl.fromTo("#S{i}",{{opacity:0,scale:1.5}},{{opacity:1,scale:1,duration:.45,ease:"power3.out"}},{c0:.2f});', "blur": f'tl.fromTo("#S{i}",{{opacity:0,filter:"blur(30px)"}},{{opacity:1,filter:"blur(0px)",duration:.5}},{c0:.2f});',
+                   "flash": f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.05}},{c0+.3:.2f});tl.fromTo("#S{i}",{{filter:"brightness(4)"}},{{filter:"brightness(1)",duration:.4}},{c0+.3:.2f});',
+                   "glitch": f'tl.fromTo("#S{i}",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:.06,repeat:4,yoyo:true}},{c0+.2:.2f});'}.get(tr, ""))
+    if bar: js.append(f'tl.fromTo("#br{i}",{{scaleX:0}},{{scaleX:1,duration:.5,ease:"power2.out"}},{s+.1:.2f});')
+    js.append(f'tl.fromTo("#cp{i}",{{opacity:0,y:30}},{{opacity:1,y:0,duration:.6,ease:"power2.out"}},{s+.3:.2f});')
     if b.get("date"): js.append(f'tl.fromTo("#dt{i}",{{opacity:0,scaleX:1.4}},{{opacity:1,scaleX:1,duration:.6}},{s:.2f});')
-    if b.get("route"): js += [f'tl.fromTo("#rt{i}",{{strokeDashoffset:900}},{{strokeDashoffset:0,duration:2,ease:"none"}},{s+.3:.2f});', f'tl.to("#dot{i}",{{opacity:1,duration:.2}},{s+2.3:.2f});']
     if b.get("flash"): js += [f'tl.fromTo("#fl{i}",{{opacity:.9}},{{opacity:0,immediateRender:false,duration:.5}},{s+.9:.2f});', f'tl.fromTo("#S{i}",{{x:0}},{{x:14,duration:.05,yoyo:true,repeat:9}},{s+.9:.2f});']
-    return h, [j for j in js if j]
+    return h, js
 def images():
     """each beat: "img": path (relative to the json) or "query": English Pixabay search (needs PIXABAY_KEY)."""
     out = os.path.abspath(sys.argv[2]) + "/project/img"; os.makedirs(out, exist_ok=True)
@@ -30,6 +74,17 @@ def images():
         if not src:
             tmp = f"{out}/q{i}"; os.makedirs(tmp, exist_ok=True)
             sh([sys.executable, KIT + "/scripts/pixabay.py", "photos", b["query"], tmp, "--n", "1"], stdout=subprocess.DEVNULL)
+            src = tmp + "/" + sorted(os.listdir(tmp))[0]
+        sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=-2:2100", "-q:v", "3", dst])
+    for i, b in enumerate(B):
+        if not (b.get("img2") or b.get("query2")): continue
+        dst = f"{out}/{i}b.jpg"; b["img2_ready"] = True
+        if os.path.exists(dst): continue
+        src = b.get("img2")
+        if src and not os.path.isabs(src): src = os.path.join(ep["_dir"], src)
+        if not src:
+            tmp = f"{out}/q{i}b"; os.makedirs(tmp, exist_ok=True)
+            sh([sys.executable, KIT + "/scripts/pixabay.py", "photos", b["query2"], tmp, "--n", "1"], stdout=subprocess.DEVNULL)
             src = tmp + "/" + sorted(os.listdir(tmp))[0]
         sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=-2:2100", "-q:v", "3", dst])
 images()

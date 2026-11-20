@@ -8,8 +8,9 @@ HERE = os.path.dirname(os.path.abspath(__file__)); KIT = os.path.abspath(os.path
 sys.path.insert(0, HERE); sys.path.insert(0, os.path.join(KIT, "scripts"))
 import cutout
 
-PAPER = {"cream": "#efe6d2", "kraft": "#c9a77a", "dark": "#1d1f24", "blue": "#24456b", "red": "#a8322e", "white": "#f6f4ee", "green": "#2f5a46", "yellow": "#f2c94c"}
-DARK_BG = {"dark", "blue", "red", "green"}
+PAPER = {"cream": "#efe6d2", "kraft": "#c9a77a", "dark": "#1d1f24", "blue": "#24456b", "red": "#a8322e", "white": "#f6f4ee", "green": "#2f5a46", "yellow": "#f2c94c",
+         "pink": "#f3c6cf", "mint": "#cfeadb", "sky": "#bcdcf0", "lilac": "#d9cdf0", "orange": "#e8913a", "teal": "#1f5f63", "navy": "#14213d", "purple": "#4a2a6a", "olive": "#6b6b3a", "sand": "#e3cfa4", "grey": "#9a9a9a", "black": "#0e0e10", "newspaper": "#e9e4d8", "brown": "#5a3a22"}
+DARK_BG = {"dark", "blue", "red", "green", "teal", "navy", "purple", "olive", "black", "brown", "orange"}
 W, H = 1080, 1920
 
 def sh(cmd, **kw): return subprocess.run(cmd, check=True, **kw)

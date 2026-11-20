@@ -40,6 +40,105 @@ def ch_kid(i):
             + eyes(i, (-70, 70), -200, 36) + mouth(i, 0, -110, 50) + '<ellipse cx="-120" cy="-140" rx="30" ry="16" fill="#ff9aa8" opacity=".7"/><ellipse cx="120" cy="-140" rx="30" ry="16" fill="#ff9aa8" opacity=".7"/>')
 CHARS = {"whale": ch_whale, "cat": ch_cat, "octopus": ch_octopus, "bee": ch_bee, "penguin": ch_penguin, "kid": ch_kid}
 HOME = {"whale": "ocean", "octopus": "ocean", "cat": "room", "bee": "garden", "penguin": "ice", "kid": "garden"}
+
+# ---------------------------------------------------------------- parametric animals (one builder, many species)
+def ch_animal(spec):
+    c, c2 = spec["c"], spec.get("c2", "#ffffff"); ears = spec.get("ears", "round"); tail = spec.get("tail", "none"); pat = spec.get("pat", "")
+    def f(i):
+        s = ""
+        tl = {"none": "", "curl": f'<path d="M0,0 C110,-10 140,-110 90,-150 C60,-170 40,-130 70,-120" stroke="{K}" stroke-width="40" fill="none" stroke-linecap="round"/><path d="M0,0 C110,-10 140,-110 90,-150" stroke="{c}" stroke-width="24" fill="none" stroke-linecap="round"/>',
+              "long": f'<path d="M0,0 C120,-20 160,-140 120,-240" stroke="{K}" stroke-width="44" fill="none" stroke-linecap="round"/><path d="M0,0 C120,-20 160,-140 120,-240" stroke="{c}" stroke-width="26" fill="none" stroke-linecap="round"/>',
+              "puff": f'<circle cx="40" cy="-20" r="60" fill="{c2}" {SW}/>', "fan": f'<path d="M0,0 L160,-140 L200,-40Z" fill="{c}" {SW}/>',
+              "fin": f'<path d="M0,0 C80,-40 120,-140 200,-160 C170,-80 180,-30 220,20 C150,10 80,40 0,40Z" fill="{c}" {SW}/>'}[tail]
+        s += f'<g id="tl{i}" transform="translate(180 140) rotate(0)">{tl}</g>'
+        if spec.get("legs", True): s += "".join(f'<rect x="{x-38}" y="220" width="76" height="120" rx="34" fill="{c}" {SW}/>' for x in (-110, 110))
+        body = f'<ellipse cx="0" cy="170" rx="{spec.get("bw", 200)}" ry="150" fill="{c}" {SW}/><ellipse cx="0" cy="200" rx="{spec.get("bw", 200)*.6:.0f}" ry="100" fill="{c2}"/>'
+        if spec.get("wings"): body += f'<path d="M-190,120 C-320,40 -300,240 -170,230Z M190,120 C320,40 300,240 170,230Z" fill="{spec.get("wc", c)}" {SW}/>'
+        s += body
+        er = {"round": lambda sx: f'<circle cx="{sx*170}" cy="-210" r="70" fill="{c}" {SW}/><circle cx="{sx*170}" cy="-210" r="38" fill="{c2}"/>',
+              "cat": lambda sx: f'<path d="M{sx*210},-180 L{sx*170},-330 L{sx*60},-230Z" fill="{c}" {SW}/>',
+              "long": lambda sx: f'<ellipse cx="{sx*90}" cy="-330" rx="50" ry="150" fill="{c}" {SW}/><ellipse cx="{sx*90}" cy="-320" rx="24" ry="110" fill="#ffc2c2"/>',
+              "floppy": lambda sx: f'<ellipse cx="{sx*230}" cy="-60" rx="60" ry="140" fill="{spec.get("ec", c)}" {SW} transform="rotate({-sx*20} {sx*230} -60)"/>',
+              "horn": lambda sx: f'<path d="M{sx*120},-200 Q{sx*190},-330 {sx*110},-360 Q{sx*120},-280 {sx*60},-220Z" fill="#f4e3b0" {SW}/>',
+              "big": lambda sx: f'<ellipse cx="{sx*250}" cy="-70" rx="130" ry="170" fill="{c}" {SW}/><ellipse cx="{sx*250}" cy="-70" rx="80" ry="120" fill="#ffc2c2"/>',
+              "tuft": lambda sx: f'<path d="M{sx*150},-210 L{sx*200},-320 L{sx*80},-240Z" fill="{c}" {SW}/>',
+              "none": lambda sx: ""}[ears]
+        s += er(-1) + er(1)
+        if spec.get("mane"): s += f'<circle cx="0" cy="-60" r="300" fill="{spec["mane"]}" {SW}/>'
+        s += f'<ellipse cx="0" cy="-60" rx="{spec.get("hw", 240)}" ry="{spec.get("hh", 200)}" fill="{c}" stroke="{K}" stroke-width="12"/>'
+        if pat == "spots": s += "".join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{spec.get("pc", "#151515")}" opacity=".85"/>' for x, y, r in ((-150, -140, 30), (140, -10, 26), (-170, 30, 20), (120, -170, 22)))
+        if pat == "stripes": s += "".join(f'<path d="M{x},-255 l{d},70" stroke="{spec.get("pc", "#151515")}" stroke-width="18" stroke-linecap="round"/>' for x, d in ((-60, 20), (0, 0), (60, -20)))
+        if pat == "mask": s += f'<ellipse cx="-90" cy="-60" rx="70" ry="60" fill="{spec.get("pc", "#151515")}"/><ellipse cx="90" cy="-60" rx="70" ry="60" fill="{spec.get("pc", "#151515")}"/>'
+        if pat == "comb": s += f'<path d="M-60,-250 q30,-90 60,-10 q30,-90 60,0 q30,-80 50,10Z" fill="#e5322d" {SW}/>'
+        mz = spec.get("muzzle", "small")
+        if mz == "small": s += f'<ellipse cx="0" cy="20" rx="80" ry="55" fill="{c2}"/><path d="M-20,-10 h40 l-20,24z" fill="{spec.get("nc", "#ff6a8a")}"/>'
+        if mz == "big": s += f'<ellipse cx="0" cy="40" rx="130" ry="80" fill="{c2}" {SW}/><ellipse cx="0" cy="10" rx="36" ry="24" fill="{K}"/>'
+        if mz == "beak": s += f'<path d="M-50,0 L0,70 L50,0 Q0,-30 -50,0Z" fill="#ff9a3a" {SW}/>'
+        if mz == "snout": s += f'<ellipse cx="0" cy="30" rx="80" ry="58" fill="{spec.get("nc", "#ffb3c6")}" {SW}/><circle cx="-26" cy="30" r="12" fill="{K}"/><circle cx="26" cy="30" r="12" fill="{K}"/>'
+        if mz == "trunk": s += f'<path d="M-40,0 C-40,160 40,220 90,200 C60,180 40,140 40,0Z" fill="{c}" {SW}/>'
+        s += eyes(i, (-90, 90), -90, spec.get("er", 40)) + (f'<path id="mo{i}" d="M-40,90 Q0,140 40,90" fill="#e85a6a" {SW}/>' if mz != "beak" else f'<path id="mo{i}" d="M-30,70 Q0,100 30,70" fill="#e85a6a" stroke="{K}" stroke-width="6"/>')
+        if spec.get("whisk"): s += f'<path d="M-100,30 h-140 M-100,50 l-130,30 M100,30 h140 M100,50 l130,30" stroke="{K}" stroke-width="6"/>'
+        if spec.get("glasses"): s += f'<circle cx="-90" cy="-90" r="60" fill="none" stroke="{K}" stroke-width="10"/><circle cx="90" cy="-90" r="60" fill="none" stroke="{K}" stroke-width="10"/><path d="M-30,-90 H30" stroke="{K}" stroke-width="10"/>'
+        if spec.get("hat"): s += f'<path d="M-150,-230 H150 L120,-260 H-120Z M-90,-260 V-380 H90 V-260Z" fill="{spec["hat"]}" {SW}/>'
+        return s
+    return f
+ANIMALS = {
+ "dog": dict(c="#c98f45", c2="#f4e3c4", ears="floppy", ec="#8a5a33", tail="curl", muzzle="big"),
+ "puppy": dict(c="#f4e3c4", c2="#fff", ears="floppy", ec="#c98f45", tail="curl", muzzle="big", pat="spots", pc="#c98f45"),
+ "rabbit": dict(c="#f2f2f2", c2="#ffd9e0", ears="long", tail="puff", muzzle="small", whisk=True),
+ "bear": dict(c="#8a5a33", c2="#d9b48a", ears="round", muzzle="big"),
+ "panda": dict(c="#fff", c2="#fff", ears="round", muzzle="big", pat="mask", pc="#151515"),
+ "polar_bear": dict(c="#f4f8ff", c2="#fff", ears="round", muzzle="big"),
+ "koala": dict(c="#9aa8b6", c2="#e8eef5", ears="big", muzzle="big"),
+ "lion": dict(c="#f2b24c", c2="#ffe7b0", ears="round", mane="#c96a1a", tail="long", muzzle="small", nc="#8a4a2a"),
+ "tiger": dict(c="#ff9a3a", c2="#fff", ears="cat", pat="stripes", tail="long", muzzle="small", whisk=True),
+ "fox": dict(c="#ff7a2a", c2="#fff", ears="cat", tail="puff", muzzle="small", nc="#151515"),
+ "wolf": dict(c="#8a9ab0", c2="#e8eef5", ears="cat", tail="puff", muzzle="big"),
+ "mouse": dict(c="#b8b8c8", c2="#ffd9e0", ears="big", tail="long", muzzle="small", whisk=True, er=34),
+ "hamster": dict(c="#f2b24c", c2="#fff", ears="round", muzzle="small", hw=280),
+ "pig": dict(c="#ffb3c6", c2="#ffd9e0", ears="cat", tail="curl", muzzle="snout"),
+ "cow": dict(c="#fff", c2="#ffd9e0", ears="horn", pat="spots", pc="#151515", muzzle="snout", nc="#ffb3c6"),
+ "sheep": dict(c="#f4f4f4", c2="#3a3a3a", ears="floppy", ec="#3a3a3a", muzzle="big", mane="#f4f4f4"),
+ "goat": dict(c="#e8dcc8", c2="#fff", ears="horn", muzzle="big"),
+ "horse": dict(c="#8a5a33", c2="#c98f45", ears="cat", tail="long", muzzle="snout", nc="#c98f45", hh=230),
+ "camel": dict(c="#d9a85a", c2="#f4e3c4", ears="round", muzzle="big", tail="long"),
+ "elephant": dict(c="#9aa8b6", c2="#c9d4e0", ears="big", muzzle="trunk"),
+ "giraffe": dict(c="#ffd27a", c2="#fff", ears="horn", pat="spots", pc="#c96a1a", muzzle="snout", nc="#f4e3c4"),
+ "zebra": dict(c="#fff", c2="#fff", ears="cat", pat="stripes", pc="#151515", muzzle="snout", nc="#3a3a3a"),
+ "monkey": dict(c="#8a5a33", c2="#f1c7a0", ears="round", tail="curl", muzzle="big"),
+ "gorilla": dict(c="#3a3a40", c2="#6a6a70", ears="round", muzzle="big", bw=260),
+ "frog": dict(c="#6fcf4f", c2="#c8f0b0", ears="none", muzzle="none", er=58, legs=False),
+ "turtle": dict(c="#6fcf4f", c2="#c98f45", ears="none", muzzle="none", pat="", legs=True),
+ "owl": dict(c="#8a5a33", c2="#f4e3c4", ears="tuft", muzzle="beak", er=60, wings=True),
+ "chick": dict(c="#ffd21f", c2="#fff3b0", ears="none", muzzle="beak", wings=True, legs=False),
+ "chicken": dict(c="#fff", c2="#fff", ears="none", muzzle="beak", pat="comb", wings=True, tail="fan"),
+ "duck": dict(c="#fff", c2="#fff", ears="none", muzzle="beak", wings=True, legs=False),
+ "parrot": dict(c="#2fbf6a", c2="#ffd21f", ears="none", muzzle="beak", wings=True, wc="#e5322d", tail="fan"),
+ "eagle": dict(c="#5a3a22", c2="#fff", ears="none", muzzle="beak", wings=True, hw=220),
+ "bat": dict(c="#4a3a5a", c2="#7a6a8a", ears="cat", muzzle="small", wings=True, wc="#3a2a4a", legs=False),
+ "dolphin": dict(c="#7cb6e0", c2="#e8f4ff", ears="none", muzzle="big", tail="fin", legs=False),
+ "shark": dict(c="#8a9ab0", c2="#fff", ears="none", muzzle="big", tail="fin", legs=False, pat=""),
+ "seal": dict(c="#9aa8b6", c2="#c9d4e0", ears="none", muzzle="small", whisk=True, tail="fin", legs=False),
+ "crab": dict(c="#e5322d", c2="#ff8a7a", ears="none", muzzle="none", legs=True, er=46),
+ "ladybug": dict(c="#e5322d", c2="#151515", ears="none", pat="spots", pc="#151515", muzzle="none", legs=False),
+ "butterfly": dict(c="#c45adb", c2="#ffd21f", ears="none", wings=True, wc="#ffd21f", muzzle="none", legs=False),
+ "ant": dict(c="#3a2a2a", c2="#5a4a4a", ears="none", muzzle="none", legs=True),
+ "snail": dict(c="#c8e090", c2="#d98f45", ears="none", muzzle="none", legs=False, mane="#d98f45"),
+ "dragon": dict(c="#2fbf6a", c2="#ffd21f", ears="horn", wings=True, wc="#2f8a3a", tail="long", muzzle="big"),
+ "unicorn": dict(c="#fff", c2="#ffd9f0", ears="cat", tail="long", muzzle="snout", nc="#ffd9f0", hat=None),
+ "robot": dict(c="#9aa8b6", c2="#dff1ff", ears="none", muzzle="none", legs=True, er=46),
+ "alien": dict(c="#7fdf6f", c2="#c8f0b0", ears="long", muzzle="none", er=60),
+ "monster": dict(c="#7a4fd1", c2="#c4a8ff", ears="horn", muzzle="big", pat="spots", pc="#5a2fb1"),
+ "teacher": dict(c="#f1c7a0", c2="#f1c7a0", ears="round", muzzle="none", glasses=True, legs=True),
+ "scientist": dict(c="#f1c7a0", c2="#fff", ears="none", muzzle="none", glasses=True, mane="#ddd"),
+ "grandpa": dict(c="#e9b98f", c2="#fff", ears="round", muzzle="none", glasses=True, hat="#5a3a22"),
+}
+for _n, _sp in ANIMALS.items():
+    CHARS.setdefault(_n, ch_animal(_sp))
+for _n in ANIMALS: HOME.setdefault(_n, {"dolphin": "ocean", "shark": "ocean", "seal": "ice", "crab": "beach", "polar_bear": "ice", "camel": "desert", "lion": "savanna", "giraffe": "savanna", "zebra": "savanna", "elephant": "savanna",
+    "monkey": "jungle", "gorilla": "jungle", "parrot": "jungle", "frog": "pond", "turtle": "pond", "duck": "pond", "cow": "farm", "pig": "farm", "sheep": "farm", "goat": "farm", "horse": "farm", "chicken": "farm", "chick": "farm",
+    "owl": "night", "bat": "night", "wolf": "night", "eagle": "mountain", "robot": "lab", "scientist": "lab", "alien": "space", "dragon": "mountain", "teacher": "classroom", "grandpa": "room", "unicorn": "garden"}.get(_n, "garden"))
+
 def bg(name, i):
     if name == "ocean":
         return (f'<linearGradient id="oc{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3fb6ff"/><stop offset="1" stop-color="#0a3d7a"/></linearGradient><rect width="1080" height="1920" fill="url(#oc{i})"/>'
@@ -56,27 +155,32 @@ def bg(name, i):
         return ('<rect width="1080" height="1920" fill="#ffd9a8"/>' + "".join(f'<rect x="{k*120}" y="0" width="60" height="1500" fill="#ffcf98"/>' for k in range(9)) +
                 '<rect y="1500" width="1080" height="420" fill="#c98f45" stroke="#0b2a4a" stroke-width="10"/><rect x="680" y="560" width="300" height="340" fill="#bfe3f5" stroke="#0b2a4a" stroke-width="10"/><path d="M830,560 V900 M680,730 H980" stroke="#0b2a4a" stroke-width="8"/>'
                 '<rect x="80" y="700" width="300" height="24" fill="#8a5a33" stroke="#0b2a4a" stroke-width="6"/><rect x="110" y="620" width="40" height="80" fill="#e5322d"/><rect x="160" y="600" width="40" height="100" fill="#2b8be0"/><rect x="210" y="630" width="40" height="70" fill="#2fbf6a"/>'), "#fff3d6"
+    SCENE = {  # name: (sky top, sky bottom, ground, decoration icons [(name,x,y,scale)], bubble colour)
+     "desert": ("#ffd27a", "#ffb35a", "#e8c070", [("sun", 820, 520, .8), ("pyramid", 260, 1420, 1.1), ("pyramid", 520, 1460, .7)], "#fff3d0"),
+     "savanna": ("#ffcf7a", "#ffa64a", "#d9b050", [("sun", 540, 1250, 1.6), ("tree", 200, 1400, 1.2), ("tree", 900, 1430, .9)], "#fff3d0"),
+     "jungle": ("#7fd36a", "#2f8a3a", "#3f7a2a", [("leaf", 120, 500, 1.3), ("leaf", 960, 640, 1.2), ("tree", 160, 1380, 1.3), ("tree", 940, 1400, 1.4), ("flower", 820, 1700, .5)], "#d8ffd0"),
+     "pond": ("#9fe0ff", "#c8f0ff", "#6fcf4f", [("water", 540, 1640, 3.5), ("leaf", 300, 1640, .6), ("flower", 820, 1620, .5), ("cloud", 260, 560, .9)], "#ffffff"),
+     "farm": ("#9fe0ff", "#dff4ff", "#8fd35a", [("house", 860, 1300, 1.2), ("tree", 160, 1350, 1.2), ("sun", 860, 500, .8), ("cloud", 300, 560, .8)], "#ffffff"),
+     "night": ("#0b1a3a", "#2b2f6a", "#1f3a2a", [("moon", 820, 520, .9), ("star", 220, 420, .3), ("star", 420, 700, .2), ("star", 640, 380, .25), ("tree", 160, 1400, 1.2)], "#bfd0ff"),
+     "mountain": ("#9fd4ff", "#e8f4ff", "#7aa860", [("mountain", 260, 1300, 2.2), ("mountain", 820, 1340, 1.8), ("cloud", 700, 520, .9)], "#ffffff"),
+     "beach": ("#8fd3ff", "#dff4ff", "#f2d79a", [("sun", 820, 500, .8), ("water", 540, 1430, 3.5), ("cloud", 260, 580, .8)], "#ffffff"),
+     "city": ("#9fd4ff", "#dff4ff", "#9aa8b6", [("tower", 200, 1250, 1.6), ("factory", 860, 1350, 1.3), ("bus", 820, 1700, .7)], "#ffffff"),
+     "lab": ("#dff4ff", "#bfe0ff", "#9aa8b6", [("atom", 200, 560, .9), ("dna", 900, 620, .9), ("laptop", 820, 1600, .8)], "#ffffff"),
+     "classroom": ("#ffe7b0", "#ffd98a", "#c98f45", [("book", 200, 600, .8), ("pencil", 880, 620, .7), ("clock", 540, 500, .6)], "#fff3d6"),
+     "kitchen": ("#fff3e0", "#ffe0c0", "#c9d6e0", [("cake", 220, 1600, .7), ("coffee", 880, 1600, .6), ("pizza", 860, 560, .6)], "#ffffff"),
+     "rain": ("#7a8ea8", "#a8b8cc", "#5a7a5a", [("rain", 260, 520, 1), ("rain", 800, 640, .9), ("bolt", 540, 700, .6)], "#dfe8ff"),
+     "snow": ("#cfe0f0", "#f4f8ff", "#ffffff", [("snow", 200, 500, .4), ("snow", 820, 620, .3), ("tree", 900, 1400, 1.2)], "#ffffff"),
+     "stage": ("#3a1a4a", "#7a2a5a", "#5a2a1a", [("star", 200, 500, .5), ("star", 880, 500, .5), ("music", 540, 600, .6)], "#ffd0f0"),
+     "hospital": ("#e8f4ff", "#ffffff", "#bfd0e0", [("hospital", 820, 1350, 1.1), ("pill", 220, 600, .6), ("syringe", 880, 560, .6)], "#ffffff"),
+    }
+    if name in SCENE:
+        t, b2, g, deco, bub = SCENE[name]
+        return (f'<linearGradient id="sk{i}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="{t}"/><stop offset="1" stop-color="{b2}"/></linearGradient><rect width="1080" height="1920" fill="url(#sk{i})"/>'
+                f'<path d="M0,1520 Q540,1420 1080,1520 V1920 H0Z" fill="{g}" stroke="{K}" stroke-width="10"/>' + "".join(f'<g transform="translate({x} {y})">{icon(n, sc)}</g>' for n, x, y, sc in deco)), bub
     return ('<rect width="1080" height="1920" fill="#0b0f2a"/>' + "".join(f'<circle cx="{(R(k)+1)*540:.0f}" cy="{(R(k+70)+1)*960:.0f}" r="{2+abs(R(k+5))*4:.1f}" fill="#fff"/>' for k in range(120)) +
             '<circle cx="880" cy="1650" r="260" fill="#ff8a5a" stroke="#0b2a4a" stroke-width="10"/><circle cx="800" cy="1580" r="40" fill="#e0703f"/><circle cx="950" cy="1720" r="60" fill="#e0703f"/>'), "#bfd0ff"
-ICON = {
- "heart": '<path d="M0,60 C-160,-40 -120,-180 0,-110 C120,-180 160,-40 0,60Z" fill="#ff4d6d" {sw}/>',
- "car": '<rect x="-150" y="-80" width="300" height="110" rx="30" fill="#e5322d" {sw}/><path d="M-90,-80 L-50,-150 H60 L100,-80Z" fill="#ffd9d9" {sw}/><circle cx="-80" cy="40" r="38" fill="#333" {sw}/><circle cx="80" cy="40" r="38" fill="#333" {sw}/>',
- "plane": '<path d="M-150,-25 h260 q40,0 40,25 q0,25 -40,25 h-260z" fill="#e8eef5" {sw}/><path d="M-30,-25 l-60,-90 h40 l80,90z M-30,25 l-60,90 h40 l80,-90z" fill="#c9d4e0" {sw}/>',
- "dino": '<path d="M-160,0 C-160,-120 -60,-160 40,-140 L120,-300 C140,-330 190,-320 190,-290 L170,-170 C220,-120 220,0 160,30 L-180,40 C-260,40 -320,20 -380,-20 C-300,-10 -220,0 -160,0Z" fill="#7fbf3f" {sw}/><circle cx="150" cy="-280" r="10" fill="#0b2a4a"/>',
- "house": '<path d="M-150,-40 L0,-170 L150,-40Z" fill="#e5322d" {sw}/><rect x="-120" y="-40" width="240" height="180" fill="#ffd9a8" {sw}/><rect x="-30" y="40" width="60" height="100" fill="#8a5a33" {sw}/>',
- "bus": '<rect x="-180" y="-110" width="360" height="190" rx="24" fill="#ffd21f" {sw}/><rect x="-150" y="-80" width="300" height="70" fill="#bfe3f5" {sw}/><circle cx="-100" cy="90" r="36" fill="#333" {sw}/><circle cx="100" cy="90" r="36" fill="#333" {sw}/>',
- "star": '<path d="M0,-120 L35,-35 L125,-35 L55,20 L80,110 L0,55 L-80,110 L-55,20 L-125,-35 L-35,-35Z" fill="#ffd21f" {sw}/>',
- "apple": '<path d="M0,-70 C-120,-130 -150,40 -60,110 C-30,130 30,130 60,110 C150,40 120,-130 0,-70Z" fill="#e5322d" {sw}/><path d="M0,-70 q10,-50 40,-70" stroke="#0b2a4a" stroke-width="10" fill="none"/>',
- "fish": '<path d="M-130,0 C-60,-90 80,-90 120,0 C80,90 -60,90 -130,0Z M120,0 L190,-60 V60Z" fill="#ff9a3a" {sw}/><circle cx="-70" cy="-10" r="12" fill="#0b2a4a"/>',
- "drop": '<path d="M0,-130 C60,-40 100,20 100,60 A100,100 0 0,1 -100,60 C-100,20 -60,-40 0,-130Z" fill="#4aa3f0" {sw}/>',
- "brain": '<path d="M-130,30 C-170,-60 -100,-140 -20,-120 C20,-170 130,-140 130,-60 C190,-20 160,90 80,100 C40,140 -60,140 -90,100 C-150,100 -170,60 -130,30Z" fill="#ffb3c6" {sw}/><path d="M0,-110 V110 M-80,-40 q40,20 0,60 M80,-40 q-40,20 0,60" stroke="#0b2a4a" stroke-width="7" fill="none"/>',
- "clock": '<circle r="120" fill="#fff" {sw}/><path d="M0,0 V-80 M0,0 L60,30" stroke="#0b2a4a" stroke-width="12" stroke-linecap="round"/>',
- "moon": '<mask id="mm"><rect x="-200" y="-200" width="400" height="400" fill="#fff"/><circle cx="60" cy="-40" r="100" fill="#000"/></mask><circle r="120" fill="#ffe27a" {sw} mask="url(#mm)"/>',
- "leaf": '<path d="M-120,100 C-120,-60 40,-140 140,-120 C140,0 60,140 -120,100Z" fill="#6fcf4f" {sw}/><path d="M-120,100 L100,-90" stroke="#0b2a4a" stroke-width="8"/>',
- "eye": '<path d="M-150,0 Q0,-120 150,0 Q0,120 -150,0Z" fill="#fff" {sw}/><circle r="55" fill="#2b8be0" {sw}/><circle r="22" fill="#0b2a4a"/>',
- "dot": '<path d="M-40,0 q40,-28 80,0 q-40,28 -80,0" fill="#ff8a5a"/>',
-}
-def icon(n, sc=1): return f'<g transform="scale({sc})">' + ICON[n].replace("{sw}", SW) + "</g>"
+from icons import ICONS as ICON, icon as _icon
+def icon(n, sc=1): return _icon(n, sc)
 def bubbles(i, col): return "".join(f'<circle class="bu{i}" cx="{(R(i*20+k)+1)*540:.0f}" cy="{1900+k*40}" r="{10+abs(R(k+i))*26:.0f}" fill="none" stroke="{col}" stroke-width="5" opacity=".8"/>' for k in range(16))
 CX, CY = 560, 1180
 def scene(i, b, s, e, c0, c1):
