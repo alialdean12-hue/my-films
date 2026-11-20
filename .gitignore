@@ -14,3 +14,6 @@ examples/*/stills/
 examples/*/events.json
 examples/*/voice/.cache/
 __pycache__/
+
+# Transient local production proofs and research; deliver via Drive.
+/.cache/

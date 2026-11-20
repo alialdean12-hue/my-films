@@ -1,0 +1,165 @@
+{
+  "slug": "002-backstage-whisper",
+  "title": "همسة خلف الستار",
+  "part": 1,
+  "duration": 50,
+  "voice": {
+    "name": "ar-SA-HamedNeural",
+    "rate": "-3%",
+    "archive": "002"
+  },
+  "room": {
+    "wall": "#171b2d",
+    "wall2": "#394351",
+    "objects": [
+      {
+        "type": "stage_wings",
+        "note": "One original, code-drawn set: burgundy drapes, lighting pipe, timber floor and two road cases."
+      },
+      {
+        "type": "clock",
+        "x": 290,
+        "y": 468,
+        "time": "22:00"
+      },
+      {
+        "type": "outline",
+        "x": 470,
+        "y": 1648,
+        "name": "سلمى"
+      },
+      {
+        "type": "chair_over",
+        "x": 829,
+        "y": 1582,
+        "note": "Decoy A: a toppled stage chair.",
+        "padded": true
+      },
+      {
+        "type": "stage_ticket",
+        "x": 221,
+        "y": 1310,
+        "note": "Decoy B: two halves of the same theatre ticket."
+      },
+      {
+        "type": "file_monitor",
+        "x": 791,
+        "y": 855,
+        "note": "The only decisive fact: original clip has 1 video track and 0 audio tracks. These are file properties, not mute or a volume indicator."
+      },
+      {
+        "type": "person",
+        "id": "younes",
+        "name": "يونس",
+        "x": 435,
+        "y": 1480,
+        "coat": "#43556b",
+        "hair": "#211c1e",
+        "skin": "#cd9a78"
+      }
+    ]
+  },
+  "beats": [
+    {
+      "scene": "host",
+      "line": "كلمةٌ واحدة جعلت عامل المسرح مُشتبَهًا به.",
+      "host": "enter",
+      "caption": "[y]كلمة واحدة[/y] تكفي؟"
+    },
+    {
+      "scene": "room",
+      "line": "العاشرة ليلًا. انصرف جمهور المسرح، وبقي الحارس يونس في الكواليس.",
+      "cam": [
+        540,
+        910,
+        1.02
+      ],
+      "caption": "بعد [y]العرض الأخير[/y]"
+    },
+    {
+      "scene": "room",
+      "line": "خلف الستار، وُجدت سلمى، مديرة المسرح، ميتةً بجوار كرسيٍّ مقلوب.",
+      "cam": [
+        542,
+        1690,
+        2.17
+      ],
+      "tags": [
+        "outline"
+      ],
+      "caption_pos": "top",
+      "caption": "خلف [b]الستار[/b]"
+    },
+    {
+      "scene": "room",
+      "line": "قال يونس: فتحتُ تسجيل الكواليس الأصلي، وسمعتُ سلمى تهمس: يا نادِر!",
+      "cam": [
+        430,
+        1075,
+        1.44
+      ],
+      "fx": [
+        "glance"
+      ],
+      "tags": [
+        "younes"
+      ],
+      "caption_size": 83,
+      "caption": "«سمعتُها تهمس:\n[y]يا نادر![/y]»",
+      "caption_pos": "bottom"
+    },
+    {
+      "scene": "room",
+      "line": "ونادرٌ عامل المسرح. لكن المحققة رأت في الغرفة ما يُكذّب شهادة الحارس.",
+      "stamp": "يكذب!",
+      "cam": [
+        560,
+        1000,
+        1.08
+      ]
+    },
+    {
+      "scene": "room",
+      "line": "انظر جيدًا. تمهّل عند كل تفصيل، ثم أعد في ذهنك كلمات الحارس.",
+      "cam": [
+        568,
+        1080,
+        1.08
+      ],
+      "tour": [
+        [
+          829,
+          1560,
+          1.95
+        ],
+        [
+          789,
+          861,
+          1.95
+        ],
+        [
+          222,
+          1307,
+          1.95
+        ]
+      ],
+      "tour_start": 0.06,
+      "caption": "انظر [y]جيدًا[/y]"
+    },
+    {
+      "scene": "host",
+      "line": "ما الذي كشف كذبة يونس؟ اكتب جوابك في التعليقات قبل الجزء الثاني.",
+      "host": "point",
+      "sub": "اكتب جوابك في التعليقات",
+      "caption": "كيف كشفته؟"
+    }
+  ],
+  "thumb": {
+    "text": "ماذا [r]سمع[/r]؟",
+    "focus": [
+      447,
+      1090,
+      1.48
+    ]
+  }
+}

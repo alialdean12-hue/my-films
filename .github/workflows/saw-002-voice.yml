@@ -1,0 +1,33 @@
+name: Backstage Whisper · narration check
+on:
+  push:
+    paths:
+      - '.github/workflows/saw-002-voice.yml'
+      - 'studio-kit/series/saw_5tory/cases/002-part*.json'
+      - 'studio-kit/series/saw_5tory/narration/002/**'
+      - 'studio-kit/series/saw_5tory/voice_stems.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify-original-takes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Verify both Hamed performances offline against the two scripts
+        working-directory: studio-kit/series/saw_5tory
+        run: |
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg; fi
+          python3 - <<'PY'
+          import json, tempfile
+          from pathlib import Path
+          from voice_stems import materialize
+          for n in (1, 2):
+              ep = json.loads(Path(f'cases/002-part{n}.json').read_text())
+              with tempfile.TemporaryDirectory() as tmp:
+                  materialize(ep, Path(f'narration/002/part{n}'), tmp)
+                  assert len(list(Path(tmp).glob('b*.wav'))) == len(ep['beats'])
+          PY
