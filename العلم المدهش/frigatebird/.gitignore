@@ -1,5 +1,0 @@
-# Local rendering intermediates and publication masters belong on Drive.
-/out/
-/.hyperframes/
-/sfx/*.wav
-/frigatebird.mp4

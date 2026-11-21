@@ -20,7 +20,7 @@ const {chromium} = require('playwright');
       const els = [...scope.querySelectorAll('div,span,text')].filter(e => [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length > 1));
       for (const e of els) {
         if (vis(e) < 0.5) continue;
-        const r = e.getBoundingClientRect(); if (r.width < 2) continue;
+        const rg = document.createRange(); rg.selectNodeContents(e); const r = rg.getBoundingClientRect(); if (r.width < 2) continue;
         const txt = e.textContent.trim().slice(0, 30);
         if (r.left < 20 || r.right > 1060) issues.push(`${t.toFixed(1)}s «${txt}» goes outside the frame sideways (x ${Math.round(r.left)}–${Math.round(r.right)})`);
         if (r.top < 40 || r.bottom > 1880) issues.push(`${t.toFixed(1)}s «${txt}» goes outside the frame top/bottom (y ${Math.round(r.top)}–${Math.round(r.bottom)})`);
@@ -32,9 +32,9 @@ const {chromium} = require('playwright');
   console.log(JSON.stringify(out)); await b.close();
 })();
 """
-def qa(P, sch, D):
+def qa(P, sch, D, prefix="S"):
     """returns list of problems (empty = OK). Checks every beat when its animation has settled."""
-    times = [[min(s + 1.9, (sch[i+1][0] - .3) if i + 1 < len(sch) else D - .2), f"S{i}"] for i, (s, e) in enumerate(sch)]
+    times = [[min(s + 1.9, (sch[i+1][0] - .3) if i + 1 < len(sch) else D - .2), f"{prefix}{i}"] for i, (s, e, *_) in enumerate(sch)]
     js = os.path.join(P, "_qa.js"); open(js, "w").write(QA_JS)
     r = subprocess.run(["node", js, os.path.join(P, "index.html"), json.dumps(times)], capture_output=True, text=True, cwd=P)
     try: return json.loads(r.stdout.strip().splitlines()[-1])
@@ -45,7 +45,7 @@ def cover(ep, P, OUT, sch, D):
     c = ep.get("cover", {}); at = c.get("at", min(sch[0][0] + 1.8, D - .5) if len(sch) == 1 else sch[min(c.get("beat", 1), len(sch) - 1)][0] + 1.8)
     snap = os.path.join(P, "cover_snap"); shutil.rmtree(snap, ignore_errors=True)
     idx = os.path.join(P, "index.html"); orig = open(idx).read()
-    open(idx, "w").write(orig.replace("</style>", ".cap,.tag,.t,.num,.sub,.dt,.bar,[id^=cp],[id^=tt]{display:none!important}</style>", 1))   # clean frame: no video captions
+    open(idx, "w").write(orig.replace("</style>", ".cap,.tag,.t,.num,.sub,.dt,.bar,#hdl,[id^=cp],[id^=tt]{display:none!important}</style>", 1))   # clean frame: no video captions
     try: subprocess.run(["npx", "hyperframes", "snapshot", "--at", f"{at:.2f}", "--no-end", "-o", "cover_snap", "."], cwd=P, capture_output=True)
     finally: open(idx, "w").write(orig)
     pngs = [f for f in os.listdir(snap) if f.startswith("frame-")] if os.path.isdir(snap) else []
@@ -58,7 +58,8 @@ def cover(ep, P, OUT, sch, D):
     html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>cover</title><style>
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}}
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}}
-html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:"Cairo",sans-serif;direction:rtl;background:#111}}.clip{{position:absolute;inset:0}}
+@font-face{{font-family:"F2";src:url("fonts/{c.get("font_file", {"amiri": "amiri", "tajawal": "tajawal", "kufi": "reemkufi", "lalezar": "lalezar", "naskh": "notonaskharabic", "marhey": "marhey", "lemonada": "lemonada"}.get(ep.get("font", ""), "cairo"))}-ar.woff2") format("woff2");font-weight:100 1000;font-display:block;}}
+html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:"F2","Cairo",sans-serif;direction:rtl;background:#111}}.clip{{position:absolute;inset:0}}
 .bg{{position:absolute;inset:0;background:url(bg.png) center/cover;filter:saturate(1.15) contrast(1.05)}}.sh{{position:absolute;inset:0;background:linear-gradient(#0000 22%,#000b 40%,#000b 72%,#0000 88%)}}
 .t{{position:absolute;left:110px;right:110px;top:{c.get("top", 700)}px;text-align:center;font-weight:900;font-size:{c.get("size", 136)}px;line-height:1.15;color:#fff;-webkit-text-stroke:16px #000;paint-order:stroke fill}}
 .y{{color:{col}}}.r{{color:#ff3b3b}}.tag{{position:absolute;top:1360px;left:50%;transform:translateX(-50%);background:#e5322d;color:#fff;font-weight:900;font-size:60px;padding:0 40px 12px;border-radius:14px;white-space:nowrap}}
@@ -117,3 +118,21 @@ if __name__ == "__main__":
         sch = json.load(open(os.path.join(P, "schedule.json"))); D = sch["D"]; sch = sch["sch"]
         if step == "qa": print("\n".join(qa(P, sch, D)) or "QA OK")
         if step == "cover": cover(ep, P, OUT, sch, D)
+
+# ------------------------------------------------------------------ 5. delivery folder (ready to upload to Google Drive as it is)
+DRIVE = {"doc": "وثائقي", "collage": "Vox", "voxflat": "رسوم Vox", "kinetic": "نصوص متحركة", "threed": "ثلاثي الأبعاد", "paper": "ورق مقصوص", "stick": "رجل العود", "anime": "أنمي", "cartoon": "هل تعلم", "saw": "الغاز saw"}
+def deliver_saw(ep, OUT):
+    """puzzle parts: الغاز saw/<title>/<title> - اللغز.mp4 | - الحل.mp4, غلاف اللغز.jpg | غلاف الحل.jpg (+ wide/square)"""
+    t = re.sub(r'[\\/:*?"<>|\n]', " ", ep.get("title", "لغز")).strip(); part = "اللغز" if int(ep.get("part", 1)) == 1 else "الحل"
+    d = os.path.join(OUT, "deliver", "الغاز saw", t); os.makedirs(d, exist_ok=True)
+    for src, dst in (("video.mp4", f"{t} - {part}.mp4"), ("thumb.jpg", f"غلاف {part}.jpg"), ("video_16x9.mp4", f"{t} - {part} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - {part} - مربع.mp4")):
+        if os.path.exists(os.path.join(OUT, src)): shutil.copy(os.path.join(OUT, src), os.path.join(d, dst))
+    print("DELIVER", d); return d
+def deliver(ep, OUT, style):
+    """OUT/deliver/<Drive folder>/<title>/ : <title>.mp4 (phone), <title> - أفقي.mp4, <title> - مربع.mp4, غلاف.jpg, وصف.txt"""
+    t = re.sub(r'[\\/:*?"<>|\n]', " ", re.sub(r"\[/?[yr]\]|<[^>]+>", "", ep.get("title", "video"))).strip() or "video"
+    d = os.path.join(OUT, "deliver", ep.get("drive_folder", DRIVE.get(style, "فيديوهات")), t); os.makedirs(d, exist_ok=True)
+    for src, dst in (("video_phone.mp4", f"{t}.mp4"), ("video_16x9.mp4", f"{t} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - مربع.mp4"), ("cover.jpg", "غلاف.jpg"), ("CAPTION.md", "وصف.txt"), ("CREDITS.txt", "مصادر الصور.txt"), ("SOURCES.txt", "مصادر المعلومات.txt")):
+        if os.path.exists(os.path.join(OUT, src)): shutil.copy(os.path.join(OUT, src), os.path.join(d, dst))
+    print("DELIVER", d)
+    return d

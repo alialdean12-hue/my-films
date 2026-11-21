@@ -45,6 +45,15 @@ def torn(w, h, seed, jag=10, step=26):
 def prepare_assets(ep, P):
     A = {}; ad = os.path.join(P, "assets"); os.makedirs(ad, exist_ok=True)
     for name, a in ep.get("assets", {}).items():
+        if "query" in a and not a.get("src"):   # find the photo: candidates sheet in OUT/candidates/<name>.jpg, choose with "pick"
+            sys.path.insert(0, os.path.join(KIT, "scripts")); import images as IM
+            cd = os.path.join(os.path.dirname(P), "candidates", name); meta = os.path.join(cd, "credits.json")
+            if os.path.exists(meta): res = json.load(open(meta))
+            else:
+                res = IM.fetch(a["query"], cd, a.get("source", ep.get("source", "auto")), 6); json.dump(res, open(meta, "w"), ensure_ascii=False)
+                IM.sheet([r["file"] for r in res], os.path.join(os.path.dirname(P), "candidates", name + ".jpg"))
+            r = res[max(1, min(int(a.get("pick", 1)), len(res))) - 1]; a = dict(a, src=r["file"])
+            open(os.path.join(os.path.dirname(P), "CREDITS.txt"), "a").write(f"{name}: {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}\n")
         src = a["src"] if os.path.isabs(a["src"]) else os.path.join(ep["_dir"], a["src"])
         if a.get("cut"):
             out = os.path.join(ad, name + ".png")
@@ -311,6 +320,13 @@ def main():
     print("3/5 html..."); build(ep, A, sch, D, P)
     lint = subprocess.run(["npx", "hyperframes", "lint"], cwd=P, capture_output=True, text=True).stdout
     if "✗" in lint: print(lint); sys.exit("LINT ERRORS")
+    sys.path.insert(0, os.path.join(KIT, "engines")); import post
+    if ep.get("qa", True):
+        probs = post.qa(P, sch, D, prefix="B")
+        if probs:
+            print("QA PROBLEMS (fix the JSON: shorter text / smaller size / move x):\n  " + "\n  ".join(probs[:20]))
+            if "--preview" not in sys.argv and "--force" not in sys.argv: sys.exit("QA FAILED: video not rendered. Fix and run again (or add --force).")
+        else: print("QA OK")
     times = ",".join(f"{min(w-0.1, s+1.6):.1f}" for s, e, w in sch)
     subprocess.run(["npx", "hyperframes", "snapshot", "--at", times, "--no-end", "-o", "snaps", "."], cwd=P, capture_output=True)
     for k, f in enumerate(sorted(f for f in os.listdir(os.path.join(P, "snaps")) if f.startswith("contact"))): shutil.copy(os.path.join(P, "snaps", f), os.path.join(OUT, f"sheet{k+1}.jpg"))

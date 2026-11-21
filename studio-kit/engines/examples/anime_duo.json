@@ -1,0 +1,58 @@
+{
+ "title": "لقاء",
+ "sky": "dusk",
+ "character": {
+  "hair": "pink",
+  "eyes": "purple",
+  "gender": "girl"
+ },
+ "character2": {
+  "hair": "black",
+  "eyes": "blue",
+  "gender": "boy",
+  "shirt": "#3a2a1a"
+ },
+ "music": "calm",
+ "no_facts": true,
+ "beats": [
+  {
+   "line": "التقيا تحت المطر صدفةً.",
+   "k": "together",
+   "sky": "storm",
+   "rain": true,
+   "sub": "صدفة تحت المطر"
+  },
+  {
+   "line": "قالت: لم أرك منذ سنوات!",
+   "k": "duo",
+   "speaker": 1,
+   "emotion": "surprised",
+   "emotion2": "happy",
+   "sky": "dusk",
+   "sub": "لم أرك منذ سنوات!"
+  },
+  {
+   "line": "قال: كنتُ أنتظر هذه اللحظة.",
+   "k": "talk2",
+   "emotion": "happy",
+   "sky": "dusk",
+   "sub": "كنت أنتظر هذه اللحظة"
+  },
+  {
+   "line": "ابتسما، وتوقّف المطر.",
+   "k": "duo",
+   "speaker": 2,
+   "emotion": "happy",
+   "emotion2": "happy",
+   "sky": "sunset",
+   "sub": "توقّف المطر",
+   "petals": true
+  },
+  {
+   "line": "لقاء.",
+   "k": "title",
+   "sky": "sunset",
+   "title": "لقاء"
+  }
+ ]
+}

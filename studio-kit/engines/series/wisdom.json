@@ -1,0 +1,22 @@
+{
+ "about": "حكم وأقوال: ثيم إسلامي هادئ",
+ "style": 4,
+ "theme": "islamic",
+ "anim": [
+  "blur",
+  "fade"
+ ],
+ "bgfx": "dots",
+ "emph": "none",
+ "music": "islamic",
+ "cover": {
+  "tag": "حكمة",
+  "color": "#f2c94c"
+ },
+ "tags": [
+  "حكم",
+  "اقتباسات"
+ ],
+ "handle": "",
+ "agent_voice": ""
+}

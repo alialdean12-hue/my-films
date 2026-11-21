@@ -1,4 +1,5 @@
 from lib import *
+import json
 CSS = ('.ph{position:absolute;inset:-6%;background-size:cover;background-position:center}.vg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 40%,#000c 100%),linear-gradient(transparent 55%,#000e)}'
        '.cap{position:absolute;left:80px;right:80px;top:1240px;text-align:center;font-weight:900;font-size:84px;line-height:1.25;color:#fff;text-shadow:0 6px 24px #000}.dt{position:absolute;left:0;right:0;top:300px;text-align:center}.dt span{background:#c9a24a;color:#111;font-weight:900;font-size:62px;padding:2px 30px 10px}'
        '.bar{position:absolute;left:300px;right:300px;top:1215px;height:8px;background:#c9a24a}')
@@ -33,7 +34,7 @@ def overlay(i, b, s, e):
         if k == "redact": sv += "".join(f'<rect class="rd{i}" x="{150+R(j)*40:.0f}" y="{600+j*90}" width="{500+R(j+5)*200:.0f}" height="50" fill="#111"/>' for j in range(4)); js.append(f'tl.fromTo("#S{i} .rd{i}",{{scaleX:0,transformOrigin:"0% 50%"}},{{scaleX:1,duration:.3,stagger:.2}},{s+.4:.2f});')
         if k == "film": sv += '<rect width="1080" height="1920" fill="none" stroke="#000" stroke-width="80"/>' + "".join(f'<rect x="{x}" y="{y}" width="30" height="40" rx="6" fill="#ddd"/>' for x in (10, 1040) for y in range(20, 1920, 80))
         if k == "letterbox": sv += '<rect width="1080" height="260" fill="#000"/><rect y="1660" width="1080" height="260" fill="#000"/>'
-        if k == "vhs": sv += "".join(f'<rect class="vh{i}" x="0" y="{(R(j)+1)*960:.0f}" width="1080" height="{4+abs(R(j+3))*10:.0f}" fill="#fff" opacity=".12"/>' for j in range(10)) + '<text x="70" y="140" font-size="56" font-family="monospace" fill="#fff" opacity=".8">▶ PLAY</text>'; js.append(f'tl.fromTo("#S{i} .vh{i}",{{y:0}},{{y:300,duration:.5,repeat:{int((e-s)/.5)+2},ease:"none"}},{s-.3:.2f});')
+        if k == "vhs": sv += "".join(f'<rect class="vh{i}" x="0" y="{(R(j)+1)*960:.0f}" width="1080" height="{4+abs(R(j+3))*10:.0f}" fill="#fff" opacity=".12"/>' for j in range(10)) + '<text x="70" y="140" text-anchor="end" font-size="56" font-family="monospace" fill="#fff" opacity=".8">▶ PLAY</text>'; js.append(f'tl.fromTo("#S{i} .vh{i}",{{y:0}},{{y:300,duration:.5,repeat:{int((e-s)/.5)+2},ease:"none"}},{s-.3:.2f});')
         if k == "counter": h += f'<div class="cap" id="cn{i}" style="top:640px;font-size:220px;color:#ffd21f;text-shadow:0 10px 40px #000">0</div>'; js.append(f'const o{i}={{v:0}};tl.to(o{i},{{v:{b.get("number",100)},duration:1.6,ease:"power2.out",onUpdate:()=>{{document.getElementById("cn{i}").textContent=Math.round(o{i}.v).toLocaleString("en")+"{b.get("unit","")}"}}}},{s+.3:.2f});')
         if k == "stamp": h += f'<div class="cap" id="sp{i}" style="top:700px;font-size:120px;color:#e5322d"><span style="border:14px solid #e5322d;padding:0 30px 14px;display:inline-block;transform:rotate(-10deg)">{b.get("stamp","سرّي")}</span></div>'; js.append(f'tl.fromTo("#sp{i}",{{opacity:0,scale:3}},{{opacity:1,scale:1,duration:.25,ease:"power4.in"}},{s+.8:.2f});')
         if k == "quote": h += f'<div class="cap" id="qt{i}" style="top:560px;font-size:76px;color:#f4ecd8;font-style:italic">«{b.get("quote","")}»</div>'; js.append(f'tl.fromTo("#qt{i}",{{opacity:0}},{{opacity:1,duration:.8}},{s+.3:.2f});')
@@ -64,29 +65,27 @@ def scene(i, b, s, e, c0, c1):
     if b.get("flash"): js += [f'tl.fromTo("#fl{i}",{{opacity:.9}},{{opacity:0,immediateRender:false,duration:.5}},{s+.9:.2f});', f'tl.fromTo("#S{i}",{{x:0}},{{x:14,duration:.05,yoyo:true,repeat:9}},{s+.9:.2f});']
     return h, js
 def images():
-    """each beat: "img": path (relative to the json) or "query": English Pixabay search (needs PIXABAY_KEY)."""
-    out = os.path.abspath(sys.argv[2]) + "/project/img"; os.makedirs(out, exist_ok=True)
-    for i, b in enumerate(B):
-        dst = f"{out}/{i}.jpg"
-        if os.path.exists(dst): continue
-        src = b.get("img")
+    """each beat: "img" (file) or "query" (English words) + optional "source" (auto|wikimedia|pixabay|openverse) and "pick" (1-6, from candidates/beat<N>.jpg)."""
+    sys.path.insert(0, KIT + "/scripts"); import images as IM
+    OUT = os.path.abspath(sys.argv[2]); out = OUT + "/project/img"; cand = OUT + "/candidates"; os.makedirs(out, exist_ok=True); os.makedirs(cand, exist_ok=True)
+    credits = []
+    def one(i, src, q, tag, pick, source):
+        dst = f"{out}/{i}{tag}.jpg"; cf = f"{cand}/q{i}{tag}"
         if src and not os.path.isabs(src): src = os.path.join(ep["_dir"], src)
         if not src:
-            tmp = f"{out}/q{i}"; os.makedirs(tmp, exist_ok=True)
-            sh([sys.executable, KIT + "/scripts/pixabay.py", "photos", b["query"], tmp, "--n", "1"], stdout=subprocess.DEVNULL)
-            src = tmp + "/" + sorted(os.listdir(tmp))[0]
+            meta = os.path.join(cf, "credits.json")
+            if os.path.exists(meta): res = json.load(open(meta))
+            else:
+                res = IM.fetch(q, cf, source, 6); json.dump(res, open(meta, "w"), ensure_ascii=False)
+                IM.sheet([r["file"] for r in res], f"{cand}/beat{i+1}{tag}.jpg")
+            k = max(1, min(int(pick or 1), len(res))) - 1; src = res[k]["file"]; r = res[k]
+            credits.append(f"مشهد {i+1}: {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}")
         sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=-2:2100", "-q:v", "3", dst])
     for i, b in enumerate(B):
-        if not (b.get("img2") or b.get("query2")): continue
-        dst = f"{out}/{i}b.jpg"; b["img2_ready"] = True
-        if os.path.exists(dst): continue
-        src = b.get("img2")
-        if src and not os.path.isabs(src): src = os.path.join(ep["_dir"], src)
-        if not src:
-            tmp = f"{out}/q{i}b"; os.makedirs(tmp, exist_ok=True)
-            sh([sys.executable, KIT + "/scripts/pixabay.py", "photos", b["query2"], tmp, "--n", "1"], stdout=subprocess.DEVNULL)
-            src = tmp + "/" + sorted(os.listdir(tmp))[0]
-        sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=-2:2100", "-q:v", "3", dst])
+        one(i, b.get("img"), b.get("query"), "", b.get("pick"), b.get("source", ep.get("source", "auto")))
+        if b.get("img2") or b.get("query2"): one(i, b.get("img2"), b.get("query2"), "b", b.get("pick2"), b.get("source", ep.get("source", "auto"))); b["img2_ready"] = True
+    open(OUT + "/CREDITS.txt", "w").write("مصادر الصور وتراخيصها:\n" + "\n".join(credits) + "\n")
+    print("photo candidates: look at", cand, "(beatN.jpg), then set \"pick\": number in that beat")
 images()
 run("1_doc", B, scene, css=CSS, bg="#000", bed="drone", rate="+3%",
     extra_sfx=lambda sch: [{"file": "sfx/hit.wav", "at": round(sch[3][0] + .9, 2), "gain": .35}, {"file": "sfx/riser.wav", "at": round(sch[3][0] - .2, 2), "gain": .15}])

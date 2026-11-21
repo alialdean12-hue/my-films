@@ -1,0 +1,43 @@
+{
+ "title": "النحلة",
+ "character": "bee",
+ "music": "happy",
+ "beats": [
+  {
+   "line": "هل تعلم؟ النحلة تزور ألفي زهرة في اليوم!",
+   "cap": "<span style='color:#ffd21f'>2000</span> زهرة!",
+   "k": "count",
+   "number": 2000
+  },
+  {
+   "line": "لتصنع ملعقةً صغيرةً من العسل.",
+   "cap": "ملعقة عسل",
+   "k": "swarm",
+   "icon": "flower",
+   "icon_scale": 0.2,
+   "n": 14
+  },
+  {
+   "line": "وترقص لتخبر صديقاتها عن الأزهار.",
+   "cap": "ترقص لتتكلم",
+   "k": "rings"
+  },
+  {
+   "line": "وبدونها، يقلّ طعامنا كثيرًا.",
+   "cap": "بدونها؟",
+   "k": "grow",
+   "icon": "apple",
+   "icon_scale": 1.2
+  },
+  {
+   "line": "احمِ النحل، وشارك المعلومة.",
+   "cap": "احمِ النحل",
+   "k": "end",
+   "character": "kid"
+  }
+ ],
+ "sources": [
+  "National Geographic — honeybees (flowers per trip, waggle dance)",
+  "FAO — pollinators and food"
+ ]
+}

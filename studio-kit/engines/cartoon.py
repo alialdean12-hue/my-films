@@ -55,6 +55,8 @@ def ch_animal(spec):
         body = f'<ellipse cx="0" cy="170" rx="{spec.get("bw", 200)}" ry="150" fill="{c}" {SW}/><ellipse cx="0" cy="200" rx="{spec.get("bw", 200)*.6:.0f}" ry="100" fill="{c2}"/>'
         if spec.get("wings"): body += f'<path d="M-190,120 C-320,40 -300,240 -170,230Z M190,120 C320,40 300,240 170,230Z" fill="{spec.get("wc", c)}" {SW}/>'
         s += body
+        if spec.get("neck"): s += f'<rect x="-75" y="-330" width="150" height="460" rx="60" fill="{c}" {SW}/>' + "".join(f'<circle cx="{x}" cy="{y}" r="24" fill="{spec.get("pc", "#c96a1a")}"/>' for x, y in ((-30, -200), (30, -80), (-20, 40))) + '<g transform="translate(0 -330)">'
+        lift_end = "</g>" if spec.get("neck") else ""
         er = {"round": lambda sx: f'<circle cx="{sx*170}" cy="-210" r="70" fill="{c}" {SW}/><circle cx="{sx*170}" cy="-210" r="38" fill="{c2}"/>',
               "cat": lambda sx: f'<path d="M{sx*210},-180 L{sx*170},-330 L{sx*60},-230Z" fill="{c}" {SW}/>',
               "long": lambda sx: f'<ellipse cx="{sx*90}" cy="-330" rx="50" ry="150" fill="{c}" {SW}/><ellipse cx="{sx*90}" cy="-320" rx="24" ry="110" fill="#ffc2c2"/>',
@@ -64,7 +66,6 @@ def ch_animal(spec):
               "tuft": lambda sx: f'<path d="M{sx*150},-210 L{sx*200},-320 L{sx*80},-240Z" fill="{c}" {SW}/>',
               "none": lambda sx: ""}[ears]
         s += er(-1) + er(1)
-        if spec.get("neck"): s += f'<rect x="-70" y="-420" width="140" height="520" rx="60" fill="{c}" {SW}/>' + "".join(f'<circle cx="{x}" cy="{y}" r="22" fill="{spec.get("pc", "#c96a1a")}"/>' for x, y in ((-30, -340), (30, -240), (-20, -120)))
         if spec.get("bwings"): s += "".join(f'<ellipse cx="{sx*190}" cy="{dy}" rx="170" ry="{r_}" fill="{spec["bwings"]}" {SW} transform="rotate({sx*20} {sx*190} {dy})"/>' for sx in (-1, 1) for dy, r_ in ((-120, 200), (160, 130)))
         if spec.get("shell"): s += f'<path d="M-260,220 A260,260 0 0,1 260,220Z" fill="{spec["shell"]}" {SW}/>' + "".join(f'<path d="M{x},220 Q{x+40},40 {x+90},220" stroke="{K}" stroke-width="6" fill="none"/>' for x in (-200, -80, 40))
         if spec.get("wool"): s += "".join(f'<circle cx="{x}" cy="{y}" r="{r_}" fill="{spec["wool"]}" {SW}/>' for x, y, r_ in ((-200, 120, 110), (0, 90, 130), (200, 120, 110), (-110, 260, 110), (110, 260, 110), (-150, -220, 70), (0, -270, 80), (150, -220, 70)))
@@ -86,7 +87,7 @@ def ch_animal(spec):
         if spec.get("antenna"): s += f'<path d="M-60,-240 Q-100,-380 -160,-400 M60,-240 Q100,-380 160,-400" stroke="{K}" stroke-width="12" fill="none"/><circle cx="-160" cy="-400" r="22" fill="{K}"/><circle cx="160" cy="-400" r="22" fill="{K}"/>'
         if spec.get("unihorn"): s += f'<path d="M-30,-250 L0,-460 L30,-250Z" fill="#ffd21f" {SW}/>'
         if spec.get("hat"): s += f'<path d="M-150,-230 H150 L120,-260 H-120Z M-90,-260 V-380 H90 V-260Z" fill="{spec["hat"]}" {SW}/>'
-        return s
+        return s + lift_end
     return f
 ANIMALS = {
  "dog": dict(c="#c98f45", c2="#f4e3c4", ears="floppy", ec="#8a5a33", tail="curl", muzzle="big"),
@@ -109,7 +110,7 @@ ANIMALS = {
  "horse": dict(c="#8a5a33", c2="#c98f45", ears="cat", tail="long", muzzle="snout", nc="#c98f45", hh=230),
  "camel": dict(c="#d9a85a", c2="#f4e3c4", ears="round", muzzle="big", tail="long"),
  "elephant": dict(c="#9aa8b6", c2="#c9d4e0", ears="big", muzzle="trunk"),
- "giraffe": dict(c="#ffd27a", c2="#fff", ears="horn", pat="spots", pc="#c96a1a", muzzle="snout", nc="#f4e3c4", neck=True),
+ "giraffe": dict(c="#ffd27a", c2="#fff", ears="horn", pat="spots", pc="#c96a1a", muzzle="snout", nc="#f4e3c4", neck=True, hw=190, hh=160),
  "zebra": dict(c="#fff", c2="#fff", ears="cat", pat="stripes", pc="#151515", muzzle="snout", nc="#3a3a3a"),
  "monkey": dict(c="#8a5a33", c2="#f1c7a0", ears="round", tail="curl", muzzle="big"),
  "gorilla": dict(c="#3a3a40", c2="#6a6a70", ears="round", muzzle="big", bw=260),
@@ -144,6 +145,194 @@ for _n, _sp in ANIMALS.items():
 for _n in ANIMALS: HOME.setdefault(_n, {"dolphin": "ocean", "shark": "ocean", "seal": "ice", "crab": "beach", "polar_bear": "ice", "camel": "desert", "lion": "savanna", "giraffe": "savanna", "zebra": "savanna", "elephant": "savanna",
     "monkey": "jungle", "gorilla": "jungle", "parrot": "jungle", "frog": "pond", "turtle": "pond", "duck": "pond", "cow": "farm", "pig": "farm", "sheep": "farm", "goat": "farm", "horse": "farm", "chicken": "farm", "chick": "farm",
     "owl": "night", "bat": "night", "wolf": "night", "eagle": "mountain", "robot": "lab", "scientist": "lab", "alien": "space", "dragon": "mountain", "teacher": "classroom", "grandpa": "room", "unicorn": "garden"}.get(_n, "garden"))
+
+
+# ---------------------------------------------------------------- 4 body templates: side-view quadrupeds, birds, sea creatures, bugs
+def _mouth(i, x, y, w=34): return f'<path id="mo{i}" d="M{x-w},{y} Q{x},{y+34} {x+w},{y}" fill="#e85a6a" stroke="{K}" stroke-width="7"/>'
+def ch_quad(sp):
+    c, c2 = sp["c"], sp.get("c2", "#fff"); bw = sp.get("bw", 230); leg = sp.get("leg", 130); nk = sp.get("neck", 0)
+    def f(i):
+        hx, hy = -bw + 10, -70 - nk
+        s = ""
+        tail = {"thin": f'<path d="M0,0 C60,-20 80,-90 60,-140" stroke="{K}" stroke-width="26" fill="none" stroke-linecap="round"/><path d="M0,0 C60,-20 80,-90 60,-140" stroke="{c}" stroke-width="12" fill="none" stroke-linecap="round"/>',
+                "fluffy": f'<path d="M0,0 C80,-30 150,-20 170,-90 C120,-60 60,-60 0,-30Z" fill="{sp.get("tc", c)}" {SW}/>', "tuft": f'<path d="M0,0 C70,10 110,-40 120,-90" stroke="{K}" stroke-width="20" fill="none"/><circle cx="122" cy="-100" r="30" fill="{sp.get("tc", "#8a4a1a")}" {SW}/>',
+                "short": f'<circle cx="16" cy="-6" r="26" fill="{c}" {SW}/>', "curl": f'<path d="M0,0 C50,0 60,-60 30,-60 C10,-60 14,-34 34,-36" stroke="{K}" stroke-width="16" fill="none"/>', "long": f'<path d="M0,0 C120,40 170,-40 230,-10" stroke="{K}" stroke-width="40" fill="none" stroke-linecap="round"/><path d="M0,0 C120,40 170,-40 230,-10" stroke="{c}" stroke-width="24" fill="none" stroke-linecap="round"/>',
+                "none": ""}[sp.get("tail", "thin")]
+        s += f'<g id="tl{i}" transform="translate({bw-20} -10) rotate(0)">{tail}</g>'
+        for k, x in enumerate((-bw + 70, -bw + 140, bw - 140, bw - 70)):
+            s += f'<rect x="{x-28}" y="60" width="56" height="{leg}" rx="24" fill="{c if k % 2 else sp.get("lc", c)}" {SW}/><rect x="{x-30}" y="{40+leg}" width="60" height="26" rx="10" fill="{sp.get("hoof", K)}"/>'
+        s += f'<ellipse cx="0" cy="20" rx="{bw}" ry="{sp.get("bh", 120)}" fill="{c}" stroke="{K}" stroke-width="12"/>'
+        if sp.get("belly", True): s += f'<ellipse cx="0" cy="{60}" rx="{bw*.7:.0f}" ry="{sp.get("bh", 120)*.5:.0f}" fill="{c2}"/>'
+        if sp.get("humps"): s += "".join(f'<path d="M{x-90},-70 Q{x},-260 {x+90},-70Z" fill="{c}" {SW}/>' for x in ([0] if sp["humps"] == 1 else [-70, 90]))
+        pat = sp.get("pat")
+        if pat == "spots": s += "".join(f'<circle cx="{x}" cy="{y}" r="{r}" fill="{sp.get("pc", "#151515")}" opacity=".85"/>' for x, y, r in ((-80, -10, 34), (60, 40, 30), (150, -20, 26), (-10, 70, 22), (-150, 40, 24)))
+        if pat == "stripes": s += "".join(f'<path d="M{x},-90 q-20,60 0,130" stroke="{sp.get("pc", "#151515")}" stroke-width="22" fill="none" stroke-linecap="round"/>' for x in (-120, -50, 20, 90, 160))
+        if pat == "shell": s += f'<path d="M{-bw+20},20 A{bw-20},{sp.get("bh",120)+40} 0 0,1 {bw-20},20Z" fill="{sp.get("pc", "#3f8a3a")}" {SW}/>' + "".join(f'<path d="M{x},20 Q{x+50},-90 {x+100},20" stroke="{K}" stroke-width="6" fill="none"/>' for x in (-150, -50, 50))
+        if pat == "wool": s += "".join(f'<circle cx="{x}" cy="{y}" r="70" fill="{sp.get("pc", "#f4f4f4")}" {SW}/>' for x, y in ((-140, 0), (-50, -40), (50, -40), (140, 0), (-90, 60), (0, 70), (90, 60)))
+        if nk: s += f'<path d="M{-bw+60},-40 L{hx+20},{hy+40} L{hx+100},{hy+60} L{-bw+170},-50Z" fill="{c}" {SW}/>' + ("".join(f'<circle cx="{-bw+80 - k*25}" cy="{-80 - k*nk/4:.0f}" r="20" fill="{sp.get("pc", "#c96a1a")}"/>' for k in range(3)) if pat == "spots" else "")
+        if sp.get("mane") == "neck": s += f'<path d="M{-bw+160},-60 L{hx+80},{hy-10} L{hx+120},{hy+20} L{-bw+190},-50Z" fill="{sp.get("mc", "#3a2414")}"/>'
+        if sp.get("mane") == "ring": s += f'<circle cx="{hx}" cy="{hy}" r="{sp.get("hr", 110)+60}" fill="{sp.get("mc", "#c96a1a")}" {SW}/>'
+        ears = sp.get("ears", "point"); hr = sp.get("hr", 110)
+        E = {"point": lambda: f'<path d="M{hx+20},{hy-hr+30} L{hx+50},{hy-hr-60} L{hx+90},{hy-hr+50}Z" fill="{c}" {SW}/>', "round": lambda: f'<circle cx="{hx+50}" cy="{hy-hr+10}" r="40" fill="{c}" {SW}/>',
+             "floppy": lambda: f'<ellipse cx="{hx+70}" cy="{hy-10}" rx="40" ry="90" fill="{sp.get("ec", c)}" {SW} transform="rotate(20 {hx+70} {hy-10})"/>', "long": lambda: f'<ellipse cx="{hx+40}" cy="{hy-hr-60}" rx="34" ry="110" fill="{c}" {SW}/>',
+             "big": lambda: f'<ellipse cx="{hx+90}" cy="{hy-10}" rx="110" ry="140" fill="{c}" {SW}/><ellipse cx="{hx+90}" cy="{hy-10}" rx="70" ry="100" fill="#ffc2c2"/>',
+             "horns": lambda: f'<path d="M{hx+10},{hy-hr+20} Q{hx-10},{hy-hr-90} {hx+40},{hy-hr-110} Q{hx+30},{hy-hr-40} {hx+50},{hy-hr+20}Z" fill="#f4e3b0" {SW}/><path d="M{hx+50},{hy-hr+20} Q{hx+60},{hy-hr-80} {hx+110},{hy-hr-90} Q{hx+90},{hy-hr-30} {hx+90},{hy-hr+30}Z" fill="#f4e3b0" {SW}/>',
+             "antlers": lambda: f'<path d="M{hx+30},{hy-hr+20} V{hy-hr-90} M{hx+30},{hy-hr-40} L{hx-30},{hy-hr-90} M{hx+30},{hy-hr-70} L{hx+90},{hy-hr-120}" stroke="#8a5a33" stroke-width="18" stroke-linecap="round"/>',
+             "ossicones": lambda: f'<path d="M{hx+20},{hy-hr+20} V{hy-hr-50} M{hx+70},{hy-hr+20} V{hy-hr-50}" stroke="{K}" stroke-width="14"/><circle cx="{hx+20}" cy="{hy-hr-55}" r="16" fill="#8a4a1a"/><circle cx="{hx+70}" cy="{hy-hr-55}" r="16" fill="#8a4a1a"/>', "none": lambda: ""}
+        s += E.get(ears, E["point"])() if ears != "floppy" else ""
+        snout = sp.get("snout", "short")
+        s += f'<ellipse cx="{hx}" cy="{hy}" rx="{hr*1.05:.0f}" ry="{hr}" fill="{c}" stroke="{K}" stroke-width="12"/>'
+        if ears == "floppy": s += E["floppy"]()
+        if snout == "long": s += f'<ellipse cx="{hx-hr*.8:.0f}" cy="{hy+30}" rx="{hr*.75:.0f}" ry="{hr*.5:.0f}" fill="{sp.get("sc", c2)}" {SW}/><circle cx="{hx-hr*1.4:.0f}" cy="{hy+10}" r="14" fill="{K}"/>' + _mouth(i, hx - hr * .9, hy + 55, 40)
+        elif snout == "croc": s += f'<path d="M{hx-30},{hy-20} L{hx-hr*2.6:.0f},{hy+10} Q{hx-hr*2.7:.0f},{hy+40} {hx-hr*2.5:.0f},{hy+50} L{hx-30},{hy+50}Z" fill="{c}" {SW}/>' + "".join(f'<path d="M{hx-60-k*45},{hy+48} l12,-22 l12,22" fill="#fff"/>' for k in range(5)) + _mouth(i, hx - 120, hy + 62, 60)
+        elif snout == "trunk": s += f'<path d="M{hx-hr*.7:.0f},{hy} C{hx-hr*1.6:.0f},{hy+40} {hx-hr*1.6:.0f},{hy+200} {hx-hr*1.1:.0f},{hy+250} C{hx-hr*1.25:.0f},{hy+190} {hx-hr*1.1:.0f},{hy+80} {hx-hr*.5:.0f},{hy+60}Z" fill="{c}" {SW}/><path d="M{hx-40},{hy+70} q-60,40 -40,90" stroke="#fffbe8" stroke-width="20" fill="none" stroke-linecap="round"/>' + _mouth(i, hx - 10, hy + 70, 26)
+        elif snout == "pig": s += f'<ellipse cx="{hx-hr*.95:.0f}" cy="{hy+20}" rx="40" ry="50" fill="{sp.get("sc", "#ffb3c6")}" {SW}/><circle cx="{hx-hr*.95:.0f}" cy="{hy+5}" r="9" fill="{K}"/><circle cx="{hx-hr*.95:.0f}" cy="{hy+35}" r="9" fill="{K}"/>' + _mouth(i, hx - 40, hy + 70, 26)
+        else: s += f'<ellipse cx="{hx-hr*.6:.0f}" cy="{hy+30}" rx="{hr*.5:.0f}" ry="{hr*.38:.0f}" fill="{sp.get("sc", c2)}"/><ellipse cx="{hx-hr*.95:.0f}" cy="{hy+10}" rx="16" ry="12" fill="{K}"/>' + _mouth(i, hx - hr * .6, hy + 52, 26)
+        s += eyes(i, (hx - 10,), hy - 30, sp.get("er", 34))
+        if sp.get("whisk"): s += f'<path d="M{hx-hr*.9:.0f},{hy+30} h-90 M{hx-hr*.9:.0f},{hy+45} l-80,25" stroke="{K}" stroke-width="5"/>'
+        if sp.get("tusk"): s += f'<path d="M{hx-50},{hy+60} q-40,60 -100,50" stroke="#fffbe8" stroke-width="18" fill="none"/>'
+        if ears in E and ears not in ("floppy",) and sp.get("ears2", True) and ears in ("point", "round"): s += ""
+        if sp.get("uni"): s += f'<path d="M{hx-10},{hy-hr+10} L{hx-30},{hy-hr-130} L{hx+20},{hy-hr+10}Z" fill="#ffd21f" {SW}/>'
+        return s
+    return f
+def ch_bird(sp):
+    c, c2 = sp["c"], sp.get("c2", "#fff"); legl = sp.get("leg", 90)
+    def f(i):
+        s = f'<path d="M110,40 L240,{sp.get("tail_y", -10)} L230,90Z" fill="{sp.get("tc", c)}" {SW}/>'
+        s += "".join(f'<path d="M{x},180 V{180+legl} M{x},{180+legl} l-30,20 M{x},{180+legl} l10,24" stroke="#ff9a3a" stroke-width="12" stroke-linecap="round"/>' for x in (-30, 40))
+        nk = sp.get("neck", 0)
+        s += f'<ellipse cx="20" cy="60" rx="{sp.get("bw", 160)}" ry="{sp.get("bh", 150)}" fill="{c}" stroke="{K}" stroke-width="12"/><ellipse cx="-20" cy="100" rx="{sp.get("bw", 160)*.6:.0f}" ry="{sp.get("bh",150)*.6:.0f}" fill="{c2}"/>'
+        hx, hy, hr = -90, -110 - nk, sp.get("hr", 100)
+        if nk: s += f'<path d="M-60,-20 Q-150,{hy+80} {hx},{hy+40} L{hx+60},{hy+60} Q-60,{hy+120} 10,-30Z" fill="{c}" {SW}/>'
+        s += f'<circle cx="{hx}" cy="{hy}" r="{hr}" fill="{sp.get("hc", c)}" stroke="{K}" stroke-width="12"/>'
+        if sp.get("crest") == "comb": s += f'<path d="M{hx-50},{hy-hr+20} q20,-80 50,-10 q30,-80 50,0 q30,-70 40,20Z" fill="#e5322d" {SW}/>'
+        if sp.get("crest") == "tuft": s += f'<path d="M{hx-60},{hy-hr+30} L{hx-90},{hy-hr-50} L{hx-20},{hy-hr+10}Z M{hx+60},{hy-hr+30} L{hx+90},{hy-hr-50} L{hx+20},{hy-hr+10}Z" fill="{c}" {SW}/>'
+        if sp.get("crest") == "feathers": s += "".join(f'<path d="M{hx+10},{hy-hr+10} Q{hx+dx},{hy-hr-90} {hx+dx+30},{hy-hr-60}" stroke="{sp.get("cc", "#ffd21f")}" stroke-width="16" fill="none" stroke-linecap="round"/>' for dx in (-20, 20, 60))
+        b = sp.get("beak", "cone")
+        if b == "cone": s += f'<path d="M{hx-hr+10},{hy-10} L{hx-hr-60},{hy+10} L{hx-hr+10},{hy+30}Z" fill="#ff9a3a" {SW}/>'
+        if b == "hook": s += f'<path d="M{hx-hr+10},{hy-30} Q{hx-hr-80},{hy-30} {hx-hr-60},{hy+50} Q{hx-hr-40},{hy+10} {hx-hr+20},{hy+30}Z" fill="{sp.get("bc", "#ffd21f")}" {SW}/>'
+        if b == "flat": s += f'<path d="M{hx-hr+10},{hy-5} Q{hx-hr-110},{hy-20} {hx-hr-100},{hy+25} Q{hx-hr-40},{hy+40} {hx-hr+20},{hy+30}Z" fill="#ff9a3a" {SW}/>'
+        if b == "long": s += f'<path d="M{hx-hr+10},{hy-10} L{hx-hr-170},{hy+30} L{hx-hr+10},{hy+30}Z" fill="{sp.get("bc", "#3a3a3a")}" {SW}/>'
+        s += f'<path id="mo{i}" d="M{hx-hr+5},{hy+28} q-10,6 0,10" fill="none" stroke="{K}" stroke-width="4"/>'
+        s += eyes(i, (hx - 20,), hy - 20, sp.get("er", 32))
+        if sp.get("mask"): s += f'<path d="M{hx-80},{hy-50} H{hx+40}" stroke="{K}" stroke-width="16"/>'
+        s += f'<g id="tl{i}" transform="translate(40 20) rotate(0)"><path d="M0,0 C120,-30 190,40 140,140 C80,120 20,90 0,0Z" fill="{sp.get("wc", c)}" {SW}/></g>'
+        return s
+    return f
+def ch_sea(sp):
+    c, c2 = sp["c"], sp.get("c2", "#fff"); kind = sp.get("kind", "fish")
+    def f(i):
+        if kind == "jelly":
+            s = f'<g id="tl{i}" transform="translate(0 60) rotate(0)">' + "".join(f'<path d="M{x},0 q30,80 0,160 q-30,80 0,160" stroke="{c}" stroke-width="18" fill="none" stroke-linecap="round"/>' for x in (-120, -60, 0, 60, 120)) + '</g>'
+            s += f'<path d="M-200,60 C-220,-220 220,-220 200,60 Q150,90 100,60 Q50,90 0,60 Q-50,90 -100,60 Q-150,90 -200,60Z" fill="{c}" fill-opacity=".9" stroke="{K}" stroke-width="12"/>'
+            return s + eyes(i, (-60, 60), -40, 32) + _mouth(i, 0, 20, 30)
+        if kind == "crab":
+            s = "".join(f'<path d="M{sx*120},40 l{sx*90},60 l{sx*30},70" stroke="{K}" stroke-width="16" fill="none" stroke-linecap="round"/>' for sx in (-1, 1) for _ in (0,))
+            s += "".join(f'<path d="M{sx*100},{30+k*30} l{sx*120},{40+k*10}" stroke="{c}" stroke-width="14" stroke-linecap="round"/>' for sx in (-1, 1) for k in range(3))
+            s += f'<g id="tl{i}" transform="translate(0 0) rotate(0)"><path d="M-170,-40 L-260,-170 M170,-40 L260,-170" stroke="{c}" stroke-width="30" stroke-linecap="round"/><path d="M-260,-170 l-60,-40 l40,-50 l40,50 l-20,-60 l60,40Z M260,-170 l60,-40 l-40,-50 l-40,50 l20,-60 l-60,40Z" fill="{c}" {SW}/></g>'
+            s += f'<ellipse cx="0" cy="40" rx="210" ry="130" fill="{c}" stroke="{K}" stroke-width="12"/><path d="M-50,-80 V-150 M50,-80 V-150" stroke="{K}" stroke-width="12"/>'
+            return s + eyes(i, (-50, 50), -170, 30) + _mouth(i, 0, 60, 40)
+        if kind == "star":
+            pts = " ".join(f"{(220 if k % 2 == 0 else 95) * math.cos(math.pi/2 + k*math.pi/5):.0f},{-(220 if k % 2 == 0 else 95) * math.sin(math.pi/2 + k*math.pi/5):.0f}" for k in range(10))
+            return f'<g id="tl{i}" transform="translate(0 0) rotate(0)"><polygon points="{pts}" fill="{c}" stroke="{K}" stroke-width="12" stroke-linejoin="round"/></g>' + eyes(i, (-45, 45), -20, 28) + _mouth(i, 0, 40, 28)
+        if kind == "seahorse":
+            s = f'<path d="M0,-200 C120,-220 140,-80 60,-20 C140,40 120,180 20,200 C-40,210 -60,260 -20,290 C-100,280 -80,180 0,160 C60,140 60,60 -20,40 C-80,30 -90,-60 -40,-110 L-160,-110 L-160,-150 L-40,-170Z" fill="{c}" stroke="{K}" stroke-width="12"/>'
+            s += f'<g id="tl{i}" transform="translate(70 0) rotate(0)"><path d="M0,0 C60,-40 90,20 40,60Z" fill="{c2}" {SW}/></g>'
+            return s + eyes(i, (-10,), -150, 30) + _mouth(i, -150, -130, 14)
+        # fish-like: fish, dolphin, shark
+        bw = sp.get("bw", 260); s = ""
+        s += f'<g id="tl{i}" transform="translate({bw-30} 0) rotate(0)"><path d="M0,0 L110,-110 Q80,0 110,110Z" fill="{c}" {SW}/></g>'
+        if sp.get("fin", True): s += f'<path d="M-20,{-sp.get("bh",120)+10} Q40,{-sp.get("bh",120)-130} 110,{-sp.get("bh",120)+20}Z" fill="{c}" {SW}/>'
+        s += f'<path d="M{-bw},10 C{-bw+20},{-sp.get("bh",120)*1.4:.0f} {bw*.6:.0f},{-sp.get("bh",120)*1.2:.0f} {bw},0 C{bw*.6:.0f},{sp.get("bh",120)*1.2:.0f} {-bw+20},{sp.get("bh",120)*1.2:.0f} {-bw},10Z" fill="{c}" stroke="{K}" stroke-width="12"/>'
+        s += f'<path d="M{-bw+30},40 C{-bw/2:.0f},{sp.get("bh",120)} {bw*.4:.0f},{sp.get("bh",120)*.9:.0f} {bw*.7:.0f},30 C{bw*.3:.0f},60 {-bw/2:.0f},70 {-bw+30},40Z" fill="{c2}"/>'
+        if kind == "dolphin": s += f'<path d="M{-bw+10},0 Q{-bw-70},10 {-bw-60},40 Q{-bw-20},40 {-bw+20},30Z" fill="{c}" {SW}/>'
+        if kind == "shark": s += "".join(f'<path d="M{-bw+40+k*28},40 l12,24 l12,-24" fill="#fff" stroke="{K}" stroke-width="3"/>' for k in range(5)) + "".join(f'<path d="M{-80+k*30},-20 q-10,30 0,60" stroke="{K}" stroke-width="6" fill="none"/>' for k in range(3))
+        if kind == "fish": s += "".join(f'<path d="M{x},-70 q-30,70 0,140" stroke="{sp.get("pc", "#fff")}" stroke-width="22" fill="none" opacity=".8"/>' for x in (-40, 60))
+        s += f'<path d="M-60,40 Q-10,120 50,50" fill="{c}" {SW}/>'
+        return s + eyes(i, (-bw + 90,), -30, sp.get("er", 30)) + _mouth(i, -bw + 50, 40, 22)
+    return f
+def ch_bug(sp):
+    c, c2 = sp["c"], sp.get("c2", "#151515"); kind = sp.get("kind", "ant")
+    def f(i):
+        legs = "".join(f'<path d="M{x},40 l{-40 if x < 0 else 40},90 l{-20 if x < 0 else 20},40" stroke="{K}" stroke-width="12" fill="none" stroke-linecap="round"/>' for x in (-90, 0, 90))
+        ant = f'<path d="M-160,-110 Q-200,-220 -260,-230 M-120,-130 Q-120,-240 -80,-270" stroke="{K}" stroke-width="10" fill="none"/><circle cx="-260" cy="-230" r="16" fill="{K}"/><circle cx="-80" cy="-270" r="16" fill="{K}"/>'
+        if kind == "ladybug":
+            s = legs + f'<g id="tl{i}" transform="translate(0 0) rotate(0)"><path d="M-170,40 A190,190 0 0,1 210,40Z" fill="{c}" stroke="{K}" stroke-width="12"/><path d="M20,-150 V40" stroke="{K}" stroke-width="10"/>' + "".join(f'<circle cx="{x}" cy="{y}" r="28" fill="{K}"/>' for x, y in ((-80, -60), (110, -60), (-30, -5), (80, -5), (40, -110))) + '</g>'
+            return s + f'<circle cx="-170" cy="-20" r="90" fill="{K}"/>' + ant.replace("-110", "-80") + eyes(i, (-200, -130), -40, 26) + _mouth(i, -170, 30, 26)
+        if kind == "butterfly":
+            s = f'<g id="tl{i}" transform="translate(0 0) rotate(0)">' + "".join(f'<ellipse cx="{sx*170}" cy="{dy}" rx="160" ry="{r_}" fill="{c if dy < 0 else sp.get("c3", c2)}" {SW} transform="rotate({sx*25} {sx*170} {dy})"/><circle cx="{sx*190}" cy="{dy}" r="40" fill="#fff" opacity=".7"/>' for sx in (-1, 1) for dy, r_ in ((-120, 190), (160, 120))) + '</g>'
+            return s + f'<rect x="-36" y="-160" width="72" height="360" rx="36" fill="#3a2a2a" {SW}/>' + f'<circle cx="0" cy="-230" r="80" fill="#3a2a2a" {SW}/>' + ant.replace("-160,-110", "-30,-290").replace("-120,-130", "30,-290") + eyes(i, (-30, 30), -240, 26) + _mouth(i, 0, -190, 22)
+        if kind == "spider":
+            s = "".join(f'<path d="M0,0 L{sx*200},{dy} L{sx*260},{dy+120}" stroke="{K}" stroke-width="16" fill="none" stroke-linejoin="round"/>' for sx in (-1, 1) for dy in (-160, -60, 40, 140))
+            return f'<g id="tl{i}" transform="translate(0 0) rotate(0)">{s}</g><circle r="170" fill="{c}" stroke="{K}" stroke-width="12"/>' + eyes(i, (-60, 60), -40, 36) + _mouth(i, 0, 60, 34)
+        if kind == "caterpillar":
+            s = "".join(f'<circle cx="{x}" cy="{40 + (k%2)*-30}" r="80" fill="{c if k % 2 else sp.get("c3", c)}" {SW}/>' for k, x in enumerate((260, 160, 60, -40, -140)))
+            return f'<g id="tl{i}" transform="translate(0 0) rotate(0)">{s}</g><circle cx="-240" cy="-20" r="110" fill="{c}" {SW}/>' + ant.replace("-160,-110", "-280,-110").replace("-120,-130", "-200,-120") + eyes(i, (-280, -200), -40, 28) + _mouth(i, -240, 40, 30)
+        if kind == "snail":
+            s = f'<path d="M-280,160 Q-300,40 -220,40 L240,140 Q260,190 200,190 H-280Z" fill="{c2}" {SW}/><path d="M-220,60 L-250,-90 M-180,60 L-170,-100" stroke="{K}" stroke-width="10"/><circle cx="-250" cy="-100" r="14" fill="{K}"/><circle cx="-170" cy="-110" r="14" fill="{K}"/>'
+            s += f'<g id="tl{i}" transform="translate(40 30) rotate(0)"><circle r="170" fill="{c}" stroke="{K}" stroke-width="12"/><path d="M0,0 m-20,0 a20,20 0 1,1 40,0 a60,60 0 1,1 -120,0 a100,100 0 1,1 200,0 a140,140 0 1,1 -280,0" stroke="{K}" stroke-width="8" fill="none"/></g>'
+            return s + eyes(i, (-260,), 90, 26) + _mouth(i, -250, 140, 24)
+        # ant / beetle / mosquito: 3 segments
+        wings = f'<path d="M-20,-60 C-80,-260 120,-260 60,-60Z M40,-60 C60,-250 240,-200 120,-50Z" fill="#dff4ff" fill-opacity=".8" {SW}/>' if kind in ("mosquito", "fly", "beetle") else ""
+        s = legs + f'<g id="tl{i}" transform="translate(0 0) rotate(0)">{wings}</g>'
+        s += f'<ellipse cx="170" cy="20" rx="{140 if kind != "mosquito" else 170}" ry="{100 if kind != "mosquito" else 60}" fill="{c}" stroke="{K}" stroke-width="12"/><ellipse cx="10" cy="10" rx="80" ry="70" fill="{c}" stroke="{K}" stroke-width="12"/>'
+        if kind == "beetle": s += f'<path d="M170,-80 V120" stroke="{K}" stroke-width="8"/>'
+        s += f'<circle cx="-150" cy="-30" r="100" fill="{c}" stroke="{K}" stroke-width="12"/>' + ant
+        if kind == "mosquito": s += f'<path d="M-240,0 L-340,40" stroke="{K}" stroke-width="10"/>'
+        return s + eyes(i, (-190, -120), -50, 28) + _mouth(i, -150, 20, 26)
+    return f
+NEW = {
+ "dog": (ch_quad, dict(c="#c98f45", c2="#f4e3c4", ears="floppy", ec="#8a5a33", tail="thin", snout="long")),
+ "puppy": (ch_quad, dict(c="#f4e3c4", c2="#fff", ears="floppy", ec="#c98f45", tail="short", snout="long", pat="spots", pc="#c98f45", leg=100)),
+ "wolf": (ch_quad, dict(c="#8a9ab0", c2="#e8eef5", ears="point", tail="fluffy", snout="long")),
+ "fox": (ch_quad, dict(c="#ff7a2a", c2="#fff", ears="point", tail="fluffy", tc="#ff7a2a", snout="long", hoof="#3a2414")),
+ "lion": (ch_quad, dict(c="#f2b24c", c2="#ffe7b0", ears="round", tail="tuft", mane="ring", mc="#c96a1a", snout="short")),
+ "tiger": (ch_quad, dict(c="#ff9a3a", c2="#fff", ears="round", tail="long", pat="stripes", snout="short", whisk=True)),
+ "horse": (ch_quad, dict(c="#8a5a33", c2="#a87048", ears="point", tail="fluffy", tc="#3a2414", neck=170, mane="neck", snout="long", sc="#c98f45", leg=170, hr=95)),
+ "zebra": (ch_quad, dict(c="#fff", c2="#fff", ears="point", tail="tuft", tc="#151515", neck=150, mane="neck", mc="#151515", snout="long", sc="#3a3a3a", pat="stripes", leg=160, hr=90)),
+ "camel": (ch_quad, dict(c="#d9a85a", c2="#f4e3c4", ears="round", tail="thin", neck=160, humps=2, snout="long", leg=190, hr=85)),
+ "giraffe": (ch_quad, dict(c="#ffd27a", c2="#fff3d0", ears="ossicones", tail="tuft", neck=360, pat="spots", pc="#c96a1a", snout="long", leg=200, hr=80, bw=200)),
+ "elephant": (ch_quad, dict(c="#9aa8b6", c2="#b8c4d0", ears="big", tail="thin", snout="trunk", tusk=True, leg=150, hr=130, bw=260, bh=150)),
+ "cow": (ch_quad, dict(c="#fff", c2="#ffd9e0", ears="horns", tail="tuft", pat="spots", snout="pig", sc="#ffc2d0")),
+ "pig": (ch_quad, dict(c="#ffb3c6", c2="#ffd9e0", ears="point", tail="curl", snout="pig", leg=90)),
+ "sheep": (ch_quad, dict(c="#3a3a3a", c2="#3a3a3a", ears="floppy", ec="#3a3a3a", tail="short", pat="wool", snout="short", belly=False, leg=110)),
+ "goat": (ch_quad, dict(c="#e8dcc8", c2="#fff", ears="horns", tail="short", snout="long", leg=130)),
+ "deer": (ch_quad, dict(c="#b8753a", c2="#f4e3c4", ears="antlers", tail="short", snout="long", pat="spots", pc="#fff", neck=80, leg=170, hr=90)),
+ "crocodile": (ch_quad, dict(c="#4f9a4a", c2="#c8e090", ears="none", tail="long", snout="croc", leg=60, bh=90, bw=280, hr=90)),
+ "turtle": (ch_quad, dict(c="#6fcf4f", c2="#6fcf4f", ears="none", tail="short", pat="shell", pc="#3f8a3a", snout="short", leg=70, belly=False)),
+ "rhino": (ch_quad, dict(c="#8a9ab0", c2="#a8b4c0", ears="point", tail="thin", snout="long", uni=True, leg=110, bw=260, bh=140, hr=120)),
+ "unicorn": (ch_quad, dict(c="#fff", c2="#ffd9f0", ears="point", tail="fluffy", tc="#c4a8ff", neck=170, mane="neck", mc="#c4a8ff", snout="long", sc="#ffd9f0", uni=True, leg=170, hr=95)),
+ "owl": (ch_bird, dict(c="#8a5a33", c2="#f4e3c4", beak="hook", bc="#ff9a3a", crest="tuft", er=46, hr=120)),
+ "chick": (ch_bird, dict(c="#ffd21f", c2="#fff3b0", beak="cone", bw=140, bh=130)),
+ "chicken": (ch_bird, dict(c="#fff", c2="#fff", beak="cone", crest="comb", tc="#e5322d")),
+ "duck": (ch_bird, dict(c="#fff", c2="#fff", beak="flat", hc="#2f8a3a", leg=50)),
+ "parrot": (ch_bird, dict(c="#2fbf6a", c2="#ffd21f", beak="hook", bc="#3a3a3a", wc="#e5322d", tc="#2b8be0", crest="feathers")),
+ "eagle": (ch_bird, dict(c="#5a3a22", c2="#7a5a3a", hc="#fff", beak="hook", bc="#ffd21f", wc="#4a2a12", mask=False)),
+ "flamingo": (ch_bird, dict(c="#ff8ab0", c2="#ffb3cc", beak="long", bc="#3a3a3a", neck=200, leg=260, bw=140, bh=110, hr=80)),
+ "crow": (ch_bird, dict(c="#2a2a3a", c2="#3a3a4a", beak="long", bc="#151515", leg=90)),
+ "penguin2": (ch_bird, dict(c="#1f2a3a", c2="#fff", beak="cone", leg=30, bw=170, bh=200)),
+ "peacock": (ch_bird, dict(c="#2b5ad0", c2="#2fbf6a", beak="cone", crest="feathers", cc="#2b5ad0", tc="#2fbf6a")),
+ "dolphin": (ch_sea, dict(c="#7cb6e0", c2="#e8f4ff", kind="dolphin")),
+ "shark": (ch_sea, dict(c="#8a9ab0", c2="#fff", kind="shark", bw=290)),
+ "fish": (ch_sea, dict(c="#ff9a3a", c2="#ffd9a8", kind="fish", pc="#fff", fin=True, bw=220, bh=140)),
+ "goldfish": (ch_sea, dict(c="#ffb02e", c2="#ffe7b0", kind="fish", pc="#ff7a2a", bw=200, bh=150)),
+ "jellyfish": (ch_sea, dict(c="#c4a8ff", kind="jelly")),
+ "crab": (ch_sea, dict(c="#e5322d", kind="crab")),
+ "starfish": (ch_sea, dict(c="#ff8a5a", kind="star")),
+ "seahorse": (ch_sea, dict(c="#ffb02e", c2="#ffe7b0", kind="seahorse")),
+ "ant": (ch_bug, dict(c="#3a2a2a", kind="ant")),
+ "beetle": (ch_bug, dict(c="#2a6a4a", kind="beetle")),
+ "mosquito": (ch_bug, dict(c="#5a5a6a", kind="mosquito")),
+ "ladybug": (ch_bug, dict(c="#e5322d", kind="ladybug")),
+ "butterfly": (ch_bug, dict(c="#c45adb", c3="#ffd21f", kind="butterfly")),
+ "spider": (ch_bug, dict(c="#3a2a4a", kind="spider")),
+ "caterpillar": (ch_bug, dict(c="#7fdf4f", c3="#4fbf3f", kind="caterpillar")),
+ "snail": (ch_bug, dict(c="#d98f45", c2="#c8e090", kind="snail")),
+}
+for _n, (_t, _sp) in NEW.items():
+    CHARS[_n] = _t(_sp)
+for _n in NEW: HOME.setdefault(_n, {"dolphin": "ocean", "shark": "ocean", "fish": "ocean", "goldfish": "ocean", "jellyfish": "ocean", "crab": "beach", "starfish": "beach", "seahorse": "ocean", "crocodile": "pond", "flamingo": "pond",
+    "deer": "jungle", "rhino": "savanna", "crow": "night", "peacock": "garden", "penguin2": "ice", "beetle": "garden", "mosquito": "pond", "caterpillar": "garden", "spider": "garden"}.get(_n, HOME.get(_n, "garden")))
 
 def bg(name, i):
     if name == "ocean":
@@ -193,7 +382,7 @@ def scene(i, b, s, e, c0, c1):
     ep_ch = ep.get("character", "whale"); ch = b.get("character", ep_ch); k = b["k"]; D = c1 - c0; js = []
     back, bub = bg(b.get("bg", ep.get("bg", HOME[ch])), i)
     sv = f'<svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{back}{bubbles(i, bub)}'
-    cs = b.get("scale", .85 if ch not in ("kid", "penguin") else .75)
+    cs = b.get("scale", 1.15 if ch in NEW else (.85 if ch not in ("kid", "penguin") else .75))
     if k == "compare":
         (ia, la), (ib, lb) = b["a"], b["b"]
         sv += (f'<g transform="translate(270 1620)"><g id="ia{i}" transform="scale(0)">{icon(ia, .9)}<text y="190" text-anchor="middle" font-size="60" font-weight="900" fill="#fff" stroke="{K}" stroke-width="10" paint-order="stroke" font-family="Cairo">{la}</text></g></g>'

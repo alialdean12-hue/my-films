@@ -58,9 +58,9 @@ def scene(i, b, s, e, c0, c1):
         for m in range(8):
             rr = 330 + m * 38; sv += f'<g transform="translate(540 1000) scale(1 .35)"><g id="mo{i}{m}" transform="rotate({m*47})"><circle cx="{rr}" r="{10+m%3*5}" fill="#cfd3dc"/></g></g>'
     sv += "</svg>"
-    h = sv + f'<div class="cap" id="cp{i}" style="opacity:0;{"color:#151515;text-shadow:none" if b.get("sky", ep.get("sky")) == "white" else ""}">{b["cap"]}</div>' + (f'<div class="sub" id="sb{i}" style="opacity:0">{b["sub"]}</div>' if b["sub"] else "")
+    h = sv + f'<div class="cap" id="cp{i}" style="opacity:0;{"color:#151515;text-shadow:none" if b.get("sky", ep.get("sky")) == "white" else ""}">{b["cap"]}</div>' + (f'<div class="sub" id="sb{i}" style="opacity:0">{b["sub"]}</div>' if b.get("sub") else "")
     js += [f'tl.fromTo("#cp{i}",{{opacity:0,y:40}},{{opacity:1,y:0,duration:.5,ease:"power3.out"}},{s:.2f});']
-    if b["sub"]: js.append(f'tl.fromTo("#sb{i}",{{opacity:0}},{{opacity:1,duration:.5}},{s+.7:.2f});')
+    if b.get("sub"): js.append(f'tl.fromTo("#sb{i}",{{opacity:0}},{{opacity:1,duration:.5}},{s+.7:.2f});')
     spd = 5 if k == "spin" else 1
     if obj in PLANETS: js.append(f'tl.fromTo("#tex{i}",{{x:0}},{{x:{-r*(1.5 if spd==1 else 9):.0f},duration:{D:.2f},ease:"none"}},{c0:.2f});')
     js.append(f'tl.fromTo("#st{i}",{{x:0}},{{x:-60,duration:{D:.2f},ease:"none"}},{c0:.2f});')

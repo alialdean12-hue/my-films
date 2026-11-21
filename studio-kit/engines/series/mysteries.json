@@ -1,0 +1,19 @@
+{
+ "about": "ألغاز التاريخ الحقيقية: وثائقي بلون أبيض وأسود وعناوين خبرية",
+ "style": 1,
+ "grade": "noir",
+ "caption": "news",
+ "transition": "cut",
+ "music": "mystery",
+ "cover": {
+  "tag": "لغز حقيقي",
+  "color": "#ff3b3b"
+ },
+ "tags": [
+  "ألغاز",
+  "غموض",
+  "قصص_حقيقية"
+ ],
+ "handle": "",
+ "agent_voice": ""
+}
