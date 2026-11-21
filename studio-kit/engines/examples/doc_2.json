@@ -63,6 +63,61 @@
    "query": "mona lisa painting",
    "cap": "أشهر لوحة في العالم",
    "transition": "zoom"
+  },
+  {
+   "line": "أُغلق المتحف أسبوعًا كاملًا، وتجمّع الناس ليشاهدوا مكان اللوحة الفارغ.",
+   "query": "museum crowd",
+   "cap": "طوابير أمام الفراغ",
+   "grade": "old_film",
+   "overlay": "stamp",
+   "stamp": "بريء"
+  },
+  {
+   "line": "اتّضح أن السارق كان يعمل في المتحف، وخرج باللوحة تحت معطفه.",
+   "query": "old coat",
+   "cap": "تحت المعطف",
+   "transition": "slide",
+   "overlay": "circle",
+   "at": [
+    540,
+    1000,
+    240
+   ]
+  },
+  {
+   "line": "لم تكن الموناليزا مشهورةً جدًا قبل السرقة، فجعلتها القصة أشهر لوحةٍ في العالم.",
+   "query": "old newspaper",
+   "cap": "لم تكن الموناليزا مشهورةً جد",
+   "cam": "in",
+   "transition": "cut",
+   "overlay": [
+    "zoombox"
+   ],
+   "box": [
+    390,
+    700,
+    300
+   ]
+  },
+  {
+   "line": "حتى بيكاسو استُجوب في القضية، قبل أن تُثبت براءته.",
+   "query": "old paris street",
+   "cap": "حتى بيكاسو استُجوب في القضية",
+   "grade": "old_film",
+   "overlay": "stamp",
+   "stamp": "بريء"
+  },
+  {
+   "line": "أُعيدت اللوحة إلى باريس عام ألفٍ وتسعمئةٍ وأربعة عشر وسط احتفالٍ كبير.",
+   "query": "paris celebration old",
+   "cap": "أُعيدت اللوحة إلى باريس عام ",
+   "flash": true,
+   "overlay": "circle",
+   "at": [
+    540,
+    1000,
+    240
+   ]
   }
  ],
  "sources": [
