@@ -11,6 +11,23 @@ Every finished run gives: `video.mp4` (master), **`video_phone.mp4` (send this)*
 - **Cover:** `"cover": {"text": "سؤال [y]مثير[/y]؟", "tag": "شرح", "beat": 1, "size": 136, "color": "#ffd21f"}`; the background is a clean frame of that beat.
 - **Caption doc:** `"caption_doc": {"title", "description", "question", "hashtags"}` (defaults come from the lines) and `"tags": ["كلمة", ...]`.
 - **Voice blocked?** If edge-tts cannot connect (ClientConnectorError), make the narration with your own TTS: one file per beat `b0.wav`, `b1.wav`… (wav/mp3/flac), same text as each `line`, clear Arabic male voice, put them in a folder and add `"voice_files": "<folder>"` to the json. Timing follows those files.
+- **Series (account identity):** add `"series": "<name>"` to the json and the look, music, cover tag and hashtags come from `engines/series/<name>.json` (anything in the video json wins). Add `"handle": "@your_account"` to show the account name small at the bottom of every frame.
+
+| series | style | what it is |
+|---|---|---|
+| `animal_facts` | 9 | عالم الحيوان: شخصية القطة تقدّم حيوانًا جديدًا كل مرة (غيّر character في كل مشهد) |
+| `anime_stories` | 8 | قصص أنمي قصيرة: نفس البطلة (شعر وردي، عيون بنفسجية) في كل حلقة |
+| `daily_facts` | 9 | هل تعلم يوميًا: شخصية الحوت، معلومة واحدة مدهشة، 30 ث |
+| `explained` | 3 | اشرح لي: Vox رسوم بورق كريمي |
+| `history_tales` | 6 | حكايات التاريخ: ورق مقصوص، وقت الغروب |
+| `life_tips` | 7 | نصائح الحياة: رجل العود بالبدلة، أماكن عمل وبيت |
+| `money_rules` | 4 | قواعد المال: ثيم ذهبي ثابت، نصوص متحركة |
+| `mysteries` | 1 | ألغاز التاريخ الحقيقية: وثائقي بلون أبيض وأسود وعناوين خبرية |
+| `space_wonders` | 5 | عجائب الفضاء: مجسمات ثلاثية الأبعاد، سماء عميقة |
+| `what_if` | 7 | ماذا تفعل لو: رجل العود نفسه (man) في كل حلقة، خطوات مرقمة |
+| `wisdom` | 4 | حكم وأقوال: ثيم إسلامي هادئ |
+
+- **Delivery folder:** every run also makes `deliver/<Drive folder>/<title>/` with `<title>.mp4`, `<title> - أفقي.mp4`, `<title> - مربع.mp4`, `غلاف.jpg`, `وصف.txt` — upload that folder to Google Drive as it is (Drive folder per style: وثائقي، Vox، رسوم Vox، نصوص متحركة، ثلاثي الأبعاد، ورق مقصوص، رجل العود، أنمي، هل تعلم؛ change with `"drive_folder"`).
 - `"formats": false` skips the 16:9 and 1:1 files.
 
 ```sh

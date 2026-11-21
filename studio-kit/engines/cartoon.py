@@ -55,6 +55,8 @@ def ch_animal(spec):
         body = f'<ellipse cx="0" cy="170" rx="{spec.get("bw", 200)}" ry="150" fill="{c}" {SW}/><ellipse cx="0" cy="200" rx="{spec.get("bw", 200)*.6:.0f}" ry="100" fill="{c2}"/>'
         if spec.get("wings"): body += f'<path d="M-190,120 C-320,40 -300,240 -170,230Z M190,120 C320,40 300,240 170,230Z" fill="{spec.get("wc", c)}" {SW}/>'
         s += body
+        if spec.get("neck"): s += f'<rect x="-75" y="-330" width="150" height="460" rx="60" fill="{c}" {SW}/>' + "".join(f'<circle cx="{x}" cy="{y}" r="24" fill="{spec.get("pc", "#c96a1a")}"/>' for x, y in ((-30, -200), (30, -80), (-20, 40))) + '<g transform="translate(0 -330)">'
+        lift_end = "</g>" if spec.get("neck") else ""
         er = {"round": lambda sx: f'<circle cx="{sx*170}" cy="-210" r="70" fill="{c}" {SW}/><circle cx="{sx*170}" cy="-210" r="38" fill="{c2}"/>',
               "cat": lambda sx: f'<path d="M{sx*210},-180 L{sx*170},-330 L{sx*60},-230Z" fill="{c}" {SW}/>',
               "long": lambda sx: f'<ellipse cx="{sx*90}" cy="-330" rx="50" ry="150" fill="{c}" {SW}/><ellipse cx="{sx*90}" cy="-320" rx="24" ry="110" fill="#ffc2c2"/>',
@@ -64,7 +66,6 @@ def ch_animal(spec):
               "tuft": lambda sx: f'<path d="M{sx*150},-210 L{sx*200},-320 L{sx*80},-240Z" fill="{c}" {SW}/>',
               "none": lambda sx: ""}[ears]
         s += er(-1) + er(1)
-        if spec.get("neck"): s += f'<rect x="-70" y="-420" width="140" height="520" rx="60" fill="{c}" {SW}/>' + "".join(f'<circle cx="{x}" cy="{y}" r="22" fill="{spec.get("pc", "#c96a1a")}"/>' for x, y in ((-30, -340), (30, -240), (-20, -120)))
         if spec.get("bwings"): s += "".join(f'<ellipse cx="{sx*190}" cy="{dy}" rx="170" ry="{r_}" fill="{spec["bwings"]}" {SW} transform="rotate({sx*20} {sx*190} {dy})"/>' for sx in (-1, 1) for dy, r_ in ((-120, 200), (160, 130)))
         if spec.get("shell"): s += f'<path d="M-260,220 A260,260 0 0,1 260,220Z" fill="{spec["shell"]}" {SW}/>' + "".join(f'<path d="M{x},220 Q{x+40},40 {x+90},220" stroke="{K}" stroke-width="6" fill="none"/>' for x in (-200, -80, 40))
         if spec.get("wool"): s += "".join(f'<circle cx="{x}" cy="{y}" r="{r_}" fill="{spec["wool"]}" {SW}/>' for x, y, r_ in ((-200, 120, 110), (0, 90, 130), (200, 120, 110), (-110, 260, 110), (110, 260, 110), (-150, -220, 70), (0, -270, 80), (150, -220, 70)))
@@ -86,7 +87,7 @@ def ch_animal(spec):
         if spec.get("antenna"): s += f'<path d="M-60,-240 Q-100,-380 -160,-400 M60,-240 Q100,-380 160,-400" stroke="{K}" stroke-width="12" fill="none"/><circle cx="-160" cy="-400" r="22" fill="{K}"/><circle cx="160" cy="-400" r="22" fill="{K}"/>'
         if spec.get("unihorn"): s += f'<path d="M-30,-250 L0,-460 L30,-250Z" fill="#ffd21f" {SW}/>'
         if spec.get("hat"): s += f'<path d="M-150,-230 H150 L120,-260 H-120Z M-90,-260 V-380 H90 V-260Z" fill="{spec["hat"]}" {SW}/>'
-        return s
+        return s + lift_end
     return f
 ANIMALS = {
  "dog": dict(c="#c98f45", c2="#f4e3c4", ears="floppy", ec="#8a5a33", tail="curl", muzzle="big"),
@@ -109,7 +110,7 @@ ANIMALS = {
  "horse": dict(c="#8a5a33", c2="#c98f45", ears="cat", tail="long", muzzle="snout", nc="#c98f45", hh=230),
  "camel": dict(c="#d9a85a", c2="#f4e3c4", ears="round", muzzle="big", tail="long"),
  "elephant": dict(c="#9aa8b6", c2="#c9d4e0", ears="big", muzzle="trunk"),
- "giraffe": dict(c="#ffd27a", c2="#fff", ears="horn", pat="spots", pc="#c96a1a", muzzle="snout", nc="#f4e3c4", neck=True),
+ "giraffe": dict(c="#ffd27a", c2="#fff", ears="horn", pat="spots", pc="#c96a1a", muzzle="snout", nc="#f4e3c4", neck=True, hw=190, hh=160),
  "zebra": dict(c="#fff", c2="#fff", ears="cat", pat="stripes", pc="#151515", muzzle="snout", nc="#3a3a3a"),
  "monkey": dict(c="#8a5a33", c2="#f1c7a0", ears="round", tail="curl", muzzle="big"),
  "gorilla": dict(c="#3a3a40", c2="#6a6a70", ears="round", muzzle="big", bw=260),

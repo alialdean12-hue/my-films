@@ -4,7 +4,7 @@ style = number or name:
   1 doc · 2 collage (Vox real photos) · 3 voxflat · 4 kinetic · 5 threed · 6 paper · 7 stick · 8 anime · 9 cartoon · 10 saw (puzzle part json)
 Output (styles 1,3–9): video.mp4, video_phone.mp4 (send this one), video_16x9.mp4, video_1x1.mp4, cover.jpg, cover_check.jpg, CAPTION.md.
 Run  sh scripts/doctor.sh  once per machine first."""
-import os, subprocess, sys
+import os, shutil, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 STYLES = {"1": "doc", "2": "collage", "3": "voxflat", "4": "kinetic", "5": "threed", "6": "paper", "7": "stick", "8": "anime", "9": "cartoon", "10": "saw"}
 def main():
@@ -20,7 +20,7 @@ def main():
     r = subprocess.run(cmd, cwd=cwd).returncode
     if r == 0 and st == "collage" and "--preview" not in extra:   # give collage the same extras as the engines
         sys.path.insert(0, os.path.join(HERE, "engines")); import json, post
-        ep = json.load(open(js)); post.caption(ep, out, "collage"); post.formats(out)
+        ep = json.load(open(js)); post.caption(ep, out, "collage"); post.formats(out); shutil.copy(os.path.join(out, "video.mp4"), os.path.join(out, "video_phone.mp4")); post.deliver(ep, out, "collage")
     sys.exit(r)
 if __name__ == "__main__":
     main()

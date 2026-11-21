@@ -45,7 +45,7 @@ def cover(ep, P, OUT, sch, D):
     c = ep.get("cover", {}); at = c.get("at", min(sch[0][0] + 1.8, D - .5) if len(sch) == 1 else sch[min(c.get("beat", 1), len(sch) - 1)][0] + 1.8)
     snap = os.path.join(P, "cover_snap"); shutil.rmtree(snap, ignore_errors=True)
     idx = os.path.join(P, "index.html"); orig = open(idx).read()
-    open(idx, "w").write(orig.replace("</style>", ".cap,.tag,.t,.num,.sub,.dt,.bar,[id^=cp],[id^=tt]{display:none!important}</style>", 1))   # clean frame: no video captions
+    open(idx, "w").write(orig.replace("</style>", ".cap,.tag,.t,.num,.sub,.dt,.bar,#hdl,[id^=cp],[id^=tt]{display:none!important}</style>", 1))   # clean frame: no video captions
     try: subprocess.run(["npx", "hyperframes", "snapshot", "--at", f"{at:.2f}", "--no-end", "-o", "cover_snap", "."], cwd=P, capture_output=True)
     finally: open(idx, "w").write(orig)
     pngs = [f for f in os.listdir(snap) if f.startswith("frame-")] if os.path.isdir(snap) else []
@@ -117,3 +117,14 @@ if __name__ == "__main__":
         sch = json.load(open(os.path.join(P, "schedule.json"))); D = sch["D"]; sch = sch["sch"]
         if step == "qa": print("\n".join(qa(P, sch, D)) or "QA OK")
         if step == "cover": cover(ep, P, OUT, sch, D)
+
+# ------------------------------------------------------------------ 5. delivery folder (ready to upload to Google Drive as it is)
+DRIVE = {"doc": "وثائقي", "collage": "Vox", "voxflat": "رسوم Vox", "kinetic": "نصوص متحركة", "threed": "ثلاثي الأبعاد", "paper": "ورق مقصوص", "stick": "رجل العود", "anime": "أنمي", "cartoon": "هل تعلم", "saw": "الغاز saw"}
+def deliver(ep, OUT, style):
+    """OUT/deliver/<Drive folder>/<title>/ : <title>.mp4 (phone), <title> - أفقي.mp4, <title> - مربع.mp4, غلاف.jpg, وصف.txt"""
+    t = re.sub(r'[\\/:*?"<>|\n]', " ", re.sub(r"\[/?[yr]\]|<[^>]+>", "", ep.get("title", "video"))).strip() or "video"
+    d = os.path.join(OUT, "deliver", ep.get("drive_folder", DRIVE.get(style, "فيديوهات")), t); os.makedirs(d, exist_ok=True)
+    for src, dst in (("video_phone.mp4", f"{t}.mp4"), ("video_16x9.mp4", f"{t} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - مربع.mp4"), ("cover.jpg", "غلاف.jpg"), ("CAPTION.md", "وصف.txt")):
+        if os.path.exists(os.path.join(OUT, src)): shutil.copy(os.path.join(OUT, src), os.path.join(d, dst))
+    print("DELIVER", d)
+    return d
