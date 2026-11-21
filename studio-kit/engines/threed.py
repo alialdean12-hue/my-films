@@ -76,4 +76,4 @@ def scene(i, b, s, e, c0, c1):
         for m in range(8): js.append(f'tl.fromTo("#mo{i}{m}",{{attr:{{transform:"rotate({m*47})"}}}},{{attr:{{transform:"rotate({m*47+360*(1.4-m*.12):.0f})"}},duration:{D:.2f},ease:"none"}},{c0:.2f});')
     if k == "end": js.append(f'tl.fromTo("#cam{i}",{{attr:{{transform:"translate(540 1000) scale(1.3)"}}}},{{attr:{{transform:"translate(540 1000) scale(0.9)"}},duration:{D:.2f},ease:"sine.inOut"}},{c0:.2f});')
     return h, js
-run("5_3d", B, scene, css=CSS, bg="#05060f", bed="drone", rate="-3%")
+run("threed", B, scene, css=CSS, bg="#05060f", bed="drone", rate="-3%")

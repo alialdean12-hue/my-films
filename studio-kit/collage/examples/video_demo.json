@@ -1,0 +1,71 @@
+{
+ "title": "لماذا البحر مالح؟",
+ "paper": "cream",
+ "no_facts": false,
+ "sources": [
+  "NOAA — Why is the ocean salty?"
+ ],
+ "voice": {
+  "rate": "+5%"
+ },
+ "assets": {
+  "sea": {
+   "video_query": "ocean waves"
+  },
+  "salt": {
+   "query": "salt crystals",
+   "source": "pixabay"
+  }
+ },
+ "beats": [
+  {
+   "bg": "kraft",
+   "line": "لماذا ماء البحر مالح؟",
+   "items": [
+    {
+     "type": "text",
+     "text": "لماذا البحر [y]مالح[/y]؟",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "video",
+     "asset": "sea",
+     "x": 540,
+     "y": 1050,
+     "size": "hero",
+     "at": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "cream",
+   "transition": "punch",
+   "line": "لأن الأنهار تحمل الأملاح من الصخور إلى البحر.",
+   "items": [
+    {
+     "type": "text",
+     "text": "الأنهار تحمل [y]الملح[/y]",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "photo",
+     "asset": "salt",
+     "x": 540,
+     "y": 1050,
+     "w": 700,
+     "enter": "toss",
+     "at": 0.4
+    },
+    {
+     "type": "circle",
+     "x": 540,
+     "y": 1050,
+     "r": 260,
+     "at": 1.4
+    }
+   ]
+  }
+ ]
+}

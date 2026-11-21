@@ -18,6 +18,7 @@ FONT = '''@font-face{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format(
     for n, f in (("Amiri", "amiri"), ("Tajawal", "tajawal"), ("Reem Kufi", "reemkufi"), ("Lalezar", "lalezar"), ("Noto Naskh", "notonaskharabic"), ("Marhey", "marhey"), ("Lemonada", "lemonada")))
 FONTS = {"cairo": "Cairo", "amiri": "Amiri", "tajawal": "Tajawal", "kufi": "Reem Kufi", "lalezar": "Lalezar", "naskh": "Noto Naskh", "marhey": "Marhey", "lemonada": "Lemonada"}
 
+TOP = []   # top-level timed elements (e.g. <video>) that scenes add; drawn under the scene clips
 def merge(a, b):
     out = dict(a)
     for k, v in b.items(): out[k] = merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
@@ -65,7 +66,7 @@ def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="
     html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{name}</title><style>{FONT}
 html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:{bg};font-family:"{FONTS.get(ep.get("font", "cairo"), "Cairo")}","Cairo",sans-serif;direction:rtl}}#root *{{font-family:inherit}}
 .clip{{position:absolute;inset:0;overflow:hidden}}svg.full{{position:absolute;inset:0}}{css}</style><script src="gsap.min.js"></script></head><body>
-<div id="root" data-composition-id="c" data-start="0" data-duration="{D}" data-width="1080" data-height="1920">{"".join(clips)}{overlay}{handle}</div><script>{pre_js}{"".join(js)}</script></body></html>'''
+<div id="root" data-composition-id="c" data-start="0" data-duration="{D}" data-width="1080" data-height="1920">{"".join(TOP)}{"".join(clips)}{overlay}{handle}</div><script>{pre_js}{"".join(js)}</script></body></html>'''
     open(P + "/index.html", "w").write(html)
     lint = subprocess.run(["npx", "hyperframes", "lint"], cwd=P, capture_output=True, text=True).stdout
     if "✗" in lint: print(lint); sys.exit("LINT")
