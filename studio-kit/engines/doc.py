@@ -1,4 +1,5 @@
 from lib import *
+import json
 CSS = ('.ph{position:absolute;inset:-6%;background-size:cover;background-position:center}.vg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 40%,#000c 100%),linear-gradient(transparent 55%,#000e)}'
        '.cap{position:absolute;left:80px;right:80px;top:1240px;text-align:center;font-weight:900;font-size:84px;line-height:1.25;color:#fff;text-shadow:0 6px 24px #000}.dt{position:absolute;left:0;right:0;top:300px;text-align:center}.dt span{background:#c9a24a;color:#111;font-weight:900;font-size:62px;padding:2px 30px 10px}'
        '.bar{position:absolute;left:300px;right:300px;top:1215px;height:8px;background:#c9a24a}')
@@ -64,29 +65,27 @@ def scene(i, b, s, e, c0, c1):
     if b.get("flash"): js += [f'tl.fromTo("#fl{i}",{{opacity:.9}},{{opacity:0,immediateRender:false,duration:.5}},{s+.9:.2f});', f'tl.fromTo("#S{i}",{{x:0}},{{x:14,duration:.05,yoyo:true,repeat:9}},{s+.9:.2f});']
     return h, js
 def images():
-    """each beat: "img": path (relative to the json) or "query": English Pixabay search (needs PIXABAY_KEY)."""
-    out = os.path.abspath(sys.argv[2]) + "/project/img"; os.makedirs(out, exist_ok=True)
-    for i, b in enumerate(B):
-        dst = f"{out}/{i}.jpg"
-        if os.path.exists(dst): continue
-        src = b.get("img")
+    """each beat: "img" (file) or "query" (English words) + optional "source" (auto|wikimedia|pixabay|openverse) and "pick" (1-6, from candidates/beat<N>.jpg)."""
+    sys.path.insert(0, KIT + "/scripts"); import images as IM
+    OUT = os.path.abspath(sys.argv[2]); out = OUT + "/project/img"; cand = OUT + "/candidates"; os.makedirs(out, exist_ok=True); os.makedirs(cand, exist_ok=True)
+    credits = []
+    def one(i, src, q, tag, pick, source):
+        dst = f"{out}/{i}{tag}.jpg"; cf = f"{cand}/q{i}{tag}"
         if src and not os.path.isabs(src): src = os.path.join(ep["_dir"], src)
         if not src:
-            tmp = f"{out}/q{i}"; os.makedirs(tmp, exist_ok=True)
-            sh([sys.executable, KIT + "/scripts/pixabay.py", "photos", b["query"], tmp, "--n", "1"], stdout=subprocess.DEVNULL)
-            src = tmp + "/" + sorted(os.listdir(tmp))[0]
+            meta = os.path.join(cf, "credits.json")
+            if os.path.exists(meta): res = json.load(open(meta))
+            else:
+                res = IM.fetch(q, cf, source, 6); json.dump(res, open(meta, "w"), ensure_ascii=False)
+                IM.sheet([r["file"] for r in res], f"{cand}/beat{i+1}{tag}.jpg")
+            k = max(1, min(int(pick or 1), len(res))) - 1; src = res[k]["file"]; r = res[k]
+            credits.append(f"مشهد {i+1}: {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}")
         sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=-2:2100", "-q:v", "3", dst])
     for i, b in enumerate(B):
-        if not (b.get("img2") or b.get("query2")): continue
-        dst = f"{out}/{i}b.jpg"; b["img2_ready"] = True
-        if os.path.exists(dst): continue
-        src = b.get("img2")
-        if src and not os.path.isabs(src): src = os.path.join(ep["_dir"], src)
-        if not src:
-            tmp = f"{out}/q{i}b"; os.makedirs(tmp, exist_ok=True)
-            sh([sys.executable, KIT + "/scripts/pixabay.py", "photos", b["query2"], tmp, "--n", "1"], stdout=subprocess.DEVNULL)
-            src = tmp + "/" + sorted(os.listdir(tmp))[0]
-        sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=-2:2100", "-q:v", "3", dst])
+        one(i, b.get("img"), b.get("query"), "", b.get("pick"), b.get("source", ep.get("source", "auto")))
+        if b.get("img2") or b.get("query2"): one(i, b.get("img2"), b.get("query2"), "b", b.get("pick2"), b.get("source", ep.get("source", "auto"))); b["img2_ready"] = True
+    open(OUT + "/CREDITS.txt", "w").write("مصادر الصور وتراخيصها:\n" + "\n".join(credits) + "\n")
+    print("photo candidates: look at", cand, "(beatN.jpg), then set \"pick\": number in that beat")
 images()
 run("1_doc", B, scene, css=CSS, bg="#000", bed="drone", rate="+3%",
     extra_sfx=lambda sch: [{"file": "sfx/hit.wav", "at": round(sch[3][0] + .9, 2), "gain": .35}, {"file": "sfx/riser.wav", "at": round(sch[3][0] - .2, 2), "gain": .15}])

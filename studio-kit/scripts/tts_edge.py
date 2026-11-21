@@ -10,6 +10,8 @@ ca = os.environ.get("SSL_CERT_FILE") or os.environ.get("REQUESTS_CA_BUNDLE")
 if ca:
     import certifi; certifi.where = lambda: ca          # edge-tts builds its SSL context from certifi
 import edge_tts
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from arabic_speech import speakable   # numbers -> words, Latin names -> Arabic (pronounce.json)
 
 async def one(text, voice, rate, out):
     for attempt in range(3):
@@ -30,7 +32,7 @@ def main():
     lines = json.loads(Path(a.lines).read_text()); dur = {}
     for ln in lines:
         raw = out / f"{ln['id']}.mp3"; wav = out / f"{ln['id']}.wav"
-        asyncio.run(one(ln["text"], a.voice, a.rate, str(raw)))
+        asyncio.run(one(ln["text"] if ln.get("raw") else speakable(ln["text"]), a.voice, a.rate, str(raw)))
         sil = "silenceremove=start_periods=1:start_threshold=-45dB"
         subprocess.run(["ffmpeg","-y","-loglevel","error","-i",str(raw),"-af",f"{sil},areverse,{sil},areverse,aresample=48000","-ac","1",str(wav)],check=True)
         d = float(subprocess.check_output(["ffprobe","-v","error","-show_entries","format=duration","-of","csv=p=0",str(wav)]))
