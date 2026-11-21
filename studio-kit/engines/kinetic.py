@@ -55,7 +55,7 @@ def scene(i, b, s, e, c0, c1):
         elif lay == "zigzag": y = 700 + (k % 2) * 260 - 130
         else: y = 700
         x0 = {"zigzag": (-180 if k % 2 == 0 else 180)}.get(lay, 0)
-        style = b.get("style", ep.get("style", "solid"))
+        style = b.get("style", ep.get("style", ep.get("style_text", "solid")))
         css = {"solid": f"color:{col}", "outline": f"color:transparent;-webkit-text-stroke:10px {col}", "box": f"color:{bg};background:{col};padding:0 40px 30px",
                "shadow": f"color:{col};text-shadow:14px 14px 0 {acc if col != acc else fg}", "underline": f"color:{col};border-bottom:24px solid {acc}", "glow": f"color:{col};text-shadow:0 0 40px {col},0 0 90px {col}",
                "highlight": f"color:{col};background:linear-gradient({acc}88,{acc}88) no-repeat 0 85%/100% 35%", "italic": f"color:{col};font-style:italic"}[style if not (k == n - 1 and i % 2 and style == "solid") else "box"]
