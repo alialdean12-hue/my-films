@@ -13,7 +13,10 @@ def mk(s, hl="#ffd21f"):
     return re.sub(r"\[r\](.*?)\[/r\]", r'<span style="color:#ff3b3b">\1</span>', s)
 
 FONT = '''@font-face{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}
-@font-face{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}'''
+@font-face{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}''' + "".join(
+    f'@font-face{{font-family:"{n}";src:url("fonts/{f}-ar.woff2") format("woff2");font-weight:100 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}}'
+    for n, f in (("Amiri", "amiri"), ("Tajawal", "tajawal"), ("Reem Kufi", "reemkufi"), ("Lalezar", "lalezar"), ("Noto Naskh", "notonaskharabic"), ("Marhey", "marhey"), ("Lemonada", "lemonada")))
+FONTS = {"cairo": "Cairo", "amiri": "Amiri", "tajawal": "Tajawal", "kufi": "Reem Kufi", "lalezar": "Lalezar", "naskh": "Noto Naskh", "marhey": "Marhey", "lemonada": "Lemonada"}
 
 def merge(a, b):
     out = dict(a)
@@ -35,7 +38,7 @@ def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="
     ep = load(); voice = ep.get("voice", {}).get("name", voice); rate = ep.get("voice", {}).get("rate", rate); D = float(ep.get("duration", D))
     os.makedirs(P + "/voice", exist_ok=True)
     shutil.copy(KIT + "/styles/kinetic/gsap.min.js", P); shutil.copytree(KIT + "/styles/kinetic/fonts", P + "/fonts", dirs_exist_ok=True)
-    json.dump([{"id": f"b{i}", "text": b["line"]} for i, b in enumerate(beats)], open(P + "/lines.json", "w"), ensure_ascii=False)
+    json.dump([{"id": f"b{i}", "text": b.get("say", b["line"])} for i, b in enumerate(beats)], open(P + "/lines.json", "w"), ensure_ascii=False)
     vf = ep.get("voice_files")   # folder with b0.wav/mp3/flac... made by another TTS (when edge-tts is blocked)
     if vf:
         vf = vf if os.path.isabs(vf) else os.path.join(ep["_dir"], vf)
@@ -60,13 +63,19 @@ def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="
     handle = (f'<div id="hdl" class="clip" data-start="0" data-duration="{D}" data-track-index="9" style="pointer-events:none"><div style="position:absolute;left:0;right:0;top:1770px;text-align:center;font-weight:800;font-size:38px;color:#fff;opacity:.55;text-shadow:0 2px 6px #000;direction:ltr">{ep["handle"]}</div></div>') if ep.get("handle") else ""
     js.append(f'tl.to({{}},{{duration:.01}},{D-.01});window.__timelines=window.__timelines||{{}};window.__timelines["c"]=tl;')
     html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{name}</title><style>{FONT}
-html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:{bg};font-family:"Cairo",sans-serif;direction:rtl}}
+html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:{bg};font-family:"{FONTS.get(ep.get("font", "cairo"), "Cairo")}","Cairo",sans-serif;direction:rtl}}#root *{{font-family:inherit}}
 .clip{{position:absolute;inset:0;overflow:hidden}}svg.full{{position:absolute;inset:0}}{css}</style><script src="gsap.min.js"></script></head><body>
 <div id="root" data-composition-id="c" data-start="0" data-duration="{D}" data-width="1080" data-height="1920">{"".join(clips)}{overlay}{handle}</div><script>{pre_js}{"".join(js)}</script></body></html>'''
     open(P + "/index.html", "w").write(html)
     lint = subprocess.run(["npx", "hyperframes", "lint"], cwd=P, capture_output=True, text=True).stdout
     if "✗" in lint: print(lint); sys.exit("LINT")
     json.dump({"sch": sch, "D": D}, open(P + "/schedule.json", "w"))
+    FACT = {"doc", "voxflat", "threed", "cartoon", "paper"}   # styles that state facts: every number/claim needs a source
+    if name in FACT:
+        src = ep.get("sources") or []
+        if src: open(OUT + "/SOURCES.txt", "w").write("مصادر المعلومات:\n" + "\n".join(f"- {x}" for x in src) + "\n")
+        elif "--preview" not in sys.argv and not ep.get("no_facts"):
+            sys.exit('SOURCES MISSING: add "sources": ["<site or book> — <what it confirms>", ...] to the json (one per fact/number), or "no_facts": true for pure fiction. Video not rendered.')
     import post
     if ep.get("qa", True):
         probs = post.qa(P, sch, D)

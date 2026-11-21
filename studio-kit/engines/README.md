@@ -7,9 +7,14 @@ One JSON → narrated vertical video (1080×1920) with voice (edge-tts), music b
 
 Every finished run gives: `video.mp4` (master), **`video_phone.mp4` (send this)**, `video_16x9.mp4` (YouTube horizontal), `video_1x1.mp4` (square), `cover.jpg` + `cover_check.jpg` (safe-area check), `CAPTION.md` (4 copy blocks: YouTube title, YouTube description, Instagram, TikTok).
 - **Quality check (automatic):** before rendering, every beat is checked; text outside the frame or too long stops the render and prints exactly which caption to fix (`--force` renders anyway, `"qa": false` turns it off).
+- **Photos (styles 1, 2):** each `query` downloads 6 candidates; look at `candidates/beatN.jpg` (numbered) after `--preview` and set `"pick": N` in that beat. `"source"`: auto (Wikimedia → Pixabay → Openverse), wikimedia (history, people, places, artworks), pixabay, openverse.
+- **Sources:** styles 1, 3, 5, 6, 9 need `"sources"` (or `"no_facts": true`), else the render stops.
+- **Pronunciation:** numbers become Arabic words automatically; add foreign names to `scripts/pronounce.json`, or give a beat `"say"`.
+- **Font:** `"font"`: cairo amiri naskh tajawal kufi lalezar marhey lemonada.
 - **Music:** `"music"`: epic mystery calm sad happy tech kids horror news islamic suspense inspire none (default chosen per style), `"music_gain"` (default 0.16).
 - **Cover:** `"cover": {"text": "سؤال [y]مثير[/y]؟", "tag": "شرح", "beat": 1, "size": 136, "color": "#ffd21f"}`; the background is a clean frame of that beat.
 - **Caption doc:** `"caption_doc": {"title", "description", "question", "hashtags"}` (defaults come from the lines) and `"tags": ["كلمة", ...]`.
+- **Same voice in a series:** when you make the narration yourself (`voice_files`), use the SAME voice every episode and write its name in the series file key `"agent_voice"`.
 - **Voice blocked?** If edge-tts cannot connect (ClientConnectorError), make the narration with your own TTS: one file per beat `b0.wav`, `b1.wav`… (wav/mp3/flac), same text as each `line`, clear Arabic male voice, put them in a folder and add `"voice_files": "<folder>"` to the json. Timing follows those files.
 - **Series (account identity):** add `"series": "<name>"` to the json and the look, music, cover tag and hashtags come from `engines/series/<name>.json` (anything in the video json wins). Add `"handle": "@your_account"` to show the account name small at the bottom of every frame.
 
