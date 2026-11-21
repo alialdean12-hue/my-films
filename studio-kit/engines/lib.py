@@ -122,7 +122,7 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     sh(["sh", KIT + "/scripts/render.sh", ".", "out/mix.wav", OUT + "/video.mp4", "30"], cwd=P, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     sh(["ffmpeg", "-y", "-loglevel", "error", "-i", OUT + "/video.mp4", "-vf", "scale=720:-2", "-c:v", "libx264", "-profile:v", "main", "-crf", "26", "-preset", "fast", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", OUT + "/video_phone.mp4"])
     post.caption(ep, OUT, name)
-    if ep.get("formats", True): post.formats(OUT)
+    if ep.get("formats"): post.formats(OUT)
     try: post.cover(ep, P, OUT, sch, D)
     except Exception as ex: print("cover failed:", ex)
     post.deliver(ep, OUT, name)
