@@ -89,4 +89,4 @@ def scene(i, b, s, e, c0, c1):
     if k == "tall": js += [f'tl.fromTo("#ruler{i}",{{opacity:0,scaleY:0,svgOrigin:"60 1230"}},{{opacity:1,scaleY:1,duration:.6}},{s+1:.2f});', f'tl.fromTo("#sun{i}",{{y:0}},{{y:500,duration:{D:.2f},ease:"none"}},{c0:.2f});']
     if night: js.append(f'tl.fromTo(".tw{i}",{{opacity:.3}},{{opacity:1,duration:.5,stagger:{{each:.05,repeat:-1,yoyo:true}}}},{c0:.2f});')
     return h, js
-run("6_paper", B, scene, css=CSS, bg="#f2b46b", bed="drone", rate="-3%")
+run("paper", B, scene, css=CSS, bg="#f2b46b", bed="drone", rate="-3%")

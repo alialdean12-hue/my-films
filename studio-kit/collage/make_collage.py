@@ -45,6 +45,23 @@ def torn(w, h, seed, jag=10, step=26):
 def prepare_assets(ep, P):
     A = {}; ad = os.path.join(P, "assets"); os.makedirs(ad, exist_ok=True)
     for name, a in ep.get("assets", {}).items():
+        if a.get("video_query") or a.get("video"):   # moving footage card (Pixabay videos): candidates/<name>.jpg, choose with "pick"
+            sys.path.insert(0, os.path.join(KIT, "scripts")); import images as IM
+            vs = a.get("video")
+            if vs: vs = vs if os.path.isabs(vs) else os.path.join(ep["_dir"], vs)
+            else:
+                cd = os.path.join(os.path.dirname(P), "candidates", name); meta = os.path.join(cd, "credits.json")
+                if os.path.exists(meta): res = json.load(open(meta))
+                else:
+                    res = IM.fetch_videos(a["video_query"], cd, 6); json.dump(res, open(meta, "w"), ensure_ascii=False)
+                    IM.sheet([r["thumb"] for r in res], os.path.join(os.path.dirname(P), "candidates", name + ".jpg"))
+                r = res[max(1, min(int(a.get("pick", 1)), len(res))) - 1]; vs = r["file"]
+                open(os.path.join(os.path.dirname(P), "CREDITS.txt"), "a").write(f"{name} (فيديو): {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}\n")
+            out = os.path.join(ad, name + ".mp4")
+            if not os.path.exists(out):
+                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-stream_loop", "-1", "-ss", str(a.get("start", 1)), "-i", vs, "-t", str(a.get("dur", 12)), "-an",
+                                "-vf", "scale=960:720:force_original_aspect_ratio=increase,crop=960:720,fps=30", "-c:v", "libx264", "-preset", "fast", "-crf", "21", "-pix_fmt", "yuv420p", out], check=True)
+            A[name] = dict(file="assets/" + name + ".mp4", size=(960, 720), cut=False, video=True); continue
         if "query" in a and not a.get("src"):   # find the photo: candidates sheet in OUT/candidates/<name>.jpg, choose with "pick"
             sys.path.insert(0, os.path.join(KIT, "scripts")); import images as IM
             cd = os.path.join(os.path.dirname(P), "candidates", name); meta = os.path.join(cd, "credits.json")
@@ -115,8 +132,30 @@ def content(it, A, iid, seed):
         return M.pin_svg() + '<path d="M0,22 V64" stroke="#111" stroke-width="5"/>', 44, 44
     return "", 0, 0
 
+VIDS = []; CUR = {}
+def video_card(it, A, bid, k, s, js):
+    """moving footage inside a torn paper card: the paper is drawn in the scene, the <video> sits above it (clip-path = torn edge)."""
+    iid = f"i{bid}_{k}"; x, y = it.get("x", 540), it.get("y", 960); ww = W * SIZES[it["size"]] if it.get("size") in SIZES else it.get("w", 700); hh = ww * .75
+    at = s + it.get("at", 0.15 + 0.4 * k); seed = bid * 13 + k; tilt = it.get("tilt", rnd(bid * 31 + k) * 3)
+    outer = torn(ww + 44, hh + 44, seed + 7, 12)
+    pts = []
+    for side in range(4):
+        n = int((ww if side % 2 == 0 else hh) / 26)
+        for q in range(n):
+            t = q / n; px, py = [(ww*t, 0), (ww, hh*t), (ww - ww*t, hh), (0, hh - hh*t)][side]; j = rnd(seed + side * 101 + q) * 8
+            if side % 2 == 0: py += j
+            else: px += j
+            pts.append(f"{px/ww*100:.1f}% {py/hh*100:.1f}%")
+    t0, t1 = CUR["c0"], CUR["c1"]
+    VIDS.append(f'<video id="vv{iid}" src="{A[it["asset"]]["file"]}" data-start="{max(t0, at-.05):.2f}" data-duration="{t1-max(t0, at-.05):.2f}" data-track-index="{5 + k}" muted playsinline '
+                f'style="position:absolute;left:{x-ww/2:.0f}px;top:{y-hh/2:.0f}px;width:{ww:.0f}px;height:{hh:.0f}px;object-fit:cover;clip-path:polygon({",".join(pts)});opacity:0"></video>')
+    js.append(f'tl.fromTo("#vv{iid}",{{opacity:0,scale:.2,rotation:{tilt-25:.1f}}},{{opacity:1,scale:1,rotation:{tilt:.1f},duration:.5,ease:"back.out(1.6)"}},{at:.2f});')
+    js.append(f'tl.fromTo("#pv{iid}",{{attr:{{transform:"translate({x} {y}) rotate({tilt-25:.1f}) scale(0.2)"}},opacity:0}},{{attr:{{transform:"translate({x} {y}) rotate({tilt:.1f}) scale(1)"}},opacity:1,duration:.5,ease:"back.out(1.6)"}},{at:.2f});')
+    tp = "".join(f'<rect x="{cx-70}" y="{-hh/2-34}" width="140" height="46" fill="#f4e8b0" fill-opacity=".85" transform="rotate({r} {cx} {-hh/2-11})"/>' for cx, r in ((-ww/2+60, -18), (ww/2-60, 14))) if it.get("tape", True) else ""
+    return f'<g id="pv{iid}" transform="translate({x} {y}) rotate({tilt:.1f}) scale(1)" opacity="0"><path d="{outer}" fill="#fbf8f0" filter="url(#shd)"/>{tp}</g>'
 def item_svg(it, A, bid, k, bg_dark, s, js):
     """svg item: translate(x y) > #iid (enter/exit) > #iidL (loop) > effect(content). appends its js."""
+    if it["type"] == "video": return video_card(it, A, bid, k, s, js)
     kind = it["type"]; iid = f"i{bid}_{k}"; x, y = it.get("x", 540), it.get("y", 960); seed = bid * 13 + k
     at = s + it.get("at", 0.15 + 0.4 * k)
     if kind in ("circle", "arrow", "underline"):   # 52 53 54 hand-drawn marks (absolute coords)
@@ -201,6 +240,7 @@ def build(ep, A, sch, D, P):
     beats = ep["beats"]; clips, js = [], ['const tl=gsap.timeline({paused:true});']; overlays = []
     for i, b in enumerate(beats):
         s, e, w = sch[i]; c0 = 0 if i == 0 else s - 1.0; c1 = sch[i+1][0] + 0.5 if i + 1 < len(beats) else D
+        CUR.update(c0=c0, c1=min(c1, sch[i+1][0] + .3) if i + 1 < len(beats) else D)
         bg = b.get("bg", ep.get("paper", "cream")); dark = bg in DARK_BG; col = PAPER.get(bg, bg)
         svg_items, html_items = [], []
         for k, it in enumerate(b.get("items", [])):
@@ -236,7 +276,7 @@ html,body{{margin:0;background:#111}}#root{{position:relative;width:1080px;heigh
 <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="14"/></filter>
 <linearGradient id="rollgrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".1"/><stop offset=".5" stop-color="#fff" stop-opacity=".4"/><stop offset="1" stop-color="#000" stop-opacity=".5"/></linearGradient>
 <filter id="shd" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="10" dy="16" stdDeviation="7" flood-opacity=".42"/></filter></defs></svg>
-{"".join(clips)}
+{"".join(clips)}{"".join(VIDS)}
 <div id="W" class="clip" data-start="0" data-duration="{D}" data-track-index="3"><svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{"".join(overlays)}<g id="sheetfall" transform="translate(0 -2100) rotate(0 540 960)"><g transform="translate(540 960)"><path d="{sheet}" fill="#efe6d2" filter="url(#shd)"/></g></g><g id="wipe" transform="translate(1250 0)"><g transform="translate(650 960)"><path d="{wipe}" fill="#efe6d2" filter="url(#shd)"/></g></g></svg>
 <div id="spot" style="opacity:0"></div><div id="flash" style="opacity:0"></div></div>
 </div><script>gsap.set("#flash,#spot",{{opacity:0}});{"".join(js)}</script></body></html>'''

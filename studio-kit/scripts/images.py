@@ -42,6 +42,28 @@ def openverse(q, out, n):
         res.append(dict(file=f, title=r.get("title", ""), author=r.get("creator", ""), license=f"{r.get('license','')} {r.get('license_version','')}".strip(), page=r.get("foreign_landing_url", "")))
         if len(res) >= n: break
     return res
+def pixabay_videos(q, out, n):
+    """short stock videos (no audio needed). Returns the same dicts with "file" = mp4 and "thumb" = jpg."""
+    key = os.environ.get("PIXABAY_KEY")
+    if not key: raise SystemExit("PIXABAY_KEY is not set: videos need it.")
+    d = json.loads(get("https://pixabay.com/api/videos/?" + urllib.parse.urlencode({"key": key, "q": q, "per_page": max(3, n), "safesearch": "true"})))
+    res = []
+    for h in d.get("hits", [])[:n]:
+        v = h["videos"].get("medium") or h["videos"].get("small")
+        if not v or not v.get("url"): continue
+        f = os.path.join(out, f"pv{h['id']}.mp4"); _save(v["url"], f); th = f[:-4] + ".jpg"
+        subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-ss", "1", "-i", f, "-frames:v", "1", "-vf", "scale=640:-2", th])
+        res.append(dict(file=f, thumb=th, title=h.get("tags", ""), author=h.get("user", ""), license="Pixabay Content License", page=h.get("pageURL", ""), duration=h.get("duration", 0)))
+    return res
+def fetch_videos(q, out, n=6):
+    os.makedirs(out, exist_ok=True); r = pixabay_videos(q, out, n)
+    if not r: raise SystemExit(f"NO VIDEOS for «{q}». Try simpler English words or use a photo (\"query\").")
+    return r
+def vertical(src, dst, dur, start=0.0, fps=30):
+    """centre-crop to 1080x1920, exact length (loops if the clip is short), no audio."""
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-stream_loop", "-1", "-ss", f"{start}", "-i", src, "-t", f"{dur:.2f}", "-an",
+                    "-vf", f"scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps={fps}", "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p", dst], check=True)
+    return dst
 SRC = {"pixabay": pixabay, "wikimedia": wikimedia, "openverse": openverse}
 def fetch(q, out, source="auto", n=6):
     os.makedirs(out, exist_ok=True); order = ["wikimedia", "pixabay", "openverse"] if source == "auto" else [source]

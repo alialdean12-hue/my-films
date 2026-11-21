@@ -45,20 +45,27 @@ def scene(i, b, s, e, c0, c1):
     D = c1 - c0; js = []
     cam = b.get("cam", ep.get("cam")); a, z, dx, dy = CAMS[cam] if isinstance(cam, str) else (cam or [(1.0, 1.18, -40, 0), (1.2, 1.0, 0, 30), (1.0, 1.15, 30, -20), (1.15, 1.0, 0, -30)][i % 4])
     g = GRADES.get(b.get("grade", ep.get("grade", "sepia")), GRADES["sepia"])
-    h = f'<div class="ph" id="ph{i}" style="background-image:url(img/{i}.jpg);filter:{g}"></div><div class="vg"></div>'
+    if b.get("_vsrc"):
+        sys.path.insert(0, KIT + "/scripts"); import images as IM
+        vd = os.path.abspath(sys.argv[2]) + "/project/vid"; os.makedirs(vd, exist_ok=True)
+        if not os.path.exists(f"{vd}/{i}.mp4"): IM.vertical(b["_vsrc"], f"{vd}/{i}.mp4", D + .2, b.get("video_start", 1.0))
+        TOP.append(f'<video id="vid{i}" src="vid/{i}.mp4" data-start="{c0:.2f}" data-duration="{D:.2f}" data-track-index="0" muted playsinline style="position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:{g}"></video>')
+        h = '<div class="vg"></div>'
+    else: h = f'<div class="ph" id="ph{i}" style="background-image:url(img/{i}.jpg);filter:{g}"></div><div class="vg"></div>'
     oh, oj = overlay(i, b, s, e); h += oh; js += oj
     if b.get("route"): o2, j2 = overlay(i, {"overlay": "route"}, s, e); h += o2; js += j2
     if b.get("date"): h += f'<div class="dt" id="dt{i}" style="opacity:0"><span>{b["date"]}</span></div>'
     ch, bar = capdiv(i, b); h += ch
     if b.get("flash"): h += f'<div id="fl{i}" style="position:absolute;inset:0;background:#fff;opacity:0"></div>'
     tr = b.get("transition", ep.get("transition", "fade"))
-    js.append(f'tl.fromTo("#ph{i}",{{scale:{a},x:{dx},y:{dy}}},{{scale:{z},x:{-dx},y:{-dy},duration:{D:.2f},ease:"none"}},{c0:.2f});')
+    js.append(f'tl.fromTo("#{"vid" if b.get("_vsrc") else "ph"}{i}",{{scale:{a if not b.get("_vsrc") else 1.0},x:{dx if not b.get("_vsrc") else 0},y:{dy if not b.get("_vsrc") else 0}}},{{scale:{z if not b.get("_vsrc") else 1.08},x:{-dx if not b.get("_vsrc") else 0},y:{-dy if not b.get("_vsrc") else 0},duration:{D:.2f},ease:"none"}},{c0:.2f});')
     if i:
         js.append({"fade": f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.45}},{c0:.2f});', "cut": f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.05}},{c0+.3:.2f});',
                    "slide": f'tl.fromTo("#S{i}",{{x:1080}},{{x:0,duration:.45,ease:"power3.out"}},{c0:.2f});', "up": f'tl.fromTo("#S{i}",{{y:1920}},{{y:0,duration:.45,ease:"power3.out"}},{c0:.2f});',
                    "zoom": f'tl.fromTo("#S{i}",{{opacity:0,scale:1.5}},{{opacity:1,scale:1,duration:.45,ease:"power3.out"}},{c0:.2f});', "blur": f'tl.fromTo("#S{i}",{{opacity:0,filter:"blur(30px)"}},{{opacity:1,filter:"blur(0px)",duration:.5}},{c0:.2f});',
                    "flash": f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.05}},{c0+.3:.2f});tl.fromTo("#S{i}",{{filter:"brightness(4)"}},{{filter:"brightness(1)",duration:.4}},{c0+.3:.2f});',
                    "glitch": f'tl.fromTo("#S{i}",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:.06,repeat:4,yoyo:true}},{c0+.2:.2f});'}.get(tr, ""))
+    if b.get("_vsrc") and i: js.append(f'tl.fromTo("#vid{i}",{{opacity:0}},{{opacity:1,duration:.45}},{c0:.2f});')
     if bar: js.append(f'tl.fromTo("#br{i}",{{scaleX:0}},{{scaleX:1,duration:.5,ease:"power2.out"}},{s+.1:.2f});')
     js.append(f'tl.fromTo("#cp{i}",{{opacity:0,y:30}},{{opacity:1,y:0,duration:.6,ease:"power2.out"}},{s+.3:.2f});')
     if b.get("date"): js.append(f'tl.fromTo("#dt{i}",{{opacity:0,scaleX:1.4}},{{opacity:1,scaleX:1,duration:.6}},{s:.2f});')
@@ -82,10 +89,24 @@ def images():
             credits.append(f"مشهد {i+1}: {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}")
         sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=-2:2100", "-q:v", "3", dst])
     for i, b in enumerate(B):
+        if b.get("video_query") or b.get("video"):   # moving footage for this beat (Pixabay videos); falls back to a photo if none
+            cf = f"{cand}/v{i}"; meta = os.path.join(cf, "credits.json")
+            try:
+                if b.get("video"): b["_vsrc"] = b["video"] if os.path.isabs(b["video"]) else os.path.join(ep["_dir"], b["video"])
+                else:
+                    if os.path.exists(meta): res = json.load(open(meta))
+                    else:
+                        res = IM.fetch_videos(b["video_query"], cf, 6); json.dump(res, open(meta, "w"), ensure_ascii=False)
+                        IM.sheet([r["thumb"] for r in res], f"{cand}/beat{i+1}_video.jpg")
+                    r = res[max(1, min(int(b.get("pick", 1)), len(res))) - 1]; b["_vsrc"] = r["file"]
+                    credits.append(f"مشهد {i+1} (فيديو): {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}")
+                continue
+            except SystemExit as ex:
+                print("video:", ex, "-> using a photo"); b.setdefault("query", b.get("video_query"))
         one(i, b.get("img"), b.get("query"), "", b.get("pick"), b.get("source", ep.get("source", "auto")))
         if b.get("img2") or b.get("query2"): one(i, b.get("img2"), b.get("query2"), "b", b.get("pick2"), b.get("source", ep.get("source", "auto"))); b["img2_ready"] = True
     open(OUT + "/CREDITS.txt", "w").write("مصادر الصور وتراخيصها:\n" + "\n".join(credits) + "\n")
     print("photo candidates: look at", cand, "(beatN.jpg), then set \"pick\": number in that beat")
 images()
-run("1_doc", B, scene, css=CSS, bg="#000", bed="drone", rate="+3%",
-    extra_sfx=lambda sch: [{"file": "sfx/hit.wav", "at": round(sch[3][0] + .9, 2), "gain": .35}, {"file": "sfx/riser.wav", "at": round(sch[3][0] - .2, 2), "gain": .15}])
+run("doc", B, scene, css=CSS, bg="#000", bed="drone", rate="+3%",
+    extra_sfx=lambda sch: sum(([{"file": "sfx/hit.wav", "at": round(sch[k][0] + .9, 2), "gain": .35}, {"file": "sfx/riser.wav", "at": round(sch[k][0] - .2, 2), "gain": .15}] for k, b in enumerate(B) if b.get("flash")), []))

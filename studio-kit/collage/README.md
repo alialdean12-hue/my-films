@@ -29,3 +29,6 @@ Example: `examples/gold.json` (download its four photos into `media/` first; eac
 - Cut-outs only from photos with a clear subject (person, object, building) on a simple background; check the sticker in the sheet: if the cut is ragged, choose another photo.
 - Alternate paper colours scene to scene (kraft → cream → dark …). Keep text inside x 90–990 and away from faces.
 - People: real public figures only from public-domain/CC archive photos; never generated faces of real people.
+
+## Moving footage cards
+Asset `{"video_query": "ocean waves"}` (Pixabay videos, needs PIXABAY_KEY; candidates in `candidates/<asset>.jpg`, choose with `"pick"`; `"start"`, `"dur"`) and item `{"type": "video", "asset": "sea", "x": 540, "y": 1050, "size": "hero"}`: the footage plays inside a torn paper card with tape. Example: `examples/video_demo.json`.

@@ -1,0 +1,32 @@
+{
+ "title": "المحيط",
+ "sources": [
+  "NOAA — How much of the ocean have we explored?",
+  "NOAA — rogue waves"
+ ],
+ "music": "epic",
+ "beats": [
+  {
+   "line": "المحيط يغطي معظم كوكبنا.",
+   "video_query": "ocean waves",
+   "cap": "المحيط",
+   "grade": "cold"
+  },
+  {
+   "line": "وفيه أمواجٌ قد يبلغ ارتفاعها ثلاثين مترًا.",
+   "video_query": "big waves storm",
+   "cap": "أمواج 30 مترًا",
+   "grade": "noir",
+   "overlay": "counter",
+   "number": 30,
+   "unit": " م"
+  },
+  {
+   "line": "لكن أعماقه ما زالت مجهولة.",
+   "query": "deep sea",
+   "cap": "أعماق مجهولة",
+   "grade": "night"
+  }
+ ],
+ "duration": 14
+}
