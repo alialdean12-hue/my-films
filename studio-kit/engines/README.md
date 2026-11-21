@@ -42,7 +42,7 @@ python3 <engine>.py examples/<engine>.json ~/out/<name> --preview   # look at sh
 python3 <engine>.py examples/<engine>.json ~/out/<name>             # video.mp4 + video_phone.mp4
 ```
 Behind a TLS proxy set `SSL_CERT_FILE`. **Always copy an example JSON and change it** (each style has 3: `examples/<style>.json`, `<style>_2.json`, `<style>_3.json`), never start from empty.
-Common keys: `title`, `beats` (5–7 beats, one spoken `line` each, ≤ 14 words), optional `voice: {name, rate}`, `duration` (default 30; grows if the voice is longer). In captions `[y]..[/y]` = yellow, `[r]..[/r]` = red, `<br/>` = new line.
+Common keys: `title`, `beats` (7–12 beats, one spoken `line` each, ≤ 14 words), optional `voice: {name, rate}`, length = as long as the narration needs, minimum 50 s (`min_duration`); a shorter narration stops the render with how many words to add (previews still run). In captions `[y]..[/y]` = yellow, `[r]..[/r]` = red, `<br/>` = new line.
 
 | Style | Engine | Beat keys |
 |---|---|---|
