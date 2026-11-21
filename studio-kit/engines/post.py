@@ -32,9 +32,9 @@ const {chromium} = require('playwright');
   console.log(JSON.stringify(out)); await b.close();
 })();
 """
-def qa(P, sch, D):
+def qa(P, sch, D, prefix="S"):
     """returns list of problems (empty = OK). Checks every beat when its animation has settled."""
-    times = [[min(s + 1.9, (sch[i+1][0] - .3) if i + 1 < len(sch) else D - .2), f"S{i}"] for i, (s, e) in enumerate(sch)]
+    times = [[min(s + 1.9, (sch[i+1][0] - .3) if i + 1 < len(sch) else D - .2), f"{prefix}{i}"] for i, (s, e, *_) in enumerate(sch)]
     js = os.path.join(P, "_qa.js"); open(js, "w").write(QA_JS)
     r = subprocess.run(["node", js, os.path.join(P, "index.html"), json.dumps(times)], capture_output=True, text=True, cwd=P)
     try: return json.loads(r.stdout.strip().splitlines()[-1])
@@ -121,6 +121,13 @@ if __name__ == "__main__":
 
 # ------------------------------------------------------------------ 5. delivery folder (ready to upload to Google Drive as it is)
 DRIVE = {"doc": "وثائقي", "collage": "Vox", "voxflat": "رسوم Vox", "kinetic": "نصوص متحركة", "threed": "ثلاثي الأبعاد", "paper": "ورق مقصوص", "stick": "رجل العود", "anime": "أنمي", "cartoon": "هل تعلم", "saw": "الغاز saw"}
+def deliver_saw(ep, OUT):
+    """puzzle parts: الغاز saw/<title>/<title> - اللغز.mp4 | - الحل.mp4, غلاف اللغز.jpg | غلاف الحل.jpg (+ wide/square)"""
+    t = re.sub(r'[\\/:*?"<>|\n]', " ", ep.get("title", "لغز")).strip(); part = "اللغز" if int(ep.get("part", 1)) == 1 else "الحل"
+    d = os.path.join(OUT, "deliver", "الغاز saw", t); os.makedirs(d, exist_ok=True)
+    for src, dst in (("video.mp4", f"{t} - {part}.mp4"), ("thumb.jpg", f"غلاف {part}.jpg"), ("video_16x9.mp4", f"{t} - {part} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - {part} - مربع.mp4")):
+        if os.path.exists(os.path.join(OUT, src)): shutil.copy(os.path.join(OUT, src), os.path.join(d, dst))
+    print("DELIVER", d); return d
 def deliver(ep, OUT, style):
     """OUT/deliver/<Drive folder>/<title>/ : <title>.mp4 (phone), <title> - أفقي.mp4, <title> - مربع.mp4, غلاف.jpg, وصف.txt"""
     t = re.sub(r'[\\/:*?"<>|\n]', " ", re.sub(r"\[/?[yr]\]|<[^>]+>", "", ep.get("title", "video"))).strip() or "video"

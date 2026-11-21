@@ -320,6 +320,13 @@ def main():
     print("3/5 html..."); build(ep, A, sch, D, P)
     lint = subprocess.run(["npx", "hyperframes", "lint"], cwd=P, capture_output=True, text=True).stdout
     if "✗" in lint: print(lint); sys.exit("LINT ERRORS")
+    sys.path.insert(0, os.path.join(KIT, "engines")); import post
+    if ep.get("qa", True):
+        probs = post.qa(P, sch, D, prefix="B")
+        if probs:
+            print("QA PROBLEMS (fix the JSON: shorter text / smaller size / move x):\n  " + "\n  ".join(probs[:20]))
+            if "--preview" not in sys.argv and "--force" not in sys.argv: sys.exit("QA FAILED: video not rendered. Fix and run again (or add --force).")
+        else: print("QA OK")
     times = ",".join(f"{min(w-0.1, s+1.6):.1f}" for s, e, w in sch)
     subprocess.run(["npx", "hyperframes", "snapshot", "--at", times, "--no-end", "-o", "snaps", "."], cwd=P, capture_output=True)
     for k, f in enumerate(sorted(f for f in os.listdir(os.path.join(P, "snaps")) if f.startswith("contact"))): shutil.copy(os.path.join(P, "snaps", f), os.path.join(OUT, f"sheet{k+1}.jpg"))

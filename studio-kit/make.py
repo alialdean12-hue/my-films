@@ -21,6 +21,9 @@ def main():
     if r == 0 and st == "collage" and "--preview" not in extra:   # give collage the same extras as the engines
         sys.path.insert(0, os.path.join(HERE, "engines")); import json, post
         ep = json.load(open(js)); post.caption(ep, out, "collage"); post.formats(out); shutil.copy(os.path.join(out, "video.mp4"), os.path.join(out, "video_phone.mp4")); post.deliver(ep, out, "collage")
+    if r == 0 and st == "saw" and "--preview" not in extra:   # wide/square versions + Drive folder with the series file names
+        sys.path.insert(0, os.path.join(HERE, "engines")); import json, post
+        ep = json.load(open(js)); post.formats(out); post.deliver_saw(ep, out)
     sys.exit(r)
 if __name__ == "__main__":
     main()

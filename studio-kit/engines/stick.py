@@ -116,7 +116,7 @@ def person(pid, p):
     if L.get("tie"): torso += f'<path d="M0,-200 L-16,-170 L0,-60 L16,-170Z" fill="{L["tie"]}" stroke="{K}" stroke-width="5"/>'
     if L.get("bag"): torso += f'<rect x="-110" y="-190" width="50" height="160" rx="16" fill="#e5322d" stroke="{K}" stroke-width="7"/>'
     cape = f'<path d="M-76,-200 L-150,60 H150 L76,-200Z" fill="{L["cape"]}" stroke="{K}" stroke-width="8"/>' if L.get("cape") else ""
-    hf, hb = hair(L, L["hs"]); beard = f'<path d="M-60,30 Q0,120 60,30 Q0,70 -60,30Z" fill="{L["beard"]}" stroke="{K}" stroke-width="6"/>' if L.get("beard") else ""
+    hf, hb = hair(L, L["hs"]); beard = f'<path d="M-58,44 Q0,112 58,44 Q0,84 -58,44Z" fill="{L["beard"]}" stroke="{K}" stroke-width="6"/>' if L.get("beard") else ""
     acc = ('<circle cx="-34" cy="0" r="28" fill="none" stroke="#151515" stroke-width="7"/><circle cx="34" cy="0" r="28" fill="none" stroke="#151515" stroke-width="7"/><path d="M-6,0 H6" stroke="#151515" stroke-width="7"/>' if L.get("glasses") else "") + ('<rect x="-84" y="-22" width="168" height="40" fill="#151515"/>' if L.get("mask") else "")
     head = f'<g id="hd{pid}" transform="translate(0 -290)">{hb}<circle r="84" fill="{sk}" stroke="{K}" stroke-width="9"/><g fill="#151515">{FACE[p.get("face", "ok")]}</g>{beard}{hf}{acc}</g>'
     x = p.get("x", 540); y = p.get("y", FLOOR - 230 * abs(sc))
@@ -281,6 +281,15 @@ def fx_js(kind, i, s, e):
 def scene(i, b, s, e, c0, c1):
     js = []; pl = b.get("place", "elevator")
     people = b.get("people") or [{"look": b.get("look", "man"), "x": b.get("x", 420), "pose": b.get("pose", "stand"), "face": b.get("face", "ok")}]
+    act = b.get("action")
+    if act and len(people) >= 2:   # two people facing each other doing something together
+        A_ = {"handshake": ("point", "point", 400, 680), "give": ("point", "carry", 360, 720), "hug": ("hug", "hug", 470, 610), "argue": ("angry_point", "angry_point", 360, 720),
+              "high_five": ("wave", "wave", 420, 660), "talk": ("shrug", "think", 360, 720), "help": ("point", "kneel", 400, 680), "bow": ("bow", "bow", 360, 720), "dance": ("dance1", "dance2", 360, 720), "teach": ("point", "read", 330, 740)}
+        p0, p1, x0, x1 = A_.get(act, A_["talk"])
+        people = [dict(people[0]), dict(people[1])] + people[2:]
+        people[0].setdefault("x", x0); people[1].setdefault("x", x1); people[0].setdefault("pose", p0); people[1].setdefault("pose", p1); people[1]["flip"] = True
+        if act in ("hug", "high_five", "dance"): people[0].setdefault("face", "happy"); people[1].setdefault("face", "happy")
+        if act == "argue": people[0].setdefault("face", "angry"); people[1].setdefault("face", "angry")
     fxs = b.get("fx", []); fxs = [fxs] if isinstance(fxs, str) else fxs
     over = ""
     p0 = people[0]; hx, hy = p0.get("x", 420) + 190, 1050
@@ -316,6 +325,23 @@ def scene(i, b, s, e, c0, c1):
     h = f'<svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920"><g id="bg{i}">{place(pl, i)}</g>{figs}{car_front}{doors}{over}</svg>'
     h += f'<div class="cap" id="cp{i}" style="opacity:0"><span class="bx">{b["cap"]}</span></div>'
     js.append(f'tl.fromTo("#cp{i}",{{opacity:0,scale:.6}},{{opacity:1,scale:1,duration:.35,ease:"back.out(2)"}},{s:.2f});')
+    if act == "give" and len(people) >= 2:
+        it_ = b.get("item", "gift"); xa, xb = people[0]["x"] + 150, people[1]["x"] - 150
+        h = h.replace("</svg>", f'<g id="gv{i}" transform="translate({xa} 1330)"><g>{icon(it_, .4, "#151515")}</g></g></svg>', 1)
+        js.append(f'tl.fromTo("#gv{i}",{{attr:{{transform:"translate({xa} 1330)"}}}},{{attr:{{transform:"translate({xb} 1360)"}},duration:.9,ease:"power2.inOut"}},{s+1.2:.2f});')
+    if act == "high_five" and len(people) >= 2:
+        mx = (people[0]["x"] + people[1]["x"]) / 2
+        h = h.replace("</svg>", f'<g id="hf{i}" transform="translate({mx:.0f} 1080) scale(0)"><g>{icon("star", .45, "#151515")}</g></g></svg>', 1)
+        js.append(f'tl.to("#hf{i}",{{attr:{{transform:"translate({mx:.0f} 1080) scale(1)"}},duration:.3,ease:"back.out(3)"}},{s+.8:.2f});')
+    if act == "handshake" and len(people) >= 2:
+        for n_ in (0, 1): js.append(f'tl.to("#a1l{i}_{n_}",{{attr:{{transform:"translate(0 96) rotate({-14 if n_ == 0 else -14})"}},duration:.18,yoyo:true,repeat:5}},{s+.9:.2f});')
+    if act == "argue" and len(people) >= 2:
+        h = h.replace("</svg>", "".join(f'<g class="fx{i}" transform="translate({p["x"]} 940)"><g>{icon("angry_face", .35, "#151515")}</g></g>' for p in people[:2]) + "</svg>", 1); js += fx_js("pop", i, s, e)
+    if act == "talk" and len(people) >= 2:
+        h = h.replace("</svg>", f'<g class="fx{i}" transform="translate({people[0]["x"]+120} 980)"><g>{icon("speech", .45, "#151515")}</g></g><g class="fx{i}" transform="translate({people[1]["x"]-120} 960)"><g>{icon("thought", .4, "#151515")}</g></g></svg>', 1); js += fx_js("pop", i, s, e)
+    if act == "dance" and len(people) >= 2:
+        for n_ in (0, 1):
+            for k_ in range(int((e - s) / .5)): js += to_pose(f"{i}_{n_}", ("dance1" if (k_ + n_) % 2 == 0 else "dance2"), s + .3 + k_ * .5, .4, "sine.inOut")
     if "shake" in fxs: js.append(f'tl.fromTo("#S{i} svg",{{x:0}},{{x:16,duration:.05,yoyo:true,repeat:11}},{s+.2:.2f});')
     js.append(f'tl.fromTo("#bg{i}",{{scale:1}},{{scale:1.04,transformOrigin:"50% 60%",duration:{c1-c0:.2f},ease:"none"}},{c0:.2f});')
     return h, js
