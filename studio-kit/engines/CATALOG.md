@@ -12,6 +12,7 @@ Use these names in the JSON keys. Mix freely. Engines: see README.md.
 - **face** (15): `ok`, `happy`, `fear`, `calm`, `sad`, `angry`, `sleepy`, `wink`, `laugh`, `cry`, `think`, `sick`, `love`, `cool`, `wow`
 - **fx** (16 animated + any icon name): `fire`, `rain`, `idea`, `question`, `exclaim`, `heart`, `zzz`, `sweat`, `check`, `cross`, `phone`, `bell`, `clock`, `smoke`, `air`, `money`, `shake`, `open`
 - per person: `x`, `walk_to`, `flip`, `scale`; per beat: `fx_at` [x, y]
+- **action** (two people, they face each other automatically): `handshake`, `give` (+ `item`: any icon), `hug`, `argue`, `high_five`, `talk`, `help`, `bow`, `dance`, `teach`
 
 ## 9 · Cartoon (`cartoon.py`)
 - **character** (71): `alien`, `ant`, `bat`, `bear`, `bee`, `beetle`, `butterfly`, `camel`, `cat`, `caterpillar`, `chick`, `chicken`, `cow`, `crab`, `crocodile`, `crow`, `deer`, `dog`, `dolphin`, `dragon`, `duck`, `eagle`, `elephant`, `fish`, `flamingo`, `fox`, `frog`, `giraffe`, `goat`, `goldfish`, `gorilla`, `grandpa`, `hamster`, `horse`, `jellyfish`, `kid`, `koala`, `ladybug`, `lion`, `monkey`, `monster`, `mosquito`, `mouse`, `octopus`, `owl`, `panda`, `parrot`, `peacock`, `penguin`, `penguin2`, `pig`, `polar_bear`, `puppy`, `rabbit`, `rhino`, `robot`, `scientist`, `seahorse`, `seal`, `shark`, `sheep`, `snail`, `spider`, `starfish`, `teacher`, `tiger`, `turtle`, `unicorn`, `whale`, `wolf`, `zebra`
@@ -53,6 +54,7 @@ Use these names in the JSON keys. Mix freely. Engines: see README.md.
 - top level `character`: {`hair`: black brown blonde pink blue silver red green, `eyes`: brown blue green red gold purple, `gender`: girl/boy, `long` (hair), `shirt`, `skin`}, `sky`, `place`: city / hills
 - **k**: `establish` (city or hills under the sky), `back` (character from behind), `closeup` (face; `emotion`: calm happy sad surprised determined angry), `tear` (close-up with a falling tear), `run` (speed lines), `sky` (shooting stars), `rain`, `sakura` (falling petals), `title` (big glowing title `title`)
 - **sky**: night sunset day dawn storm dusk space · per beat: `sub` (subtitle), `petals: true`, `rain: true`
+- **two characters**: top level `character2`; kinds `duo` (`speaker`: 1 or 2, `emotion`, `emotion2`), `talk2`, `together`
 
 ## Shared options (every engine)
 - **font**: `cairo` (default), `amiri` (classic), `naskh`, `tajawal` (clean), `kufi` (Reem Kufi titles), `lalezar` (bold display), `marhey` (playful), `lemonada` (rounded)
