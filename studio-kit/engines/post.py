@@ -125,14 +125,22 @@ def deliver_saw(ep, OUT):
     """puzzle parts: الغاز saw/<title>/<title> - اللغز.mp4 | - الحل.mp4, غلاف اللغز.jpg | غلاف الحل.jpg (+ wide/square)"""
     t = re.sub(r'[\\/:*?"<>|\n]', " ", ep.get("title", "لغز")).strip(); part = "اللغز" if int(ep.get("part", 1)) == 1 else "الحل"
     d = os.path.join(OUT, "deliver", "الغاز saw", t); os.makedirs(d, exist_ok=True)
-    for src, dst in (("video.mp4", f"{t} - {part}.mp4"), ("thumb.jpg", f"غلاف {part}.jpg"), ("video_16x9.mp4", f"{t} - {part} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - {part} - مربع.mp4")):
+    for src, dst in (("video.mp4", f"{t} - {part}.mp4"), ("thumb.jpg", f"غلاف {part}.jpg")) + ((("video_16x9.mp4", f"{t} - {part} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - {part} - مربع.mp4")) if ep.get("formats") else ()):
         if os.path.exists(os.path.join(OUT, src)): shutil.copy(os.path.join(OUT, src), os.path.join(d, dst))
     print("DELIVER", d); return d
 def deliver(ep, OUT, style):
-    """OUT/deliver/<Drive folder>/<title>/ : <title>.mp4 (phone), <title> - أفقي.mp4, <title> - مربع.mp4, غلاف.jpg, وصف.txt"""
+    """OUT/deliver/<Drive folder>/<title>/ with ONLY: <title>.mp4, غلاف.jpg, الوصف.txt (captions + sources + photo credits at the end).
+    Wide/square videos only when "formats": true. Nothing else goes to Drive."""
     t = re.sub(r'[\\/:*?"<>|\n]', " ", re.sub(r"\[/?[yr]\]|<[^>]+>", "", ep.get("title", "video"))).strip() or "video"
-    d = os.path.join(OUT, "deliver", ep.get("drive_folder", DRIVE.get(style, "فيديوهات")), t); os.makedirs(d, exist_ok=True)
-    for src, dst in (("video_phone.mp4", f"{t}.mp4"), ("video_16x9.mp4", f"{t} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - مربع.mp4"), ("cover.jpg", "غلاف.jpg"), ("CAPTION.md", "وصف.txt"), ("CREDITS.txt", "مصادر الصور.txt"), ("SOURCES.txt", "مصادر المعلومات.txt")):
+    d = os.path.join(OUT, "deliver", ep.get("drive_folder", DRIVE.get(style, "فيديوهات")), t)
+    shutil.rmtree(d, ignore_errors=True); os.makedirs(d)
+    pairs = [("video_phone.mp4", f"{t}.mp4"), ("cover.jpg", "غلاف.jpg")]
+    if ep.get("formats"): pairs += [("video_16x9.mp4", f"{t} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - مربع.mp4")]
+    for src, dst in pairs:
         if os.path.exists(os.path.join(OUT, src)): shutil.copy(os.path.join(OUT, src), os.path.join(d, dst))
-    print("DELIVER", d)
+    txt = open(os.path.join(OUT, "CAPTION.md")).read() if os.path.exists(os.path.join(OUT, "CAPTION.md")) else ""
+    for f in ("SOURCES.txt", "CREDITS.txt"):
+        if os.path.exists(os.path.join(OUT, f)): txt += "\n━━━━━━━━━━\n" + open(os.path.join(OUT, f)).read()
+    open(os.path.join(d, "الوصف.txt"), "w").write(txt)
+    print("DELIVER", d, "(upload exactly these files, nothing else)")
     return d
