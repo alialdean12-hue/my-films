@@ -52,20 +52,14 @@ def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="
         if r_.returncode: sys.exit("VOICE FAILED (edge-tts cannot reach its server here). Make one audio file per beat with your own TTS, Arabic male voice, "
                                    "named b0.wav b1.wav ... (one per line, same text), put them in a folder and add  \"voice_files\": \"<folder>\"  to the json. Then run again.\n" + r_.stderr[-300:])
     durs = [dur(f"{P}/voice/b{i}.wav") for i in range(len(beats))]
-    # exact length: the video is always "duration" seconds (default 30). A slightly long voice is sped up (max 12 %, pitch kept);
-    # a much longer one stops with how many words to cut. "duration_flexible": true lets the video grow instead.
+    # length follows the topic: the video is as long as the narration needs (no maximum), but never under "min_duration" (default 50 s).
+    # A too-short narration is NOT padded with silence: the render stops and says how many words to add (previews still run).
     need = lambda t: t + .3 * (len(beats) - 1) + 1.6
-    tot = sum(durs)
-    if need(tot) > D and not ep.get("duration_flexible"):
-        k = (tot) / (D - .3 * (len(beats) - 1) - 1.6)
-        if k <= 1.12:
-            for i in range(len(beats)):
-                f = f"{P}/voice/b{i}.wav"; sh(["ffmpeg", "-y", "-loglevel", "error", "-i", f, "-af", f"atempo={k:.4f}", f + ".tmp.wav"]); os.replace(f + ".tmp.wav", f)
-            durs = [dur(f"{P}/voice/b{i}.wav") for i in range(len(beats))]; tot = sum(durs); print(f"voice sped up x{k:.2f} to fit {D:.0f} s")
-        else:
-            words = sum(len(b.get("say", b["line"]).split()) for b in beats); cut = int(words * (1 - 1.12 / k)) + 1
-            sys.exit(f"TOO LONG: the voice needs {need(tot):.1f} s but the video must be {D:.0f} s. Remove about {cut} words from the lines (or set \"duration\" higher). Video not rendered.")
-    if need(tot) > D: D = round(need(tot), 2)
+    tot = sum(durs); MIN = float(ep.get("min_duration", 50))
+    if need(tot) < MIN and "--preview" not in sys.argv:
+        words = sum(len(b.get("say", b["line"]).split()) for b in beats); add = int(words * (MIN / need(tot) - 1)) + 3
+        sys.exit(f"TOO SHORT: the narration lasts {need(tot):.1f} s but every video must be at least {MIN:.0f} s. Explain the topic more: add about {add} words (new beats or longer lines). Video not rendered.")
+    D = round(max(need(tot), MIN if "--preview" not in sys.argv else min(MIN, need(tot) + 2)), 2)
     gap = min(1.0, max(.3, (D - 0.6 - 1.0 - tot) / max(1, len(beats) - 1)))
     sch, t = [], .5
     for d in durs: sch.append((round(t, 2), round(t + d, 2))); t += d + gap
@@ -135,7 +129,7 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     sh(["sh", KIT + "/scripts/render.sh", ".", "out/mix.wav", OUT + "/video.mp4", "30"], cwd=P, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     sh(["ffmpeg", "-y", "-loglevel", "error", "-i", OUT + "/video.mp4", "-vf", "scale=720:-2", "-c:v", "libx264", "-profile:v", "main", "-crf", "26", "-preset", "fast", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", OUT + "/video_phone.mp4"])
     real = dur(OUT + "/video.mp4")
-    print(f"LENGTH {real:.2f} s (target {D:.2f} s)" + ("" if abs(real - D) < .25 else "  WARNING: length differs from the target"))
+    print(f"LENGTH {real:.2f} s" + ("" if real >= float(ep.get("min_duration", 50)) - .1 else "  WARNING: shorter than the minimum"))
     post.caption(ep, OUT, name)
     if ep.get("formats"): post.formats(OUT)
     try: post.cover(ep, P, OUT, sch, D)

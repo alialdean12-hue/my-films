@@ -93,8 +93,10 @@ def schedule(ep, durs):
     t, out = 0.35, []
     for d in durs:
         out.append([round(t, 2), round(t + d, 2)]); t += d + ep.get("gap", 0.45)
-    D = ep.get("duration") or round(out[-1][1] + 1.3, 2)
-    if out[-1][1] > D - 0.5: sys.exit(f"TOO LONG: voice ends at {out[-1][1]:.1f}s, duration {D}s. Shorten the lines or raise duration.")
+    MIN = float(ep.get("min_duration", 50)); D = round(out[-1][1] + 1.3, 2)   # length follows the narration, never under MIN (default 50 s)
+    if D < MIN and "--preview" not in sys.argv:
+        words = sum(len(b["line"].split()) for b in ep["beats"]); add = int(words * (MIN / D - 1)) + 3
+        sys.exit(f"TOO SHORT: the narration lasts {D:.1f} s but every video must be at least {MIN:.0f} s. Explain the topic more: add about {add} words. Video not rendered.")
     for i in range(len(out)): out[i].append(round(out[i+1][0] - 0.05, 2) if i + 1 < len(out) else D)
     return out, D
 
