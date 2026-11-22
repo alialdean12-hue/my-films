@@ -13,8 +13,8 @@ Every finished run gives: `video.mp4` (master), **`video_phone.mp4` (send this)*
 - **Pronunciation:** numbers become Arabic words automatically; add foreign names to `scripts/pronounce.json`, or give a beat `"say"`.
 - **Font:** `"font"`: cairo amiri naskh tajawal kufi lalezar marhey lemonada.
 - **Music:** `"music"`: epic mystery calm sad happy tech kids horror news islamic suspense inspire none (default chosen per style), `"music_gain"` (default 0.16).
-- **Cover:** `"cover": {"text": "سؤال [y]مثير[/y]؟", "tag": "شرح", "beat": 1, "size": 136, "color": "#ffd21f"}`; the background is a clean frame of that beat.
-- **Caption doc:** `"caption_doc": {"title", "description", "question", "hashtags"}` (defaults come from the lines) and `"tags": ["كلمة", ...]`.
+- **Cover:** `"cover": {"text": "2–4 words, [y]keyword[/y] in a yellow box", "label": "small top pill", "tag": "red badge", "beat": 1, "focus": [x, y], "zoom": 1.25, "arrow": true, "style": "bold"|"split"}`; background = clean zoomed frame of that beat, text size adapts to its length.
+- **Caption doc:** a different text per platform (YouTube title+description, TikTok, Instagram). Feed it `"caption_doc": {"hook", "title", "question", "audience", "youtube_title", "hashtags"}` and `"tags"`.
 - **Same voice in a series:** when you make the narration yourself (`voice_files`), use the SAME voice every episode and write its name in the series file key `"agent_voice"`.
 - **Voice blocked?** If edge-tts cannot connect (ClientConnectorError), make the narration with your own TTS: one file per beat `b0.wav`, `b1.wav`… (wav/mp3/flac), same text as each `line`, clear Arabic male voice, put them in a folder and add `"voice_files": "<folder>"` to the json. Timing follows those files.
 - **Series (account identity):** add `"series": "<name>"` to the json and the look, music, cover tag and hashtags come from `engines/series/<name>.json` (anything in the video json wins). Add `"handle": "@your_account"` to show the account name small at the bottom of every frame.
