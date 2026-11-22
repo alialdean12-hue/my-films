@@ -52,19 +52,29 @@ def cover(ep, P, OUT, sch, D):
     T = os.path.join(P, "cover"); os.makedirs(T, exist_ok=True)
     shutil.copy(os.path.join(P, "gsap.min.js"), T); shutil.copytree(os.path.join(P, "fonts"), os.path.join(T, "fonts"), dirs_exist_ok=True)
     if pngs: shutil.copy(os.path.join(snap, pngs[0]), os.path.join(T, "bg.png"))
-    text = c.get("text", ep.get("title", "")); text = re.sub(r"\[y\](.*?)\[/y\]", r'<span class="y">\1</span>', text).replace("\n", "<br/>")
+    raw = c.get("text", ep.get("title", "")); plain = re.sub(r"\[/?[yr]\]|<[^>]+>", "", raw).replace("\n", " ")
+    n = len(plain); size = c.get("size", 176 if n <= 10 else 150 if n <= 16 else 128 if n <= 24 else 108)
+    text = re.sub(r"\[y\](.*?)\[/y\]", r'<span class="y">\1</span>', raw).replace("\n", "<br/>")
     text = re.sub(r"\[r\](.*?)\[/r\]", r'<span class="r">\1</span>', text)
-    tag = c.get("tag", ep.get("tag", "")); col = c.get("color", "#ffd21f")
+    tag = c.get("tag", ep.get("tag", "")); col = c.get("color", "#ffd21f"); label = c.get("label", "")
+    fx, fy = c.get("focus", [540, 960]); zoom = c.get("zoom", 1.25); style = c.get("style", "bold")
+    arrow = (f'<svg width="1080" height="1920" style="position:absolute;inset:0"><path d="M{c.get("arrow_from", [940, 1330])[0]},{c.get("arrow_from", [940, 1330])[1]} Q{(fx+880)/2+120:.0f},{(fy+640)/2:.0f} {fx+60},{fy-40}" fill="none" stroke="#ff2a2a" stroke-width="22" stroke-linecap="round"/>'
+             f'<circle cx="{fx}" cy="{fy}" r="{c.get("circle_r", 170)}" fill="none" stroke="#ff2a2a" stroke-width="16"/></svg>') if c.get("arrow") else ""
+    band = style == "split"
     html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>cover</title><style>
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format("woff2");font-weight:200 1000;font-display:block;unicode-range:U+0600-06FF,U+0750-077F,U+FB50-FDFF,U+FE70-FEFC,U+200C-200E;}}
 @font-face{{font-family:"Cairo";src:url("fonts/cairo-latin.woff2") format("woff2");font-weight:200 1000;font-display:block;}}
 @font-face{{font-family:"F2";src:url("fonts/{c.get("font_file", {"amiri": "amiri", "tajawal": "tajawal", "kufi": "reemkufi", "lalezar": "lalezar", "naskh": "notonaskharabic", "marhey": "marhey", "lemonada": "lemonada"}.get(ep.get("font", ""), "cairo"))}-ar.woff2") format("woff2");font-weight:100 1000;font-display:block;}}
 html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;font-family:"F2","Cairo",sans-serif;direction:rtl;background:#111}}.clip{{position:absolute;inset:0}}
-.bg{{position:absolute;inset:0;background:url(bg.png) center/cover;filter:saturate(1.15) contrast(1.05)}}.sh{{position:absolute;inset:0;background:linear-gradient(#0000 22%,#000b 40%,#000b 72%,#0000 88%)}}
-.t{{position:absolute;left:110px;right:110px;top:{c.get("top", 700)}px;text-align:center;font-weight:900;font-size:{c.get("size", 136)}px;line-height:1.15;color:#fff;-webkit-text-stroke:16px #000;paint-order:stroke fill}}
-.y{{color:{col}}}.r{{color:#ff3b3b}}.tag{{position:absolute;top:1360px;left:50%;transform:translateX(-50%);background:#e5322d;color:#fff;font-weight:900;font-size:60px;padding:0 40px 12px;border-radius:14px;white-space:nowrap}}
+.bg{{position:absolute;inset:0;background:url(bg.png) {fx/10.8:.0f}% {fy/19.2:.0f}%/cover;transform:scale({zoom});transform-origin:{fx}px {fy}px;filter:saturate(1.3) contrast(1.12) brightness(.95)}}
+.vg{{position:absolute;inset:0;background:radial-gradient(ellipse at {fx}px {fy}px,#0000 25%,#000c 85%)}}
+.band{{position:absolute;left:0;right:0;top:440px;height:520px;background:{c.get("band", "#111")};opacity:.92}}
+.t{{position:absolute;left:96px;right:96px;top:{c.get("top", 520 if band else 600)}px;text-align:center;font-weight:900;font-size:{size}px;line-height:1.42;color:#fff;-webkit-text-stroke:{max(10, size//10)}px #000;paint-order:stroke fill;text-shadow:0 12px 30px #000c}}
+.y{{display:inline-block;color:#111;-webkit-text-stroke:0;background:{col};padding:0 24px 14px;margin:6px 0;border-radius:18px;line-height:1.15;text-shadow:none;transform:rotate(-2deg)}}.r{{color:#ff3b3b}}
+.lab{{position:absolute;top:470px;left:50%;transform:translateX(-50%);background:#fff;color:#111;font-weight:900;font-size:46px;padding:0 30px 8px;border-radius:40px;white-space:nowrap}}
+.tag{{position:absolute;top:1370px;left:50%;transform:translateX(-50%);background:#e5322d;color:#fff;font-weight:900;font-size:58px;padding:0 40px 12px;border-radius:14px;white-space:nowrap;box-shadow:0 10px 0 #7a0f0f}}
 </style><script src="gsap.min.js"></script></head><body><div id="root" data-composition-id="cv" data-start="0" data-duration="1" data-width="1080" data-height="1920"><div id="a" class="clip" data-start="0" data-duration="1" data-track-index="1">
-<div class="bg"></div><div class="sh"></div><div class="t">{text}</div>{f'<div class="tag">{tag}</div>' if tag else ''}</div></div>
+<div class="bg"></div><div class="vg"></div>{'<div class="band"></div>' if band else ''}{arrow}{f'<div class="lab">{label}</div>' if label else ''}<div class="t">{text}</div>{f'<div class="tag">{tag}</div>' if tag else ''}</div></div>
 <script>const tl=gsap.timeline({{paused:true}});tl.to({{}},{{duration:1}},0);window.__timelines={{cv:tl}};</script></body></html>'''
     open(os.path.join(T, "index.html"), "w").write(html)
     shutil.rmtree(os.path.join(T, "snap"), ignore_errors=True)
@@ -74,32 +84,53 @@ html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflo
     sh([sys.executable, os.path.join(KIT, "scripts", "cover_check.py"), os.path.join(OUT, "cover.jpg")])
 
 # ------------------------------------------------------------------ 3. caption document (4 copy blocks)
-TAGS = {"doc": "#وثائقي #قصة #تاريخ #هل_تعلم", "voxflat": "#شرح #معلومة #اقتصاد #تعلم", "kinetic": "#تحفيز #نصائح #اقتباسات #تطوير_الذات", "threed": "#فضاء #علوم #هل_تعلم #معلومة",
-        "paper": "#تاريخ #حضارة #أماكن #قصة", "stick": "#نصائح #ماذا_تفعل #سلامة #معلومة", "cartoon": "#هل_تعلم #حيوانات #معلومات #أطفال", "collage": "#شرح #معلومة #لماذا #تعلم"}
+TAGS = {  # niche tags per style (Arabic first); broad tags are added from BROAD
+ "doc": ["#قصة_حقيقية", "#وثائقي", "#تاريخ", "#غموض", "#ألغاز"], "collage": ["#لماذا", "#شرح", "#معلومة", "#اقتصاد", "#ثقافة"],
+ "voxflat": ["#معلومة", "#إحصائيات", "#شرح", "#اقتصاد", "#تعلم"], "kinetic": ["#تطوير_الذات", "#نصائح", "#تحفيز", "#حكمة", "#نجاح"],
+ "threed": ["#فضاء", "#علوم", "#الكون", "#ماذا_لو", "#معلومة"], "paper": ["#تاريخ", "#حضارات", "#قصص", "#آثار", "#تراث"],
+ "stick": ["#ماذا_تفعل", "#نصائح", "#سلامة", "#مواقف", "#معلومة_مفيدة"], "anime": ["#أنمي", "#قصة_قصيرة", "#قصص", "#مشاعر", "#عبرة"],
+ "cartoon": ["#هل_تعلم", "#حيوانات", "#معلومات_غريبة", "#عالم_الحيوان", "#معلومة"], "saw": ["#لغز", "#ألغاز", "#جريمة", "#تحقيق", "#فكر"]}
+BROAD = ["#معلومات", "#قصص", "#هل_تعلم", "#ثقافة_عامة", "#عرب"]
+def _clean(t): return re.sub(r"\[/?[yr]\]|<[^>]+>|\n", " ", t or "").strip()
 def caption(ep, OUT, style):
+    """CAPTION.md: a different title/description/hashtags for YouTube, TikTok and Instagram (each platform rewards different things)."""
     c = ep.get("caption_doc", {}); lines = [b["line"] for b in ep["beats"]]
-    title = c.get("title", re.sub(r"\[/?[yr]\]|<[^>]+>|\n", " ", ep.get("cover", {}).get("text", ep.get("title", ""))).strip())
-    desc = c.get("description", " ".join(lines[:2]))
+    hook = c.get("hook", lines[0]); title = c.get("title", _clean(ep.get("title", "")))
+    cover_words = _clean(ep.get("cover", {}).get("text", title))
     q = c.get("question", lines[-1] if "؟" in lines[-1] else "ما رأيك؟ اكتب في التعليقات 👇")
-    tags = c.get("hashtags", TAGS.get(style, "#معلومة #هل_تعلم")) + (" " + " ".join("#" + t.replace(" ", "_") for t in ep.get("tags", [])) if ep.get("tags") else "")
+    niche = c.get("hashtags") or ep.get("hashtags") or TAGS.get(style, ["#معلومة"])
+    if isinstance(niche, str): niche = niche.split()
+    own = ["#" + t.replace(" ", "_").lstrip("#") for t in ep.get("tags", [])]
+    cover_words = re.sub(r"\s+", " ", cover_words)
+    yt_title = c.get("youtube_title") or (title if 15 <= len(title) <= 60 else (cover_words if len(cover_words) >= 15 else hook))[:70]
+    tiktok_tags = (own + niche)[:3] + BROAD[:1]
+    yt_tags = (own + niche)[:3]
+    ig_tags = list(dict.fromkeys(own + niche + BROAD))[:12]
+    story = " ".join(lines[1:4])
     sep = "━━━━━━━━━━"
     doc = f"""▼ انسخ: عنوان يوتيوب
-{title} #shorts
+{yt_title} #shorts
 {sep}
 ▼ انسخ: وصف يوتيوب
-{desc}
+{hook}
+{story}
 {q}
-{tags}
-{sep}
-▼ انسخ: انستجرام
-{title}
-{" ".join(lines[:3])}
-{q}
-احفظه وشاركه مع من يحتاجه.
-{tags}
+{" ".join(yt_tags)}
 {sep}
 ▼ انسخ: تيك توك
-{title} {q} {tags}
+{hook[:90]} {q} {" ".join(tiktok_tags)}
+{sep}
+▼ انسخ: انستجرام
+{hook}
+
+{story}
+
+{q}
+احفظ الفيديو وأرسله لصديق يحب {c.get("audience", "هذه القصص")} 📌
+.
+{" ".join(ig_tags)}
+{sep}
+(للنشر، لا تنسخ: انشر النسخة الأصلية النظيفة في كل منصة بلا شعار منصة أخرى. أوقات مقترحة للمنطقة العربية: تيك توك 8–11 مساءً · يوتيوب 6–9 مساءً · إنستغرام 7–9 مساءً. نص الغلاف: «{cover_words}».)
 """
     open(os.path.join(OUT, "CAPTION.md"), "w").write(doc)
 
