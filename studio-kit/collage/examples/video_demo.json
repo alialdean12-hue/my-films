@@ -9,11 +9,33 @@
   "rate": "+5%"
  },
  "assets": {
-  "sea": {
+  "sea1": {
    "video_query": "ocean waves"
   },
-  "salt": {
+  "sea2": {
+   "video_query": "sea aerial"
+  },
+  "salt1": {
    "query": "salt crystals",
+   "source": "pixabay"
+  },
+  "salt2": {
+   "query": "river rocks",
+   "source": "pixabay"
+  },
+  "salt3": {
+   "query": "sun over sea",
+   "source": "pixabay"
+  },
+  "salt4": {
+   "query": "salt flats",
+   "source": "pixabay"
+  },
+  "sea3": {
+   "video_query": "dead sea"
+  },
+  "salt5": {
+   "query": "desalination plant",
    "source": "pixabay"
   }
  },
@@ -30,7 +52,7 @@
     },
     {
      "type": "video",
-     "asset": "sea",
+     "asset": "sea1",
      "x": 540,
      "y": 1050,
      "size": "hero",
@@ -51,7 +73,7 @@
     },
     {
      "type": "video",
-     "asset": "sea",
+     "asset": "sea2",
      "x": 540,
      "y": 1050,
      "size": "main",
@@ -72,7 +94,7 @@
     },
     {
      "type": "photo",
-     "asset": "salt",
+     "asset": "salt1",
      "x": 540,
      "y": 1050,
      "w": 700,
@@ -101,7 +123,7 @@
     },
     {
      "type": "photo",
-     "asset": "salt",
+     "asset": "salt2",
      "x": 540,
      "y": 1050,
      "w": 640,
@@ -123,7 +145,7 @@
     },
     {
      "type": "photo",
-     "asset": "salt",
+     "asset": "salt3",
      "x": 540,
      "y": 1050,
      "w": 640,
@@ -145,7 +167,7 @@
     },
     {
      "type": "photo",
-     "asset": "salt",
+     "asset": "salt4",
      "x": 540,
      "y": 1050,
      "w": 640,
@@ -167,7 +189,7 @@
     },
     {
      "type": "video",
-     "asset": "sea",
+     "asset": "sea3",
      "x": 540,
      "y": 1050,
      "size": "main",
@@ -188,7 +210,7 @@
     },
     {
      "type": "photo",
-     "asset": "salt",
+     "asset": "salt5",
      "x": 540,
      "y": 1050,
      "w": 640,

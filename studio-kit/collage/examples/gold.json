@@ -6,25 +6,53 @@
   "rate": "+0%"
  },
  "assets": {
-  "gold": {
-   "src": "media/gold_bars.jpg",
+  "gold1": {
    "cut": true,
    "query": "gold bars"
   },
-  "man": {
-   "src": "media/banker.jpg",
-   "cut": true,
-   "query": "man suit serious"
-  },
-  "ring": {
-   "src": "media/gold_ring.jpg",
+  "ring1": {
    "cut": true,
    "query": "gold ring"
   },
-  "bank": {
-   "src": "media/bank.jpg",
+  "gold2": {
+   "cut": true,
+   "query": "gold nugget"
+  },
+  "ring2": {
+   "cut": true,
+   "query": "gold necklace"
+  },
+  "bank1": {
    "vintage": true,
    "query": "bank building"
+  },
+  "man1": {
+   "cut": true,
+   "query": "man suit serious"
+  },
+  "ring3": {
+   "cut": true,
+   "query": "gold mine"
+  },
+  "gold3": {
+   "cut": true,
+   "query": "gold coins"
+  },
+  "ring4": {
+   "cut": true,
+   "query": "old gold coin"
+  },
+  "ring5": {
+   "cut": true,
+   "query": "gold earrings"
+  },
+  "gold4": {
+   "cut": true,
+   "query": "gold bullion vault"
+  },
+  "gold5": {
+   "cut": true,
+   "query": "gold jewelry"
   }
  },
  "beats": [
@@ -41,7 +69,7 @@
     },
     {
      "type": "cutout",
-     "asset": "gold",
+     "asset": "gold1",
      "x": 540,
      "y": 1060,
      "h": 640,
@@ -68,7 +96,7 @@
     },
     {
      "type": "cutout",
-     "asset": "ring",
+     "asset": "ring1",
      "x": 540,
      "y": 1000,
      "h": 520,
@@ -97,7 +125,7 @@
     },
     {
      "type": "cutout",
-     "asset": "gold",
+     "asset": "gold2",
      "x": 540,
      "y": 960,
      "h": 420,
@@ -119,7 +147,7 @@
    "items": [
     {
      "type": "cutout",
-     "asset": "ring",
+     "asset": "ring2",
      "x": 690,
      "y": 980,
      "h": 440,
@@ -150,7 +178,7 @@
    "items": [
     {
      "type": "photo",
-     "asset": "bank",
+     "asset": "bank1",
      "x": 600,
      "y": 740,
      "w": 780,
@@ -158,7 +186,7 @@
     },
     {
      "type": "cutout",
-     "asset": "man",
+     "asset": "man1",
      "x": 300,
      "y": 1260,
      "h": 820,
@@ -200,7 +228,7 @@
     },
     {
      "type": "cutout",
-     "asset": "ring",
+     "asset": "ring3",
      "x": 540,
      "y": 1000,
      "h": 520,
@@ -229,7 +257,7 @@
     },
     {
      "type": "cutout",
-     "asset": "gold",
+     "asset": "gold3",
      "x": 540,
      "y": 960,
      "h": 420,
@@ -251,7 +279,7 @@
    "items": [
     {
      "type": "cutout",
-     "asset": "ring",
+     "asset": "ring4",
      "x": 690,
      "y": 980,
      "h": 440,
@@ -288,7 +316,7 @@
     },
     {
      "type": "cutout",
-     "asset": "ring",
+     "asset": "ring5",
      "x": 540,
      "y": 1000,
      "h": 520,
@@ -317,7 +345,7 @@
     },
     {
      "type": "cutout",
-     "asset": "gold",
+     "asset": "gold4",
      "x": 540,
      "y": 960,
      "h": 420,
@@ -346,7 +374,7 @@
     },
     {
      "type": "cutout",
-     "asset": "gold",
+     "asset": "gold5",
      "x": 540,
      "y": 1000,
      "h": 560,

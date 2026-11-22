@@ -42,6 +42,15 @@ def torn(w, h, seed, jag=10, step=26):
     return "M" + " L".join(pts) + " Z"
 
 # ------------------------------------------------------------------ assets / voice / timing
+USED, USED_FILES = set(), set()
+def check_repeats(ep):
+    """no repetition ever: each asset may appear in ONE item of ONE scene only."""
+    seen = {}
+    for i, b in enumerate(ep["beats"]):
+        for it in b.get("items", []):
+            for a in ([it["asset"]] if it.get("asset") else []) + list(it.get("assets", [])):
+                if a in seen and not ep.get("allow_repeat"): sys.exit(f"REPEATED MEDIA: asset «{a}» is used in scene {seen[a]} and again in scene {i+1}. Use a different photo/video for every appearance.")
+                seen[a] = i + 1
 def prepare_assets(ep, P):
     A = {}; ad = os.path.join(P, "assets"); os.makedirs(ad, exist_ok=True)
     for name, a in ep.get("assets", {}).items():
@@ -62,15 +71,30 @@ def prepare_assets(ep, P):
                 subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-stream_loop", "-1", "-ss", str(a.get("start", 1)), "-i", vs, "-t", str(a.get("dur", 12)), "-an",
                                 "-vf", "scale=960:720:force_original_aspect_ratio=increase,crop=960:720,fps=30", "-c:v", "libx264", "-preset", "fast", "-crf", "21", "-pix_fmt", "yuv420p", out], check=True)
             A[name] = dict(file="assets/" + name + ".mp4", size=(960, 720), cut=False, video=True); continue
-        if "query" in a and not a.get("src"):   # find the photo: candidates sheet in OUT/candidates/<name>.jpg, choose with "pick"
+        if "query" in a and not a.get("src"):   # candidates sheet OUT/candidates/<name>.jpg: PHOTO/VIDEO + source, choose with "pick"
             sys.path.insert(0, os.path.join(KIT, "scripts")); import images as IM
             cd = os.path.join(os.path.dirname(P), "candidates", name); meta = os.path.join(cd, "credits.json")
             if os.path.exists(meta): res = json.load(open(meta))
             else:
-                res = IM.fetch(a["query"], cd, a.get("source", ep.get("source", "auto")), 6); json.dump(res, open(meta, "w"), ensure_ascii=False)
-                IM.sheet([r["file"] for r in res], os.path.join(os.path.dirname(P), "candidates", name + ".jpg"))
-            r = res[max(1, min(int(a.get("pick", 1)), len(res))) - 1]; a = dict(a, src=r["file"])
-            open(os.path.join(os.path.dirname(P), "CREDITS.txt"), "a").write(f"{name}: {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}\n")
+                res = IM.fetch_mixed(a["query"], cd, n_vid=0 if a.get("cut") or a.get("videos") == 0 else 3, photos=a.get("source", ep.get("source", "auto")))
+                json.dump(res, open(meta, "w"), ensure_ascii=False)
+            fresh = [r for r in res if (r.get("page") or r["file"]) not in USED]
+            if not fresh: sys.exit(f"NO NEW MEDIA for asset «{name}»: every candidate is already used by another asset. Change its query.")
+            IM.mixed_sheet(fresh, os.path.join(os.path.dirname(P), "candidates", name + ".jpg"))
+            r = fresh[max(1, min(int(a.get("pick", 1)), len(fresh))) - 1]; USED.add(r.get("page") or r["file"])
+            open(os.path.join(os.path.dirname(P), "CREDITS.txt"), "a").write(f"{name} ({'فيديو' if r['kind'] == 'video' else 'صورة'}): {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}\n")
+            if r["kind"] == "video": a = dict(a, video=r["file"]); a.pop("query", None)
+            else: a = dict(a, src=r["file"])
+        if a.get("video") and not a.get("video_query"):
+            vs = a["video"] if os.path.isabs(a["video"]) else os.path.join(ep["_dir"], a["video"]); out = os.path.join(ad, name + ".mp4")
+            if not os.path.exists(out):
+                subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-stream_loop", "-1", "-ss", str(a.get("start", 1)), "-i", vs, "-t", str(a.get("dur", 12)), "-an",
+                                "-vf", "scale=960:720:force_original_aspect_ratio=increase,crop=960:720,fps=30", "-c:v", "libx264", "-preset", "fast", "-crf", "21", "-pix_fmt", "yuv420p", out], check=True)
+            A[name] = dict(file="assets/" + name + ".mp4", size=(960, 720), cut=False, video=True); continue
+        if a.get("src"):
+            k_ = os.path.abspath(a["src"] if os.path.isabs(a["src"]) else os.path.join(ep["_dir"], a["src"]))
+            if k_ in USED_FILES: sys.exit(f"REPEATED MEDIA: asset «{name}» uses the same file as another asset. Every photo must be different.")
+            USED_FILES.add(k_)
         src = a["src"] if os.path.isabs(a["src"]) else os.path.join(ep["_dir"], a["src"])
         if a.get("cut"):
             out = os.path.join(ad, name + ".png")
@@ -158,7 +182,7 @@ def video_card(it, A, bid, k, s, js):
     return f'<g id="pv{iid}" transform="translate({x} {y}) rotate({tilt:.1f}) scale(1)" opacity="0"><path d="{outer}" fill="#fbf8f0" filter="url(#shd)"/>{tp}</g>'
 def item_svg(it, A, bid, k, bg_dark, s, js):
     """svg item: translate(x y) > #iid (enter/exit) > #iidL (loop) > effect(content). appends its js."""
-    if it["type"] == "video": return video_card(it, A, bid, k, s, js)
+    if it["type"] == "video" or (it.get("asset") in A and A[it["asset"]].get("video") and it["type"] in ("photo", "cutout")): return video_card(it, A, bid, k, s, js)
     kind = it["type"]; iid = f"i{bid}_{k}"; x, y = it.get("x", 540), it.get("y", 960); seed = bid * 13 + k
     at = s + it.get("at", 0.15 + 0.4 * k)
     if kind in ("circle", "arrow", "underline"):   # 52 53 54 hand-drawn marks (absolute coords)
@@ -358,6 +382,7 @@ def main():
     path = os.path.abspath(sys.argv[1]); ep = json.load(open(path)); ep["_dir"] = os.path.dirname(path)
     OUT = os.path.abspath(sys.argv[2]); P = os.path.join(OUT, "project"); os.makedirs(P, exist_ok=True)
     tpl = os.path.join(KIT, "styles", "kinetic"); shutil.copy(os.path.join(tpl, "gsap.min.js"), P); shutil.copytree(os.path.join(tpl, "fonts"), os.path.join(P, "fonts"), dirs_exist_ok=True)
+    check_repeats(ep)
     print("1/5 cut-outs..."); A = prepare_assets(ep, P)
     print("2/5 voice..."); durs = voice(ep, P); sch, D = schedule(ep, durs)
     print("3/5 html..."); build(ep, A, sch, D, P)

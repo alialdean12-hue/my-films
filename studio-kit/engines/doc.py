@@ -72,41 +72,49 @@ def scene(i, b, s, e, c0, c1):
     if b.get("flash"): js += [f'tl.fromTo("#fl{i}",{{opacity:.9}},{{opacity:0,immediateRender:false,duration:.5}},{s+.9:.2f});', f'tl.fromTo("#S{i}",{{x:0}},{{x:14,duration:.05,yoyo:true,repeat:9}},{s+.9:.2f});']
     return h, js
 def images():
-    """each beat: "img" (file) or "query" (English words) + optional "source" (auto|wikimedia|pixabay|openverse) and "pick" (1-6, from candidates/beat<N>.jpg)."""
+    """each beat: "query" (English words) -> candidates sheet candidates/beatN.jpg with Wikimedia photos + Pixabay photos + Pixabay videos;
+    choose with "pick": N. Or give "img"/"video" files. "source" limits photos (auto|wikimedia|pixabay|openverse|none), "videos": 0 turns videos off.
+    The same photo/video is never used in two scenes: already used items are removed from later sheets, and a repeated pick stops the run."""
     sys.path.insert(0, KIT + "/scripts"); import images as IM
     OUT = os.path.abspath(sys.argv[2]); out = OUT + "/project/img"; cand = OUT + "/candidates"; os.makedirs(out, exist_ok=True); os.makedirs(cand, exist_ok=True)
-    credits = []
-    def one(i, src, q, tag, pick, source):
-        dst = f"{out}/{i}{tag}.jpg"; cf = f"{cand}/q{i}{tag}"
-        if src and not os.path.isabs(src): src = os.path.join(ep["_dir"], src)
-        if not src:
-            meta = os.path.join(cf, "credits.json")
-            if os.path.exists(meta): res = json.load(open(meta))
-            else:
-                res = IM.fetch(q, cf, source, 6); json.dump(res, open(meta, "w"), ensure_ascii=False)
-                IM.sheet([r["file"] for r in res], f"{cand}/beat{i+1}{tag}.jpg")
-            k = max(1, min(int(pick or 1), len(res))) - 1; src = res[k]["file"]; r = res[k]
-            credits.append(f"مشهد {i+1}: {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}")
-        sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=-2:2100", "-q:v", "3", dst])
+    credits, used = [], {}
+    def key(r): return r.get("page") or r["file"]
     for i, b in enumerate(B):
-        if b.get("video_query") or b.get("video"):   # moving footage for this beat (Pixabay videos); falls back to a photo if none
-            cf = f"{cand}/v{i}"; meta = os.path.join(cf, "credits.json")
-            try:
-                if b.get("video"): b["_vsrc"] = b["video"] if os.path.isabs(b["video"]) else os.path.join(ep["_dir"], b["video"])
-                else:
-                    if os.path.exists(meta): res = json.load(open(meta))
-                    else:
-                        res = IM.fetch_videos(b["video_query"], cf, 6); json.dump(res, open(meta, "w"), ensure_ascii=False)
-                        IM.sheet([r["thumb"] for r in res], f"{cand}/beat{i+1}_video.jpg")
-                    r = res[max(1, min(int(b.get("pick", 1)), len(res))) - 1]; b["_vsrc"] = r["file"]
-                    credits.append(f"مشهد {i+1} (فيديو): {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}")
-                continue
-            except SystemExit as ex:
-                print("video:", ex, "-> using a photo"); b.setdefault("query", b.get("video_query"))
-        one(i, b.get("img"), b.get("query"), "", b.get("pick"), b.get("source", ep.get("source", "auto")))
-        if b.get("img2") or b.get("query2"): one(i, b.get("img2"), b.get("query2"), "b", b.get("pick2"), b.get("source", ep.get("source", "auto"))); b["img2_ready"] = True
-    open(OUT + "/CREDITS.txt", "w").write("مصادر الصور وتراخيصها:\n" + "\n".join(credits) + "\n")
-    print("photo candidates: look at", cand, "(beatN.jpg), then set \"pick\": number in that beat")
+        tag = ""
+        if b.get("img") or b.get("video"):
+            src = b.get("video") or b.get("img"); src = src if os.path.isabs(src) else os.path.join(ep["_dir"], src)
+            if src in used: sys.exit(f"REPEATED MEDIA: scene {i+1} uses the same file as scene {used[src]}. Every scene needs its own photo/video.")
+            used[src] = i + 1
+            if b.get("video"): b["_vsrc"] = src
+            else: sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-vf", "scale=-2:2100", "-q:v", "3", f"{out}/{i}.jpg"])
+            continue
+        q = b.get("query") or b.get("video_query")
+        cf = f"{cand}/q{i}"; meta = os.path.join(cf, "credits.json")
+        if os.path.exists(meta): res = json.load(open(meta))
+        else:
+            nv = 0 if b.get("videos", ep.get("videos", 3)) == 0 else 3
+            res = IM.fetch_mixed(q, cf, video_q=b.get("video_query"), n_vid=nv, photos=b.get("source", ep.get("source", "auto")))
+            json.dump(res, open(meta, "w"), ensure_ascii=False)
+        fresh = [r for r in res if key(r) not in used]          # never offer what an earlier scene already uses
+        if not fresh: sys.exit(f"NO NEW MEDIA for scene {i+1} («{q}»): every candidate is already used. Change the query of this scene.")
+        IM.mixed_sheet(fresh, f"{cand}/beat{i+1}.jpg")
+        k = int(b.get("pick", 1))
+        if k > len(fresh): k = 1
+        r = fresh[k - 1]; used[key(r)] = i + 1
+        if r["kind"] == "video": b["_vsrc"] = r["file"]
+        else: sh(["ffmpeg", "-y", "-loglevel", "error", "-i", r["file"], "-vf", "scale=-2:2100", "-q:v", "3", f"{out}/{i}.jpg"])
+        credits.append(f"مشهد {i+1} ({'فيديو' if r['kind'] == 'video' else 'صورة'}): {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}")
+        if b.get("img2") or b.get("query2"):
+            q2 = b.get("query2"); cf2 = f"{cand}/q{i}b"; m2 = os.path.join(cf2, "credits.json")
+            if b.get("img2"): src2 = b["img2"] if os.path.isabs(b["img2"]) else os.path.join(ep["_dir"], b["img2"])
+            else:
+                res2 = json.load(open(m2)) if os.path.exists(m2) else IM.fetch_mixed(q2, cf2, n_vid=0)
+                if not os.path.exists(m2): json.dump(res2, open(m2, "w"), ensure_ascii=False)
+                f2 = [x for x in res2 if key(x) not in used] or res2; r2 = f2[max(1, min(int(b.get("pick2", 1)), len(f2))) - 1]; used[key(r2)] = i + 1; src2 = r2["file"]
+            sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src2, "-vf", "scale=-2:2100", "-q:v", "3", f"{out}/{i}b.jpg"]); b["img2_ready"] = True
+    open(OUT + "/CREDITS.txt", "w").write("مصادر الصور والفيديوهات وتراخيصها:\n" + "\n".join(credits) + "\n")
+    print("media candidates: look at", cand, "(beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set \"pick\": number")
+
 images()
 run("doc", B, scene, css=CSS, bg="#000", bed="drone", rate="+3%",
     extra_sfx=lambda sch: sum(([{"file": "sfx/hit.wav", "at": round(sch[k][0] + .9, 2), "gain": .35}, {"file": "sfx/riser.wav", "at": round(sch[k][0] - .2, 2), "gain": .15}] for k, b in enumerate(B) if b.get("flash")), []))
