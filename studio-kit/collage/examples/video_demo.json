@@ -10,10 +10,10 @@
  },
  "assets": {
   "sea1": {
-   "video_query": "ocean waves"
+   "query": "ocean waves"
   },
   "sea2": {
-   "video_query": "sea aerial"
+   "query": "sea aerial"
   },
   "salt1": {
    "query": "salt crystals",
@@ -32,7 +32,7 @@
    "source": "pixabay"
   },
   "sea3": {
-   "video_query": "dead sea"
+   "query": "dead sea"
   },
   "salt5": {
    "query": "desalination plant",
