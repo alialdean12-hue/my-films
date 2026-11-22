@@ -76,7 +76,7 @@ def prepare_assets(ep, P):
             cd = os.path.join(os.path.dirname(P), "candidates", name); meta = os.path.join(cd, "credits.json")
             if os.path.exists(meta): res = json.load(open(meta))
             else:
-                res = IM.fetch_mixed(a["query"], cd, n_vid=0 if a.get("cut") or a.get("videos") == 0 else 3, photos=a.get("source", ep.get("source", "auto")))
+                res = IM.fetch_mixed(a["query"], cd, n_vid=0, photos=a.get("source", ep.get("source", "auto")))
                 json.dump(res, open(meta, "w"), ensure_ascii=False)
             fresh = [r for r in res if (r.get("page") or r["file"]) not in USED]
             if not fresh: sys.exit(f"NO NEW MEDIA for asset «{name}»: every candidate is already used by another asset. Change its query.")
