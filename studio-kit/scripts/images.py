@@ -64,6 +64,27 @@ def vertical(src, dst, dur, start=0.0, fps=30):
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-stream_loop", "-1", "-ss", f"{start}", "-i", src, "-t", f"{dur:.2f}", "-an",
                     "-vf", f"scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps={fps}", "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p", dst], check=True)
     return dst
+def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=3, video_q=None, photos="auto"):
+    """candidates for one scene: Wikimedia photos + Pixabay photos + Pixabay videos (any part may be empty).
+    Each item has "kind" (photo|video) and "source"; "file" is a jpg or mp4, "thumb" a jpg for the sheet."""
+    os.makedirs(out, exist_ok=True); res = []
+    plan = {"auto": [("wikimedia", n_wm), ("pixabay", n_px)], "wikimedia": [("wikimedia", n_wm + n_px)], "pixabay": [("pixabay", n_wm + n_px)], "openverse": [("openverse", n_wm + n_px)], "none": []}[photos]
+    for src, n in plan:
+        try:
+            for r in SRC[src](q, out, n): r.update(kind="photo", source=src, thumb=r["file"]); res.append(r)
+        except Exception as e: print(f"  {src}: {type(e).__name__}", file=sys.stderr)
+    if not res and photos == "auto":
+        try:
+            for r in openverse(q, out, n_wm + n_px): r.update(kind="photo", source="openverse", thumb=r["file"]); res.append(r)
+        except Exception: pass
+    if n_vid:
+        try:
+            for r in pixabay_videos(video_q or q, out, n_vid): r.update(kind="video", source="pixabay"); res.append(r)
+        except (Exception, SystemExit) as e: print(f"  videos: {e}", file=sys.stderr)
+    if not res: raise SystemExit(f"NO PHOTOS OR VIDEOS for «{q}». Try simpler English words, or give \"img\" files.")
+    return res
+def mixed_sheet(res, out):
+    return sheet([r["thumb"] for r in res], out, labels=[f"{'VIDEO' if r['kind'] == 'video' else 'PHOTO'} {r['source'].upper()}" for r in res])
 SRC = {"pixabay": pixabay, "wikimedia": wikimedia, "openverse": openverse}
 def fetch(q, out, source="auto", n=6):
     os.makedirs(out, exist_ok=True); order = ["wikimedia", "pixabay", "openverse"] if source == "auto" else [source]
@@ -74,10 +95,12 @@ def fetch(q, out, source="auto", n=6):
             if r: return r
         except Exception as e: errors.append(f"{s}: {type(e).__name__}")
     raise SystemExit(f"NO PHOTOS for «{q}» ({', '.join(errors) or 'no results'}). Try simpler English words, another source, or give \"img\" files.")
-def sheet(files, out, cols=3):
-    """numbered contact sheet (1..n) so the agent can choose with "pick"."""
+def sheet(files, out, cols=3, labels=None):
+    """numbered contact sheet (1..n) so the agent can choose with "pick"; labels = text under the number (e.g. VIDEO PIXABAY)."""
     n = len(files); inputs = sum((["-i", f] for f in files), [])
-    fc = "".join(f"[{k}]scale=360:640:force_original_aspect_ratio=increase,crop=360:640,drawbox=x=0:y=0:w=90:h=90:color=black@0.7:t=fill,drawtext=text='{k+1}':fontsize=64:fontcolor=yellow:x=24:y=10[v{k}];" for k in range(n))
+    lab = labels or [""] * n
+    fc = "".join(f"[{k}]scale=360:640:force_original_aspect_ratio=increase,crop=360:640,drawbox=x=0:y=0:w=360:h=90:color=black@0.7:t=fill,drawtext=text='{k+1}':fontsize=64:fontcolor=yellow:x=20:y=10"
+                 + (f",drawtext=text='{lab[k]}':fontsize=30:fontcolor={'#7cff7c' if 'VIDEO' in lab[k] else 'white'}:x=100:y=30" if lab[k] else "") + f"[v{k}];" for k in range(n))
     rows = (n + cols - 1) // cols
     while n < rows * cols: fc += f"color=black:s=360x640[v{n}];"; n += 1
     lay = "|".join(f"{(k%cols)*360}_{(k//cols)*640}" for k in range(n))

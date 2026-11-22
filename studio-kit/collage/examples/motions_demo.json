@@ -770,5 +770,6 @@
   "asset": "man"
  },
  "min_duration": 0,
- "_note": "motion showcase only: real videos must be at least 50 s"
+ "_note": "motion showcase only: real videos must be at least 50 s",
+ "allow_repeat": true
 }
