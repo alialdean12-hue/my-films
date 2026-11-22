@@ -18,6 +18,7 @@ FONT = '''@font-face{font-family:"Cairo";src:url("fonts/cairo-ar.woff2") format(
     for n, f in (("Amiri", "amiri"), ("Tajawal", "tajawal"), ("Reem Kufi", "reemkufi"), ("Lalezar", "lalezar"), ("Noto Naskh", "notonaskharabic"), ("Marhey", "marhey"), ("Lemonada", "lemonada")))
 FONTS = {"cairo": "Cairo", "amiri": "Amiri", "tajawal": "Tajawal", "kufi": "Reem Kufi", "lalezar": "Lalezar", "naskh": "Noto Naskh", "marhey": "Marhey", "lemonada": "Lemonada"}
 
+TOP = []   # top-level timed elements (e.g. <video>) that scenes add; drawn under the scene clips
 def merge(a, b):
     out = dict(a)
     for k, v in b.items(): out[k] = merge(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
@@ -51,8 +52,19 @@ def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="
         if r_.returncode: sys.exit("VOICE FAILED (edge-tts cannot reach its server here). Make one audio file per beat with your own TTS, Arabic male voice, "
                                    "named b0.wav b1.wav ... (one per line, same text), put them in a folder and add  \"voice_files\": \"<folder>\"  to the json. Then run again.\n" + r_.stderr[-300:])
     durs = [dur(f"{P}/voice/b{i}.wav") for i in range(len(beats))]
-    tot = sum(durs); gap = max(.3, (D - 0.6 - 1.0 - tot) / max(1, len(beats) - 1))
-    if tot + .3 * (len(beats) - 1) + 1.6 > D: D = round(tot + .3 * (len(beats) - 1) + 1.6, 2); gap = .3
+    # length follows the topic: the video is as long as the narration needs (no maximum), but never under "min_duration" (default 50 s).
+    # A too-short narration is NOT padded with silence: the render stops and says how many words to add (previews still run).
+    need = lambda t: t + .3 * (len(beats) - 1) + 1.6
+    tot = sum(durs); MIN = float(ep.get("min_duration", 50))
+    if need(tot) < MIN and "--preview" not in sys.argv:
+        words = sum(len(b.get("say", b["line"]).split()) for b in beats); add = int(words * (MIN / need(tot) - 1)) + 3
+        sys.exit(f"TOO SHORT: the narration lasts {need(tot):.1f} s but every video must be at least {MIN:.0f} s. Explain the topic more: add about {add} words (new beats or longer lines). Video not rendered.")
+    MAX = float(ep.get("max_duration", 180))   # 3 min = the shortest limit of YouTube Shorts / Instagram Reels / TikTok
+    if need(tot) > MAX:
+        words = sum(len(b.get("say", b["line"]).split()) for b in beats); cut = int(words * (1 - MAX / need(tot))) + 3
+        sys.exit(f"TOO LONG: the narration lasts {need(tot):.1f} s but Shorts/Reels allow at most {MAX:.0f} s. Remove about {cut} words. Video not rendered.")
+    D = round(max(need(tot), MIN if "--preview" not in sys.argv else min(MIN, need(tot) + 2)), 2)
+    gap = min(1.0, max(.3, (D - 0.6 - 1.0 - tot) / max(1, len(beats) - 1)))
     sch, t = [], .5
     for d in durs: sch.append((round(t, 2), round(t + d, 2))); t += d + gap
     clips, js = [], ["const tl=gsap.timeline({paused:true});"]
@@ -65,7 +77,7 @@ def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="
     html = f'''<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>{name}</title><style>{FONT}
 html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;height:1920px;overflow:hidden;background:{bg};font-family:"{FONTS.get(ep.get("font", "cairo"), "Cairo")}","Cairo",sans-serif;direction:rtl}}#root *{{font-family:inherit}}
 .clip{{position:absolute;inset:0;overflow:hidden}}svg.full{{position:absolute;inset:0}}{css}</style><script src="gsap.min.js"></script></head><body>
-<div id="root" data-composition-id="c" data-start="0" data-duration="{D}" data-width="1080" data-height="1920">{"".join(clips)}{overlay}{handle}</div><script>{pre_js}{"".join(js)}</script></body></html>'''
+<div id="root" data-composition-id="c" data-start="0" data-duration="{D}" data-width="1080" data-height="1920">{"".join(TOP)}{"".join(clips)}{overlay}{handle}</div><script>{pre_js}{"".join(js)}</script></body></html>'''
     open(P + "/index.html", "w").write(html)
     lint = subprocess.run(["npx", "hyperframes", "lint"], cwd=P, capture_output=True, text=True).stdout
     if "✗" in lint: print(lint); sys.exit("LINT")
@@ -120,8 +132,10 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     sh([sys.executable, KIT + "/scripts/mix.py", "mix.json", "out/mix.wav"], cwd=P, stdout=subprocess.DEVNULL)
     sh(["sh", KIT + "/scripts/render.sh", ".", "out/mix.wav", OUT + "/video.mp4", "30"], cwd=P, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     sh(["ffmpeg", "-y", "-loglevel", "error", "-i", OUT + "/video.mp4", "-vf", "scale=720:-2", "-c:v", "libx264", "-profile:v", "main", "-crf", "26", "-preset", "fast", "-c:a", "aac", "-b:a", "128k", "-movflags", "+faststart", OUT + "/video_phone.mp4"])
+    real = dur(OUT + "/video.mp4")
+    print(f"LENGTH {real:.2f} s" + ("" if real >= float(ep.get("min_duration", 50)) - .1 else "  WARNING: shorter than the minimum"))
     post.caption(ep, OUT, name)
-    if ep.get("formats", True): post.formats(OUT)
+    if ep.get("formats"): post.formats(OUT)
     try: post.cover(ep, P, OUT, sch, D)
     except Exception as ex: print("cover failed:", ex)
     post.deliver(ep, OUT, name)

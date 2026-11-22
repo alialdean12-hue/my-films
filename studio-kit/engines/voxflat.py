@@ -144,4 +144,4 @@ def scene(i, b, s, e, c0, c1):
         js += tjs(i, s) + [f'tl.to("#ci{i}",{{attr:{{transform:"scale(1)"}},duration:.4,ease:"back.out(2)"}},{s+.4:.2f});', f'tl.to("#mt{i}",{{opacity:1,duration:.3}},{s+1.6:.2f});']
         for n in range(4): js.append(f'tl.fromTo("#cc{i}{n}",{{opacity:0,y:-80}},{{opacity:1,y:0,duration:.35,ease:"bounce.out"}},{s+2+n*.3:.2f});')
     return h, js
-run("3_voxflat", B, scene, css=CSS, bg="#f1ead8", rate="+0%")
+run("voxflat", B, scene, css=CSS, bg="#f1ead8", rate="+0%")

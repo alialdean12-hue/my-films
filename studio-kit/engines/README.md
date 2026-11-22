@@ -5,9 +5,10 @@ One JSON → narrated vertical video (1080×1920) with voice (edge-tts), music b
 **First time on a machine:** `sh ~/my-films/studio-kit/scripts/doctor.sh` (checks and installs everything; must end with READY).
 **One command for every style:** `python3 ~/my-films/studio-kit/make.py <style 1-10> video.json ~/out/<name> [--preview]`.
 
-Every finished run gives: `video.mp4` (master), **`video_phone.mp4` (send this)**, `video_16x9.mp4` (YouTube horizontal), `video_1x1.mp4` (square), `cover.jpg` + `cover_check.jpg` (safe-area check), `CAPTION.md` (4 copy blocks: YouTube title, YouTube description, Instagram, TikTok).
+Every finished run gives: `video.mp4` (master), **`video_phone.mp4` (send this)**, (`video_16x9.mp4`, `video_1x1.mp4` only with `"formats": true`), `cover.jpg` + `cover_check.jpg` (safe-area check), `CAPTION.md` (4 copy blocks: YouTube title, YouTube description, Instagram, TikTok).
 - **Quality check (automatic):** before rendering, every beat is checked; text outside the frame or too long stops the render and prints exactly which caption to fix (`--force` renders anyway, `"qa": false` turns it off).
 - **Photos (styles 1, 2):** each `query` downloads 6 candidates; look at `candidates/beatN.jpg` (numbered) after `--preview` and set `"pick": N` in that beat. `"source"`: auto (Wikimedia → Pixabay → Openverse), wikimedia (history, people, places, artworks), pixabay, openverse.
+- **Videos (styles 1, 2):** doc beat `"video_query": "ocean waves"` (or `"video": file`) uses moving Pixabay footage instead of a photo (6 candidates in `candidates/beatN_video.jpg`, choose with `"pick"`; `"video_start"` seconds to skip). Collage: an asset `{"video_query": "..."}` + item `{"type": "video", "asset": ..., "size": "hero"}` = moving footage inside a torn paper card. Original sound is removed; credits go to `مصادر الصور.txt`. If no video is found, the doc falls back to a photo.
 - **Sources:** styles 1, 3, 5, 6, 9 need `"sources"` (or `"no_facts": true`), else the render stops.
 - **Pronunciation:** numbers become Arabic words automatically; add foreign names to `scripts/pronounce.json`, or give a beat `"say"`.
 - **Font:** `"font"`: cairo amiri naskh tajawal kufi lalezar marhey lemonada.
@@ -32,8 +33,8 @@ Every finished run gives: `video.mp4` (master), **`video_phone.mp4` (send this)*
 | `what_if` | 7 | ماذا تفعل لو: رجل العود نفسه (man) في كل حلقة، خطوات مرقمة |
 | `wisdom` | 4 | حكم وأقوال: ثيم إسلامي هادئ |
 
-- **Delivery folder:** every run also makes `deliver/<Drive folder>/<title>/` with `<title>.mp4`, `<title> - أفقي.mp4`, `<title> - مربع.mp4`, `غلاف.jpg`, `وصف.txt` — upload that folder to Google Drive as it is (Drive folder per style: وثائقي، Vox، رسوم Vox، نصوص متحركة، ثلاثي الأبعاد، ورق مقصوص، رجل العود، أنمي، هل تعلم؛ change with `"drive_folder"`).
-- `"formats": false` skips the 16:9 and 1:1 files.
+- **Delivery folder:** every run makes `deliver/<Drive folder>/<title>/` with ONLY `<title>.mp4`, `غلاف.jpg`, `الوصف.txt` (captions, then sources and photo credits). Upload exactly that (the .txt becomes the Google Doc «الوصف»). `"formats": true` adds `<title> - أفقي.mp4` and `<title> - مربع.mp4`.
+- `"formats": true` also makes the 16:9 and 1:1 files.
 
 ```sh
 cd ~/my-films/studio-kit/engines
@@ -41,7 +42,7 @@ python3 <engine>.py examples/<engine>.json ~/out/<name> --preview   # look at sh
 python3 <engine>.py examples/<engine>.json ~/out/<name>             # video.mp4 + video_phone.mp4
 ```
 Behind a TLS proxy set `SSL_CERT_FILE`. **Always copy an example JSON and change it** (each style has 3: `examples/<style>.json`, `<style>_2.json`, `<style>_3.json`), never start from empty.
-Common keys: `title`, `beats` (5–7 beats, one spoken `line` each, ≤ 14 words), optional `voice: {name, rate}`, `duration` (default 30; grows if the voice is longer). In captions `[y]..[/y]` = yellow, `[r]..[/r]` = red, `<br/>` = new line.
+Common keys: `title`, `beats` (7–12 beats, one spoken `line` each, ≤ 14 words), optional `voice: {name, rate}`, length = as long as the narration needs, minimum 50 s and maximum 180 s (`min_duration`, `max_duration`); outside that range the render stops and says how many words to add or cut (previews still run). In captions `[y]..[/y]` = yellow, `[r]..[/r]` = red, `<br/>` = new line.
 
 | Style | Engine | Beat keys |
 |---|---|---|

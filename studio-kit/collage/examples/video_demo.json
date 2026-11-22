@@ -1,0 +1,201 @@
+{
+ "title": "لماذا البحر مالح؟",
+ "paper": "cream",
+ "no_facts": false,
+ "sources": [
+  "NOAA — Why is the ocean salty?"
+ ],
+ "voice": {
+  "rate": "+5%"
+ },
+ "assets": {
+  "sea": {
+   "video_query": "ocean waves"
+  },
+  "salt": {
+   "query": "salt crystals",
+   "source": "pixabay"
+  }
+ },
+ "beats": [
+  {
+   "bg": "kraft",
+   "line": "لماذا ماء البحر مالح؟",
+   "items": [
+    {
+     "type": "text",
+     "text": "لماذا البحر [y]مالح[/y]؟",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "video",
+     "asset": "sea",
+     "x": 540,
+     "y": 1050,
+     "size": "hero",
+     "at": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "cream",
+   "transition": "brush",
+   "line": "ماء البحر يغطي معظم كوكبنا، ويحتوي على كمياتٍ هائلة من الأملاح الذائبة.",
+   "items": [
+    {
+     "type": "text",
+     "text": "أملاحٌ [y]هائلة[/y]",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "video",
+     "asset": "sea",
+     "x": 540,
+     "y": 1050,
+     "size": "main",
+     "at": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "cream",
+   "transition": "punch",
+   "line": "لأن الأنهار تحمل الأملاح من الصخور إلى البحر.",
+   "items": [
+    {
+     "type": "text",
+     "text": "الأنهار تحمل [y]الملح[/y]",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "photo",
+     "asset": "salt",
+     "x": 540,
+     "y": 1050,
+     "w": 700,
+     "enter": "toss",
+     "at": 0.4
+    },
+    {
+     "type": "circle",
+     "x": 540,
+     "y": 1050,
+     "r": 260,
+     "at": 1.4
+    }
+   ]
+  },
+  {
+   "bg": "kraft",
+   "transition": "ink",
+   "line": "تذوب الأملاح من الصخور مع مياه الأمطار، ثم تحملها الأنهار ببطء نحو البحر.",
+   "items": [
+    {
+     "type": "text",
+     "text": "المطر يذيب [y]الصخور[/y]",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "photo",
+     "asset": "salt",
+     "x": 540,
+     "y": 1050,
+     "w": 640,
+     "enter": "drop",
+     "at": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "kraft",
+   "transition": "ink",
+   "line": "وحين تشرق الشمس، يتبخر الماء من البحر، أما الملح فيبقى في مكانه.",
+   "items": [
+    {
+     "type": "text",
+     "text": "الشمس تبخّر [y]الماء[/y]",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "photo",
+     "asset": "salt",
+     "x": 540,
+     "y": 1050,
+     "w": 640,
+     "enter": "drop",
+     "at": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "kraft",
+   "transition": "ink",
+   "line": "ومع مرور ملايين السنين، تجمّع الملح حتى صار البحر مالحًا كما نعرفه اليوم.",
+   "items": [
+    {
+     "type": "text",
+     "text": "[y]ملايين[/y] السنين",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "photo",
+     "asset": "salt",
+     "x": 540,
+     "y": 1050,
+     "w": 640,
+     "enter": "drop",
+     "at": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "cream",
+   "transition": "punch",
+   "line": "وفي بعض البحار المغلقة، مثل البحر الميت، يصبح الماء مالحًا جدًا حتى يطفو فيه الإنسان بسهولة.",
+   "items": [
+    {
+     "type": "text",
+     "text": "البحر [y]الميت[/y]",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "video",
+     "asset": "sea",
+     "x": 540,
+     "y": 1050,
+     "size": "main",
+     "at": 0.4
+    }
+   ]
+  },
+  {
+   "bg": "kraft",
+   "transition": "ink",
+   "line": "ولهذا لا نستطيع شرب ماء البحر، بل نحتاج إلى محطات تحلية لتنقيته.",
+   "items": [
+    {
+     "type": "text",
+     "text": "محطات [y]التحلية[/y]",
+     "y": 380,
+     "at": 0
+    },
+    {
+     "type": "photo",
+     "asset": "salt",
+     "x": 540,
+     "y": 1050,
+     "w": 640,
+     "enter": "drop",
+     "at": 0.4
+    }
+   ]
+  }
+ ]
+}

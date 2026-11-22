@@ -768,5 +768,7 @@
  "cover": {
   "text": "[y]73[/y] حركة",
   "asset": "man"
- }
+ },
+ "min_duration": 0,
+ "_note": "motion showcase only: real videos must be at least 50 s"
 }
