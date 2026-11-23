@@ -14,46 +14,46 @@
     "objects": [
       {
         "type": "clock",
-        "x": 300,
-        "y": 470,
+        "x": 900,
+        "y": 620,
         "time": "11:40"
-      },
-      {
-        "type": "dusty_box",
-        "x": 200,
-        "y": 1560,
-        "handprint": true,
-        "note": "Red herring: the open money box with a clean handprint."
-      },
-      {
-        "type": "glass_shards",
-        "x": 395,
-        "y": 1590,
-        "n": 9,
-        "note": "Red herring: broken glass on the floor."
-      },
-      {
-        "type": "cup_broken",
-        "x": 960,
-        "y": 1700,
-        "note": "Red herring B: a shattered cup by the sofa."
-      },
-      {
-        "type": "dog",
-        "x": 790,
-        "y": 1720,
-        "asleep": true,
-        "note": "THE CLUE: the guard dog slept through the 'break-in'."
       },
       {
         "type": "person",
         "id": "shadi",
         "name": "شادي",
-        "x": 520,
-        "y": 1520,
+        "x": 300,
+        "y": 1500,
         "coat": "#3b4a6b",
         "hair": "#1d1a22",
         "skin": "#cb9878"
+      },
+      {
+        "type": "dog",
+        "x": 560,
+        "y": 1700,
+        "asleep": true,
+        "note": "THE CLUE: the guard dog slept through the 'break-in'."
+      },
+      {
+        "type": "dusty_box",
+        "x": 880,
+        "y": 1580,
+        "handprint": true,
+        "note": "red herring: open money box with a clean handprint"
+      },
+      {
+        "type": "glass_shards",
+        "x": 640,
+        "y": 1630,
+        "n": 9,
+        "note": "red herring: broken glass"
+      },
+      {
+        "type": "cup_broken",
+        "x": 975,
+        "y": 1720,
+        "note": "red herring B"
       }
     ]
   },
@@ -61,82 +61,81 @@
     {
       "scene": "host",
       "host": "enter",
-      "line": "هل عرفتَ الحل؟ تذكّر: شادي قال إنّ لصًّا كسر النافذة ودخل.",
+      "line": "هل عرفتَ الحل؟ تذكّر: شادي قال إنّ لصًّا كسر النافذة.",
       "caption": "هل عرفتَ [y]الحل[/y]؟"
     },
     {
       "scene": "room",
-      "line": "لكن في هذه الصالة كلبًا يحرس الباب، وهو لم ينبح ولا مرّة.",
+      "line": "لكن كلب الحراسة لم ينبح ولا مرّة، وهو نائم قرب الزجاج.",
+      "caption": "كلبٌ [b]لم ينبح[/b]",
+      "caption_pos": "top",
+      "caption_size": 92,
       "cam": [
-        790,
-        1660,
-        1.55
-      ],
-      "caption": "كلبٌ [b]لم ينبح[/b]"
+        600,
+        1480,
+        1.28
+      ]
     },
     {
       "scene": "room",
-      "line": "أيُّ غريبٍ يكسر زجاجًا في الليل، وكلبُ الحراسة نائم؟",
+      "line": "كلبٌ يكسر غريبٌ زجاجًا أمامه ولا يستيقظ؟ مستحيل.",
       "cam": [
-        760,
-        1660,
-        2.05
+        620,
+        1620,
+        1.75
       ],
       "ring": [
-        790,
-        1660,
-        190
+        560,
+        1585,
+        180
       ],
       "reveal": "الكلب [r]نائم[/r]!"
     },
     {
       "scene": "room",
-      "line": "لا أحد دخل. شادي كسر النافذة بنفسه، وأخذ الصندوق من الداخل.",
+      "line": "لا أحد دخل. شادي كسر النافذة بنفسه، وأخذ الصندوق.",
       "stamp": "من الداخل!",
       "cam": [
-        540,
-        1080,
-        1.04
-      ],
-      "tags": [
-        "shadi"
+        430,
+        1230,
+        1.3
       ]
     },
     {
       "scene": "room",
-      "line": "ثم رمى الزجاج على الأرض، ووضع أثر يده على الصندوق ليصنع لصًّا.",
+      "line": "ثم نثَر الزجاج ليصنع أثر لصّ لا وجود له.",
+      "caption": "نثَر [y]الزجاج[/y]",
+      "caption_pos": "top",
+      "caption_size": 92,
       "cam": [
-        300,
-        1420,
-        1.5
-      ],
-      "ring": [
-        205,
+        620,
         1450,
-        165
+        1.4
       ]
     },
     {
       "scene": "room",
-      "line": "أما الكوب المكسور، فكان للتضليل فقط. الدليل كان نائمًا في الزاوية.",
+      "line": "أما أثر اليد والكوب، فكانا للتضليل. الدليل كان نائمًا.",
+      "caption": "[y]تضليل[/y]",
+      "caption_pos": "top",
+      "caption_size": 92,
       "cam": [
-        540,
-        1100,
-        1.02
+        560,
+        1350,
+        1.03
       ],
       "tour": [
         [
-          960,
-          1660,
-          2.1
+          880,
+          1480,
+          1.6
         ],
         [
-          790,
-          1640,
-          2.1
+          560,
+          1585,
+          1.7
         ]
-      ],
-      "caption": "الكوب: [y]تضليل[/y]"
+      ]
     },
     {
       "scene": "host",
@@ -149,7 +148,7 @@
   "thumb": {
     "text": "الحل\\n[y]هنا[/y]!",
     "focus": [
-      790,
+      560,
       1600,
       1.6
     ]

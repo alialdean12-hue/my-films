@@ -14,46 +14,46 @@
     "objects": [
       {
         "type": "clock",
-        "x": 300,
-        "y": 470,
+        "x": 900,
+        "y": 620,
         "time": "11:40"
-      },
-      {
-        "type": "dusty_box",
-        "x": 200,
-        "y": 1560,
-        "handprint": true,
-        "note": "Red herring: the open money box with a clean handprint."
-      },
-      {
-        "type": "glass_shards",
-        "x": 395,
-        "y": 1590,
-        "n": 9,
-        "note": "Red herring: broken glass on the floor."
-      },
-      {
-        "type": "cup_broken",
-        "x": 960,
-        "y": 1700,
-        "note": "Red herring B: a shattered cup by the sofa."
-      },
-      {
-        "type": "dog",
-        "x": 790,
-        "y": 1720,
-        "asleep": true,
-        "note": "THE CLUE: the guard dog is fast asleep next to the broken glass."
       },
       {
         "type": "person",
         "id": "shadi",
         "name": "شادي",
-        "x": 520,
-        "y": 1520,
+        "x": 300,
+        "y": 1500,
         "coat": "#3b4a6b",
         "hair": "#1d1a22",
         "skin": "#cb9878"
+      },
+      {
+        "type": "dog",
+        "x": 560,
+        "y": 1700,
+        "asleep": true,
+        "note": "THE CLUE: the guard dog slept through the 'break-in'."
+      },
+      {
+        "type": "dusty_box",
+        "x": 880,
+        "y": 1580,
+        "handprint": true,
+        "note": "red herring: open money box with a clean handprint"
+      },
+      {
+        "type": "glass_shards",
+        "x": 640,
+        "y": 1630,
+        "n": 9,
+        "note": "red herring: broken glass"
+      },
+      {
+        "type": "cup_broken",
+        "x": 975,
+        "y": 1720,
+        "note": "red herring B"
       }
     ]
   },
@@ -67,86 +67,91 @@
     {
       "scene": "room",
       "line": "الحادية عشرة ليلًا. الزجاج مكسور على الأرض.",
+      "caption": "الساعة [y]11:40[/y]\\nليلًا",
+      "caption_size": 88,
+      "caption_pos": "top",
       "cam": [
-        540,
-        980,
-        1.02
-      ],
-      "caption": "الحادية عشرة [y]وأربعون[/y]\\nزجاجٌ [b]مكسور[/b]",
-      "caption_pos": "top"
+        640,
+        1240,
+        1.12
+      ]
     },
     {
       "scene": "room",
       "line": "اختفى صندوق النقود، وفي البيت رجلٌ واحد: شادي.",
+      "caption": "رجلٌ [y]واحد[/y] فقط",
       "cam": [
-        360,
-        1300,
-        1.5
+        430,
+        1200,
+        1.3
       ],
-      "tags": [
-        "shadi"
-      ],
-      "caption": "الصندوق [r]اختفى[/r]"
+      "caption_pos": "top",
+      "caption_size": 104
     },
     {
       "scene": "room",
       "line": "قال شادي: كنتُ نائمًا، ولم أخرج من غرفتي.",
-      "cam": [
-        520,
-        1290,
-        1.35
-      ],
       "caption_size": 86,
-      "caption": "«لم أخرج\\nمن [b]غرفتي[/b]»",
-      "caption_pos": "bottom"
+      "caption_pos": "top",
+      "cam": [
+        330,
+        1320,
+        1.62
+      ],
+      "caption": "«لم أخرج\\nمن [b]غرفتي[/b]»"
     },
     {
       "scene": "room",
       "line": "زجاجٌ، صندوقٌ، كوبٌ مكسور… كل شيءٍ يشير إلى لصّ.",
       "stamp": "يكذب!",
       "cam": [
-        560,
-        1200,
+        600,
+        1250,
         1.06
-      ]
+      ],
+      "caption": "كل شيءٍ يشير إلى [r]لصّ[/r]",
+      "caption_pos": "top"
     },
     {
       "scene": "room",
       "line": "لكن في الزاوية شاهدٌ لم يسأله أحد: كلب الحراسة.",
       "cam": [
-        790,
-        1650,
-        1.5
+        600,
+        1480,
+        1.28
       ],
-      "caption": "شاهدٌ [y]لم يُسأل[/y]"
+      "caption": "شاهدٌ [y]لم يُسأل[/y]",
+      "caption_pos": "top",
+      "caption_size": 92
     },
     {
       "scene": "room",
       "line": "انظر جيدًا: الكلب، الزجاج، الصندوق… ثم كلامه.",
       "cam": [
-        540,
-        1080,
-        1.05
+        560,
+        1350,
+        1.02
       ],
       "tour": [
         [
-          790,
-          1580,
-          2.0
+          560,
+          1590,
+          1.55
         ],
         [
-          395,
-          1540,
-          2.0
+          680,
+          1600,
+          1.65
         ],
         [
-          205,
-          1440,
-          2.0
+          880,
+          1490,
+          1.55
         ]
       ],
       "tour_start": 0.06,
-      "caption": "انظر [y]جيدًا[/y]"
+      "caption": "انظر [y]جيدًا[/y]",
+      "caption_pos": "top"
     },
     {
       "scene": "host",
@@ -160,7 +165,7 @@
   "thumb": {
     "text": "شاهدٌ\\nلم [y]ينبح[/y]",
     "focus": [
-      790,
+      560,
       1600,
       1.6
     ]
