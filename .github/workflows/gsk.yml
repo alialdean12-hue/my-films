@@ -5,7 +5,6 @@ on:
     paths:
       - '.github/workflows/gsk.yml'
       - 'projects/gsk/script.json'
-  workflow_dispatch:
 permissions:
   contents: write
 jobs:
