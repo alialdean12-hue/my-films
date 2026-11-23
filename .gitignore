@@ -18,4 +18,8 @@ __pycache__/
 # Transient local production proofs and research; deliver via Drive.
 /.cache/
 media_cache/
+projects/*/build/
+projects/*/voice/
+projects/*/assets/
+*/build/
 voice_cache/

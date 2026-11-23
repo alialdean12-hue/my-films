@@ -75,14 +75,15 @@ def prepare_assets(ep, P):
             A[name] = dict(file="assets/" + name + ".mp4", size=(960, 720), cut=False, video=True); continue
         if "query" in a and not a.get("src"):   # candidates sheet OUT/candidates/<name>.jpg: PHOTO/VIDEO + source, choose with "pick"
             sys.path.insert(0, os.path.join(KIT, "scripts")); import images as IM
-            cd = os.path.join(os.path.dirname(P), "candidates", name); meta = os.path.join(cd, "credits.json")
+            cd = os.path.join(os.path.dirname(P), "candidates", name); os.makedirs(cd, exist_ok=True); meta = os.path.join(cd, "credits.json")
             if os.path.exists(meta): res = json.load(open(meta))
             else:
                 res = IM.fetch_mixed(a["query"], cd, n_vid=0, photos=a.get("source", ep.get("source", "auto")))
                 json.dump(res, open(meta, "w"), ensure_ascii=False)
             fresh = [r for r in res if (r.get("page") or r["file"]) not in USED]
             if not fresh: sys.exit(f"NO NEW MEDIA for asset «{name}»: every candidate is already used by another asset. Change its query.")
-            IM.mixed_sheet(fresh, os.path.join(os.path.dirname(P), "candidates", name + ".jpg"))
+            try: IM.mixed_sheet(fresh, os.path.join(os.path.dirname(P), "candidates", name + ".jpg"))
+            except Exception as e: print("  (candidate sheet skipped:", type(e).__name__, ")")
             r = fresh[max(1, min(int(a.get("pick", 1)), len(fresh))) - 1]; USED.add(r.get("page") or r["file"])
             open(os.path.join(os.path.dirname(P), "CREDITS.txt"), "a").write(f"{name} ({'فيديو' if r['kind'] == 'video' else 'صورة'}): {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}\n")
             if r["kind"] == "video": a = dict(a, video=r["file"]); a.pop("query", None)

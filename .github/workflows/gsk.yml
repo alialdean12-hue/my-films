@@ -1,0 +1,38 @@
+name: GSK film · voice
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/gsk.yml'
+      - 'projects/gsk/script.json'
+permissions:
+  contents: write
+jobs:
+  voice:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install
+        run: |
+          sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg
+          python3 -m pip install --quiet edge-tts
+      - name: Voice
+        run: |
+          mkdir -p out/voice
+          python3 - <<'PY'
+          import json, subprocess, sys
+          ep = json.load(open('projects/gsk/script.json'))
+          json.dump([{'id': f'b{i}', 'text': b['line']} for i, b in enumerate(ep['beats'])], open('/tmp/lines.json','w'), ensure_ascii=False)
+          v = ep.get('voice', {})
+          subprocess.run([sys.executable, 'studio-kit/scripts/tts_edge.py', '/tmp/lines.json', 'out/voice',
+                          '--voice', v.get('name','ar-SA-HamedNeural'), f"--rate={v.get('rate','-4%')}"], check=True)
+          PY
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f out/voice
+          git diff --cached --quiet && exit 0
+          git commit -qm "gsk: voice"
+          git push

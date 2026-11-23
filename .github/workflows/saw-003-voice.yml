@@ -1,0 +1,43 @@
+name: The Dog That Didn't Bark · Hamed narration
+on:
+  push:
+    paths:
+      - '.github/workflows/saw-003-voice.yml'
+      - 'studio-kit/series/saw_5tory/cases/003-part*.json'
+      - 'studio-kit/series/saw_5tory/voice_stems.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  record-and-pack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Record both parts with the approved Hamed voice and pack them losslessly
+        working-directory: studio-kit/series/saw_5tory
+        run: |
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg; fi
+          python3 -m pip install --quiet edge-tts
+          for n in 1 2; do
+            python3 voice_stems.py cases/003-part$n.json /tmp/raw$n
+            python3 voice_stems.py pack cases/003-part$n.json /tmp/raw$n narration/003/part$n
+          done
+      - name: Verify both archives against the two scripts, then commit them
+        working-directory: studio-kit/series/saw_5tory
+        run: |
+          python3 - <<'PY'
+          import json, tempfile
+          from pathlib import Path
+          from voice_stems import materialize
+          for n in (1, 2):
+              ep = json.loads(Path(f'cases/003-part{n}.json').read_text())
+              with tempfile.TemporaryDirectory() as tmp:
+                  materialize(ep, Path(f'narration/003/part{n}'), tmp)
+                  assert len(list(Path(tmp).glob('b*.wav'))) == len(ep['beats'])
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add narration/003
+          git commit -m "saw 003: preserve the approved Hamed performances (packed PCM, no processing)"
+          git push
