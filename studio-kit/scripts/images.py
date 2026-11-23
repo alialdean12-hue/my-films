@@ -5,12 +5,12 @@ source "auto": wikimedia first (best for history, real people, places, artworks)
 Pixabay needs PIXABAY_KEY. Wikimedia/Openverse need no key; credits are written for licences that ask for them."""
 import json, os, re, subprocess, sys, time, urllib.parse, urllib.request
 UA = "studio-kit/1.0 (educational video tool)"
-def get(url, tries=3):
+def get(url, tries=4):
     for k in range(tries):
         try: return urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=40).read()
         except Exception as e:
             if k == tries - 1: raise
-            time.sleep(2 + 3 * k)
+            time.sleep(15 + 10 * k if getattr(e, "code", 0) == 429 else 2 + 3 * k)   # 429 = too many requests: wait longer
 def _save(url, path): open(path, "wb").write(get(url)); return path
 def pixabay(q, out, n):
     key = os.environ.get("PIXABAY_KEY")
@@ -64,20 +64,27 @@ def vertical(src, dst, dur, start=0.0, fps=30):
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-stream_loop", "-1", "-ss", f"{start}", "-i", src, "-t", f"{dur:.2f}", "-an",
                     "-vf", f"scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps={fps}", "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p", dst], check=True)
     return dst
-CACHE = os.path.expanduser(os.environ.get("MEDIA_CACHE", "~/my-films/media_cache"))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import remote
+CACHE = os.environ.get("MEDIA_CACHE") or os.path.join(remote.ROOT, "media_cache")
 def cache_key(q, photos="auto"):
     import hashlib; return hashlib.sha1(f"{q.strip().lower()}|{photos}".encode()).hexdigest()[:12]
 def from_cache(q, photos="auto"):
-    """photos fetched by GitHub (scripts/remote_media.py). Returns the list or None."""
+    """photos already fetched (here or by GitHub). Returns the list or None."""
     d = os.path.join(CACHE, cache_key(q, photos)); m = os.path.join(d, "credits.json")
     if not os.path.exists(m): return None
     res = json.load(open(m))
     for r in res: r["file"] = os.path.join(d, os.path.basename(r["file"])); r["thumb"] = os.path.join(d, os.path.basename(r.get("thumb") or r["file"]))
     return res
+def ensure(queries):
+    """queries = [(q, photos)]. When this machine cannot reach Wikimedia, GitHub fetches all missing ones in ONE request."""
+    miss = {cache_key(q, p): dict(key=cache_key(q, p), q=q, photos=p) for q, p in queries if q and not from_cache(q, p)}
+    if not miss or not remote.blocked("https://commons.wikimedia.org/"): return
+    bad = remote.request("media", list(miss.values()), CACHE)
+    if bad: print("NO PHOTOS for:", " | ".join(b["q"] for b in bad), "-> change these queries (simpler English words).", file=sys.stderr)
 def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=0, video_q=None, photos="auto"):
     """candidates for one scene: Wikimedia photos + Pixabay photos (videos only if n_vid>0).
     Each item has "kind" (photo|video) and "source"; "file" is a jpg or mp4, "thumb" a jpg for the sheet.
-    Looks first in the GitHub media cache (remote_media.py), so it works when the sandbox blocks these sites."""
+    Looks first in media_cache (filled here or by GitHub through ensure())."""
     c = from_cache(q, photos)
     if c: return c
     os.makedirs(out, exist_ok=True); res = []
@@ -94,7 +101,7 @@ def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=0, video_q=None, photos="auto"):
         try:
             for r in pixabay_videos(video_q or q, out, n_vid): r.update(kind="video", source="pixabay"); res.append(r)
         except (Exception, SystemExit) as e: print(f"  videos: {e}", file=sys.stderr)
-    if not res: raise SystemExit(f"NO PHOTOS for «{q}». If the sites are blocked here, run: python3 studio-kit/scripts/remote_media.py <episode.json>  (GitHub fetches them). Otherwise try simpler English words.")
+    if not res: raise SystemExit(f"NO PHOTOS for «{q}». Try simpler English words, or give \"img\" files.")
     return res
 def mixed_sheet(res, out):
     return sheet([r["thumb"] for r in res], out, labels=[f"{'VIDEO' if r['kind'] == 'video' else 'PHOTO'} {r['source'].upper()}" for r in res])
@@ -118,7 +125,7 @@ def sheet(files, out, cols=3, labels=None):
     while n < rows * cols: fc += f"color=black:s=360x640[v{n}];"; n += 1
     lay = "|".join(f"{(k%cols)*360}_{(k//cols)*640}" for k in range(n))
     fc += "".join(f"[v{k}]" for k in range(n)) + f"xstack=inputs={n}:layout={lay}"
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error"] + inputs + ["-filter_complex", fc, "-q:v", "4", out], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error"] + inputs + ["-filter_complex", fc, "-frames:v", "1", "-update", "1", "-q:v", "4", out], check=True)
     return out
 if __name__ == "__main__":
     a = sys.argv[1:]

@@ -1,0 +1,57 @@
+name: Engines check
+# After every change to the engines: a preview of every style (voice, photos, lint, quality check, snapshot).
+on:
+  push:
+    branches: ['main']
+    paths: ['studio-kit/**', '.github/workflows/engines-check.yml']
+  pull_request:
+    paths: ['studio-kit/**', '.github/workflows/engines-check.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    if: github.repository == 'alialdean12-hue/my-films'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {style: 1, json: studio-kit/engines/examples/doc.json}
+          - {style: 2, json: studio-kit/collage/examples/gold.json}
+          - {style: 3, json: studio-kit/engines/examples/voxflat.json}
+          - {style: 4, json: studio-kit/engines/examples/kinetic.json}
+          - {style: 5, json: studio-kit/engines/examples/threed.json}
+          - {style: 6, json: studio-kit/engines/examples/paper.json}
+          - {style: 7, json: studio-kit/engines/examples/stick.json}
+          - {style: 8, json: studio-kit/engines/examples/anime.json}
+          - {style: 9, json: studio-kit/engines/examples/cartoon.json}
+          - {style: 10, json: studio-kit/series/saw_5tory/examples/001-part1.json}
+    name: style ${{ matrix.style }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tools
+        run: |
+          command -v ffmpeg >/dev/null || (sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg)
+          pip install -q edge-tts numpy pillow
+          if [ "${{ matrix.style }}" = 2 ]; then pip install -q "rembg[cpu]"; fi
+          npm i -g playwright >/dev/null && npx playwright install --with-deps chromium >/dev/null
+          npx --yes hyperframes --version
+      - name: Preview
+        env:
+          PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
+          NODE_PATH: /usr/local/lib/node_modules
+        run: python3 studio-kit/make.py ${{ matrix.style }} ${{ matrix.json }} "$RUNNER_TEMP/out" --preview
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sheet-style-${{ matrix.style }}
+          path: ${{ runner.temp }}/out/*.jpg
+          if-no-files-found: ignore
+          retention-days: 7

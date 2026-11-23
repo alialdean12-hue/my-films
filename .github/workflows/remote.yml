@@ -1,0 +1,65 @@
+name: Remote fetch
+# Photos (Wikimedia/Pixabay) and narration (edge-tts) for sandboxes that block those sites.
+# studio-kit/scripts/remote.py pushes remote_requests/<kind>-*.json; results go to branch <kind>-cache.
+on:
+  push:
+    branches-ignore: ['media-cache', 'voice-cache']
+    paths: ['remote_requests/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: remote-fetch
+  cancel-in-progress: false
+jobs:
+  fetch:
+    if: github.repository == 'alialdean12-hue/my-films'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 1
+      - name: Tools
+        run: |
+          command -v ffmpeg >/dev/null || (sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg)
+          pip install -q edge-tts
+      - name: Fetch
+        env:
+          PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
+          MEDIA_CACHE: /nonexistent
+        run: |
+          git config --global user.name "media-bot"; git config --global user.email "media-bot@users.noreply.github.com"
+          for kind in media voice; do
+            ls remote_requests/$kind-*.json >/dev/null 2>&1 || continue
+            if git ls-remote --exit-code origin $kind-cache >/dev/null; then
+              git fetch -q --depth 1 origin $kind-cache && git worktree add -q cache-$kind FETCH_HEAD
+            else
+              git worktree add -q --detach cache-$kind && (cd cache-$kind && git checkout -q --orphan tmp && git rm -rfq .)
+            fi
+            python3 - "$kind" <<'PY'
+          import glob, json, os, subprocess, sys
+          kind = sys.argv[1]; root = f"cache-{kind}"; sys.path.insert(0, "studio-kit/scripts")
+          for f in sorted(glob.glob(f"remote_requests/{kind}-*.json"))[-30:]:
+              for it in json.load(open(f)).get("items", []):
+                  d = os.path.join(root, it["key"])
+                  if os.path.exists(os.path.join(d, "done")): continue
+                  os.makedirs(d, exist_ok=True)
+                  try:
+                      if kind == "media":
+                          import images as IM
+                          res = IM.fetch_mixed(it["q"], d, photos=it.get("photos", "auto"))
+                          for r in res: r["file"] = os.path.basename(r["file"]); r["thumb"] = os.path.basename(r.get("thumb") or r["file"])
+                          json.dump(res, open(os.path.join(d, "credits.json"), "w"), ensure_ascii=False)
+                      else:
+                          lj = os.path.join(d, "l.json"); json.dump([{"id": "v", "text": it["text"], "raw": it.get("raw", False)}], open(lj, "w"), ensure_ascii=False)
+                          subprocess.run([sys.executable, "studio-kit/scripts/tts_edge.py", lj, d, "--voice", it["voice"], f"--rate={it['rate']}"], check=True, capture_output=True)
+                          subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", os.path.join(d, "v.wav"), os.path.join(d, "v.flac")], check=True)
+                          for x in ("l.json", "v.wav", "v.mp3", "durations.json"):
+                              if os.path.exists(os.path.join(d, x)): os.remove(os.path.join(d, x))
+                      open(os.path.join(d, "done"), "w").close(); print("ok", kind, it["key"])
+                  except (Exception, SystemExit) as e:
+                      open(os.path.join(d, "error.txt"), "w").write(str(e)[:500]); print("FAIL", kind, it["key"], e)
+          PY
+            (cd cache-$kind && git add -A && (git diff --cached --quiet || (git commit -qm "$kind for ${GITHUB_SHA::7}" && git push -q origin HEAD:$kind-cache)))
+          done

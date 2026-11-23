@@ -43,8 +43,8 @@ def voice(ep, P, stems=None):
         from voice_stems import materialize
         materialize(ep, stems, vd)
     else:
-        sh([sys.executable, os.path.join(KIT, "scripts", "tts_edge.py"), os.path.join(P, "lines.json"), vd,
-            "--voice", v.get("name", "ar-SA-HamedNeural"), f"--rate={v.get('rate', '-8%')}"], stdout=subprocess.DEVNULL)
+        sys.path.insert(0, os.path.join(KIT, "scripts")); import voice as V   # cache -> edge-tts -> GitHub when blocked
+        V.synth(lines, vd, v.get("name", "ar-SA-HamedNeural"), v.get("rate", "-8%"))
     # approved voice (sample 3, Nov 2026): Hamed slightly deeper (pitch x0.92, tempo kept), warm bass, no second layer, no echo
     out = []
     for i in range(len(lines)):
