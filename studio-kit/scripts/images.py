@@ -5,12 +5,12 @@ source "auto": wikimedia first (best for history, real people, places, artworks)
 Pixabay needs PIXABAY_KEY. Wikimedia/Openverse need no key; credits are written for licences that ask for them."""
 import json, os, re, subprocess, sys, time, urllib.parse, urllib.request
 UA = "studio-kit/1.0 (educational video tool)"
-def get(url, tries=3):
+def get(url, tries=4):
     for k in range(tries):
         try: return urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=40).read()
         except Exception as e:
             if k == tries - 1: raise
-            time.sleep(2 + 3 * k)
+            time.sleep(15 + 10 * k if getattr(e, "code", 0) == 429 else 2 + 3 * k)   # 429 = too many requests: wait longer
 def _save(url, path): open(path, "wb").write(get(url)); return path
 def pixabay(q, out, n):
     key = os.environ.get("PIXABAY_KEY")
@@ -125,7 +125,7 @@ def sheet(files, out, cols=3, labels=None):
     while n < rows * cols: fc += f"color=black:s=360x640[v{n}];"; n += 1
     lay = "|".join(f"{(k%cols)*360}_{(k//cols)*640}" for k in range(n))
     fc += "".join(f"[v{k}]" for k in range(n)) + f"xstack=inputs={n}:layout={lay}"
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error"] + inputs + ["-filter_complex", fc, "-q:v", "4", out], check=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error"] + inputs + ["-filter_complex", fc, "-frames:v", "1", "-update", "1", "-q:v", "4", out], check=True)
     return out
 if __name__ == "__main__":
     a = sys.argv[1:]
