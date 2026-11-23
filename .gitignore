@@ -22,3 +22,4 @@ projects/*/build/
 projects/*/voice/
 projects/*/assets/
 */build/
+voice_cache/

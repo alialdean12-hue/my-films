@@ -6,7 +6,7 @@ Real photos (Pixabay / Wikimedia) become **paper stickers**: the subject is cut 
 
 ```sh
 pip install "rembg[cpu]" pillow numpy      # once; first cut downloads the u2net model (~170 MB)
-python3 ~/my-films/studio-kit/scripts/pixabay.py photos "gold bars" media --n 5   # pick the clearest subject on a simple background
+# photos: give each asset a "query" (English); the engine shows a numbered sheet candidates/<asset>.jpg, choose with "pick"
 python3 ~/my-films/studio-kit/collage/make_collage.py video.json OUT --preview    # look at OUT/sheet1.jpg
 python3 ~/my-films/studio-kit/collage/make_collage.py video.json OUT              # OUT/video.mp4 + OUT/cover.jpg
 python3 ~/my-films/studio-kit/scripts/cover_check.py OUT/cover.jpg               # safe-area check

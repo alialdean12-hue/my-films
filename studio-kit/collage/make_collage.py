@@ -53,6 +53,8 @@ def check_repeats(ep):
                 seen[a] = i + 1
 def prepare_assets(ep, P):
     A = {}; ad = os.path.join(P, "assets"); os.makedirs(ad, exist_ok=True)
+    sys.path.insert(0, os.path.join(KIT, "scripts")); import images as IM   # all searches in one go (GitHub if the sites are blocked)
+    IM.ensure([(a["query"], a.get("source", ep.get("source", "auto"))) for a in ep.get("assets", {}).values() if a.get("query") and not a.get("src")])
     for name, a in ep.get("assets", {}).items():
         if a.get("video_query") or a.get("video"):   # moving footage card (Pixabay videos): candidates/<name>.jpg, choose with "pick"
             sys.path.insert(0, os.path.join(KIT, "scripts")); import images as IM
@@ -108,18 +110,12 @@ def prepare_assets(ep, P):
     return A
 
 def voice(ep, P):
-    vd = os.path.join(P, "voice"); os.makedirs(vd, exist_ok=True); v = ep.get("voice", {})
+    vd = os.path.join(P, "voice"); v = ep.get("voice", {})
     lines = [{"id": f"b{i}", "text": b["line"]} for i, b in enumerate(ep["beats"])]
     json.dump(lines, open(os.path.join(P, "lines.json"), "w"), ensure_ascii=False)
-    vf = ep.get("voice_files")   # a folder with b0.mp3/b0.wav ... made by another TTS (works when edge-tts is blocked)
-    if vf:
-        vf = vf if os.path.isabs(vf) else os.path.join(ep["_dir"], vf)
-        for i in range(len(lines)):
-            src = next((os.path.join(vf, f"b{i}.{x}") for x in ("wav", "mp3", "flac", "ogg", "m4a") if os.path.exists(os.path.join(vf, f"b{i}.{x}"))), None)
-            if not src: sys.exit(f"voice_files: missing b{i}.wav (or .mp3) in {vf}")
-            sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src, "-ac", "1", "-ar", "48000", os.path.join(vd, f"b{i}.wav")])
-    else:
-        sh([sys.executable, os.path.join(KIT, "scripts", "tts_edge.py"), os.path.join(P, "lines.json"), vd, "--voice", v.get("name", "ar-SA-HamedNeural"), f"--rate={v.get('rate', '+0%')}"], stdout=subprocess.DEVNULL)
+    sys.path.insert(0, os.path.join(KIT, "scripts")); import voice as V   # cache -> edge-tts -> GitHub; "voice_files" = own TTS
+    vf = ep.get("voice_files"); vf = (vf if os.path.isabs(vf) else os.path.join(ep["_dir"], vf)) if vf else None
+    V.synth(lines, vd, v.get("name", "ar-SA-HamedNeural"), v.get("rate", "+0%"), vf)
     return [dur(os.path.join(vd, f"b{i}.wav")) for i in range(len(lines))]
 
 def schedule(ep, durs):
@@ -130,7 +126,7 @@ def schedule(ep, durs):
     if D < MIN and "--preview" not in sys.argv:
         words = sum(len(b["line"].split()) for b in ep["beats"]); add = int(words * (MIN / D - 1)) + 3
         sys.exit(f"TOO SHORT: the narration lasts {D:.1f} s but every video must be at least {MIN:.0f} s. Explain the topic more: add about {add} words. Video not rendered.")
-    if D > float(ep.get("max_duration", 180)): sys.exit(f"TOO LONG: {D:.1f} s; Shorts/Reels allow at most {ep.get('max_duration', 180)} s. Shorten the lines.")
+    if D > float(ep.get("max_duration", 80)): sys.exit(f"TOO LONG: {D:.1f} s; Shorts/Reels allow at most {ep.get('max_duration', 180)} s. Shorten the lines.")
     for i in range(len(out)): out[i].append(round(out[i+1][0] - 0.05, 2) if i + 1 < len(out) else D)
     return out, D
 

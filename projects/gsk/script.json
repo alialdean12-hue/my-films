@@ -387,5 +387,7 @@
  "voice": {
   "name": "ar-SA-HamedNeural",
   "rate": "-4%"
- }
+ },
+ "min_duration": 60,
+ "max_duration": 82
 }

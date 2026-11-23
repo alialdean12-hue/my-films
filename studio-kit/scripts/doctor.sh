@@ -15,6 +15,7 @@ npx --yes hyperframes --version >/dev/null 2>&1 && ok "hyperframes" || miss hype
 node -e "require('playwright')" 2>/dev/null && ok "playwright (quality check)" || { npm i -g playwright >/dev/null 2>&1; node -e "require('playwright')" 2>/dev/null && fixed playwright || echo "WARN    playwright missing: quality check is skipped -> npm i -g playwright && npx playwright install chromium"; }
 [ -f "$KIT/styles/kinetic/fonts/cairo-ar.woff2" ] && ok "Cairo font" || miss "Cairo font" "git pull the repository again"
 T=$(mktemp -d); echo '[{"id":"t","text":"مرحبا"}]' > $T/l.json
-python3 "$KIT/scripts/tts_edge.py" $T/l.json $T >/dev/null 2>&1 && [ -s $T/t.wav ] && ok "edge-tts voice works" || echo "WARN    edge-tts could not make a voice (network/TLS: set SSL_CERT_FILE to your CA bundle)"; rm -rf $T
-[ -n "$PIXABAY_KEY" ] && ok "PIXABAY_KEY set (styles 1 and 2 photos)" || echo "WARN    PIXABAY_KEY not set: style 1 needs \"img\" files instead of \"query\""
+python3 "$KIT/scripts/tts_edge.py" $T/l.json $T >/dev/null 2>&1 && [ -s $T/t.wav ] && ok "edge-tts voice works" || echo "OK      edge-tts blocked here: the engines will make the voice through GitHub automatically (needs git push)"; rm -rf $T
+[ -n "$PIXABAY_KEY" ] && ok "PIXABAY_KEY set here" || echo "OK      PIXABAY_KEY not set here: Pixabay photos come through GitHub when needed"
+git -C "$KIT/.." push --dry-run -q origin HEAD >/dev/null 2>&1 && ok "git push works (needed when this machine blocks photo/voice sites)" || echo "WARN    git push failed: if photo/voice sites are blocked here, the GitHub fallback cannot work"
 [ $BAD = 0 ] && echo "READY: all engines can run." || { echo "NOT READY: fix the MISSING lines above."; exit 1; }
