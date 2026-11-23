@@ -52,7 +52,7 @@ def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="
     if need(tot) < MIN and "--preview" not in sys.argv:
         words = sum(len(b.get("say", b["line"]).split()) for b in beats); add = int(words * (MIN / need(tot) - 1)) + 3
         sys.exit(f"TOO SHORT: the narration lasts {need(tot):.1f} s but every video must be at least {MIN:.0f} s. Explain the topic more: add about {add} words (new beats or longer lines). Video not rendered.")
-    MAX = float(ep.get("max_duration", 180))   # 3 min = the shortest limit of YouTube Shorts / Instagram Reels / TikTok
+    MAX = float(ep.get("max_duration", 80))   # the user wants 50-80 s videos
     if need(tot) > MAX:
         words = sum(len(b.get("say", b["line"]).split()) for b in beats); cut = int(words * (1 - MAX / need(tot))) + 3
         sys.exit(f"TOO LONG: the narration lasts {need(tot):.1f} s but Shorts/Reels allow at most {MAX:.0f} s. Remove about {cut} words. Video not rendered.")
