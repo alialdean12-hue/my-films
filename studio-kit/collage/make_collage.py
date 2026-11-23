@@ -53,6 +53,8 @@ def check_repeats(ep):
                 seen[a] = i + 1
 def prepare_assets(ep, P):
     A = {}; ad = os.path.join(P, "assets"); os.makedirs(ad, exist_ok=True)
+    sys.path.insert(0, os.path.join(KIT, "scripts")); import images as IM   # all searches in one go (GitHub if the sites are blocked)
+    IM.ensure([(a["query"], a.get("source", ep.get("source", "auto"))) for a in ep.get("assets", {}).values() if a.get("query") and not a.get("src")])
     for name, a in ep.get("assets", {}).items():
         if a.get("video_query") or a.get("video"):   # moving footage card (Pixabay videos): candidates/<name>.jpg, choose with "pick"
             sys.path.insert(0, os.path.join(KIT, "scripts")); import images as IM
@@ -107,10 +109,12 @@ def prepare_assets(ep, P):
     return A
 
 def voice(ep, P):
-    vd = os.path.join(P, "voice"); os.makedirs(vd, exist_ok=True); v = ep.get("voice", {})
+    vd = os.path.join(P, "voice"); v = ep.get("voice", {})
     lines = [{"id": f"b{i}", "text": b["line"]} for i, b in enumerate(ep["beats"])]
     json.dump(lines, open(os.path.join(P, "lines.json"), "w"), ensure_ascii=False)
-    sh([sys.executable, os.path.join(KIT, "scripts", "tts_edge.py"), os.path.join(P, "lines.json"), vd, "--voice", v.get("name", "ar-SA-HamedNeural"), f"--rate={v.get('rate', '+0%')}"], stdout=subprocess.DEVNULL)
+    sys.path.insert(0, os.path.join(KIT, "scripts")); import voice as V   # cache -> edge-tts -> GitHub; "voice_files" = own TTS
+    vf = ep.get("voice_files"); vf = (vf if os.path.isabs(vf) else os.path.join(ep["_dir"], vf)) if vf else None
+    V.synth(lines, vd, v.get("name", "ar-SA-HamedNeural"), v.get("rate", "+0%"), vf)
     return [dur(os.path.join(vd, f"b{i}.wav")) for i in range(len(lines))]
 
 def schedule(ep, durs):
