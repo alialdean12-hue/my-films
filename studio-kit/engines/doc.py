@@ -93,7 +93,7 @@ def images():
         if os.path.exists(meta): res = json.load(open(meta))
         else:
             nv = 0 if b.get("videos", ep.get("videos", 3)) == 0 else 3
-            res = IM.fetch_mixed(q, cf, video_q=b.get("video_query"), n_vid=nv, photos=b.get("source", ep.get("source", "auto")))
+            res = IM.fetch_mixed(q, cf, video_q=b.get("video_query"), n_vid=0, photos=b.get("source", ep.get("source", "auto")))
             json.dump(res, open(meta, "w"), ensure_ascii=False)
         fresh = [r for r in res if key(r) not in used]          # never offer what an earlier scene already uses
         if not fresh: sys.exit(f"NO NEW MEDIA for scene {i+1} («{q}»): every candidate is already used. Change the query of this scene.")
