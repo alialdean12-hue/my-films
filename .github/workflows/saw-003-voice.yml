@@ -1,0 +1,31 @@
+name: The Dog That Didn't Bark · Hamed narration
+on:
+  push:
+    paths:
+      - '.github/workflows/saw-003-voice.yml'
+      - 'studio-kit/series/saw_5tory/cases/003-part*.json'
+      - 'studio-kit/series/saw_5tory/voice_stems.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  record-and-pack:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+        with:
+          persist-credentials: false
+      - name: Record both parts with the approved Hamed voice and pack them losslessly
+        working-directory: studio-kit/series/saw_5tory
+        run: |
+          if ! command -v ffmpeg >/dev/null; then sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg; fi
+          python3 -m pip install --quiet edge-tts
+          for n in 1 2; do
+            python3 voice_stems.py cases/003-part$n.json /tmp/raw$n
+            python3 voice_stems.py pack cases/003-part$n.json /tmp/raw$n narration/003/part$n
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: hamed-003
+          path: studio-kit/series/saw_5tory/narration/003

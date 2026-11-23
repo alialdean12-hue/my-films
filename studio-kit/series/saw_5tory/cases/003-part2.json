@@ -1,0 +1,157 @@
+{
+  "slug": "003-dog-that-didnt-bark",
+  "title": "الكلب لم ينبح",
+  "part": 2,
+  "duration": 50,
+  "voice": {
+    "name": "ar-SA-HamedNeural",
+    "rate": "-3%",
+    "archive": "003"
+  },
+  "room": {
+    "place": "living_room",
+    "time": "night",
+    "objects": [
+      {
+        "type": "clock",
+        "x": 300,
+        "y": 470,
+        "time": "11:40"
+      },
+      {
+        "type": "dusty_box",
+        "x": 200,
+        "y": 1560,
+        "handprint": true,
+        "note": "Red herring: the open money box with a clean handprint."
+      },
+      {
+        "type": "glass_shards",
+        "x": 395,
+        "y": 1590,
+        "n": 9,
+        "note": "Red herring: broken glass on the floor."
+      },
+      {
+        "type": "cup_broken",
+        "x": 960,
+        "y": 1700,
+        "note": "Red herring B: a shattered cup by the sofa."
+      },
+      {
+        "type": "dog",
+        "x": 790,
+        "y": 1720,
+        "asleep": true,
+        "note": "THE CLUE: the guard dog slept through the 'break-in'."
+      },
+      {
+        "type": "person",
+        "id": "shadi",
+        "name": "شادي",
+        "x": 520,
+        "y": 1520,
+        "coat": "#3b4a6b",
+        "hair": "#1d1a22",
+        "skin": "#cb9878"
+      }
+    ]
+  },
+  "beats": [
+    {
+      "scene": "host",
+      "host": "enter",
+      "line": "هل عرفتَ الحل؟ تذكّر: شادي قال إنّ لصًّا كسر النافذة ودخل.",
+      "caption": "هل عرفتَ [y]الحل[/y]؟"
+    },
+    {
+      "scene": "room",
+      "line": "لكن في هذه الصالة كلبًا يحرس الباب، وهو لم ينبح ولا مرّة.",
+      "cam": [
+        790,
+        1660,
+        1.55
+      ],
+      "caption": "كلبٌ [b]لم ينبح[/b]"
+    },
+    {
+      "scene": "room",
+      "line": "أيُّ غريبٍ يكسر زجاجًا في الليل، وكلبُ الحراسة نائم؟",
+      "cam": [
+        760,
+        1660,
+        2.05
+      ],
+      "ring": [
+        790,
+        1660,
+        190
+      ],
+      "reveal": "الكلب [r]نائم[/r]!"
+    },
+    {
+      "scene": "room",
+      "line": "لا أحد دخل. شادي كسر النافذة بنفسه، وأخذ الصندوق من الداخل.",
+      "stamp": "من الداخل!",
+      "cam": [
+        540,
+        1080,
+        1.04
+      ],
+      "tags": [
+        "shadi"
+      ]
+    },
+    {
+      "scene": "room",
+      "line": "ثم رمى الزجاج على الأرض، ووضع أثر يده على الصندوق ليصنع لصًّا.",
+      "cam": [
+        300,
+        1420,
+        1.5
+      ],
+      "ring": [
+        205,
+        1450,
+        165
+      ]
+    },
+    {
+      "scene": "room",
+      "line": "أما الكوب المكسور، فكان للتضليل فقط. الدليل كان نائمًا في الزاوية.",
+      "cam": [
+        540,
+        1100,
+        1.02
+      ],
+      "tour": [
+        [
+          960,
+          1660,
+          2.1
+        ],
+        [
+          790,
+          1640,
+          2.1
+        ]
+      ],
+      "caption": "الكوب: [y]تضليل[/y]"
+    },
+    {
+      "scene": "host",
+      "host": "point",
+      "line": "هل حللتَها؟ أخبرنا في التعليقات، وانتظر اللغز القادم.",
+      "caption": "هل [y]حللتَها[/y]؟",
+      "sub": "تابع للغز القادم"
+    }
+  ],
+  "thumb": {
+    "text": "الحل\\n[y]هنا[/y]!",
+    "focus": [
+      790,
+      1600,
+      1.6
+    ]
+  }
+}

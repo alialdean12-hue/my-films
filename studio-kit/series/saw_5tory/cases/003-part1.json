@@ -1,0 +1,168 @@
+{
+  "slug": "003-dog-that-didnt-bark",
+  "title": "الكلب لم ينبح",
+  "part": 1,
+  "duration": 50,
+  "voice": {
+    "name": "ar-SA-HamedNeural",
+    "rate": "-3%",
+    "archive": "003"
+  },
+  "room": {
+    "place": "living_room",
+    "time": "night",
+    "objects": [
+      {
+        "type": "clock",
+        "x": 300,
+        "y": 470,
+        "time": "11:40"
+      },
+      {
+        "type": "dusty_box",
+        "x": 200,
+        "y": 1560,
+        "handprint": true,
+        "note": "Red herring: the open money box with a clean handprint."
+      },
+      {
+        "type": "glass_shards",
+        "x": 395,
+        "y": 1590,
+        "n": 9,
+        "note": "Red herring: broken glass on the floor."
+      },
+      {
+        "type": "cup_broken",
+        "x": 960,
+        "y": 1700,
+        "note": "Red herring B: a shattered cup by the sofa."
+      },
+      {
+        "type": "dog",
+        "x": 790,
+        "y": 1720,
+        "asleep": true,
+        "note": "THE CLUE: the guard dog is fast asleep next to the broken glass."
+      },
+      {
+        "type": "person",
+        "id": "shadi",
+        "name": "شادي",
+        "x": 520,
+        "y": 1520,
+        "coat": "#3b4a6b",
+        "hair": "#1d1a22",
+        "skin": "#cb9878"
+      }
+    ]
+  },
+  "beats": [
+    {
+      "scene": "host",
+      "host": "enter",
+      "line": "جريمةٌ حُلَّت بشاهدٍ واحد… شاهدٍ لم ينبح.",
+      "caption": "شاهدٌ [y]لم ينبح[/y]"
+    },
+    {
+      "scene": "room",
+      "line": "الحادية عشرة وأربعون دقيقة ليلًا. النافذة مكسورة، والزجاج على أرض الصالة.",
+      "cam": [
+        540,
+        980,
+        1.02
+      ],
+      "caption": "الحادية عشرة [y]وأربعون[/y]\\nزجاجٌ [b]مكسور[/b]",
+      "caption_pos": "top"
+    },
+    {
+      "scene": "room",
+      "line": "اختفى صندوق النقود من فوق الطاولة. وفي البيت رجلٌ واحد: شادي.",
+      "cam": [
+        360,
+        1300,
+        1.5
+      ],
+      "tags": [
+        "shadi"
+      ],
+      "caption": "الصندوق [r]اختفى[/r]"
+    },
+    {
+      "scene": "room",
+      "line": "قال شادي: كنتُ نائمًا. سمعتُ زجاجًا يُكسر، ولم أخرج من غرفتي.",
+      "cam": [
+        520,
+        1290,
+        1.35
+      ],
+      "caption_size": 86,
+      "caption": "«لم أخرج\\nمن [b]غرفتي[/b]»",
+      "caption_pos": "bottom"
+    },
+    {
+      "scene": "room",
+      "line": "زجاجٌ، صندوقٌ عليه أثر يد، كوبٌ مكسور… كل شيءٍ يقول: لصٌّ من الخارج.",
+      "stamp": "يكذب!",
+      "cam": [
+        560,
+        1200,
+        1.06
+      ]
+    },
+    {
+      "scene": "room",
+      "line": "لكن في زاوية الصالة شاهدًا لم يسأله أحد… كلبُ الحراسة.",
+      "cam": [
+        790,
+        1650,
+        1.5
+      ],
+      "caption": "شاهدٌ [y]لم يُسأل[/y]"
+    },
+    {
+      "scene": "room",
+      "line": "انظر جيدًا. عند كلبٍ، عند زجاجٍ، عند صندوق. ثم أعد قراءة كلامه.",
+      "cam": [
+        540,
+        1080,
+        1.05
+      ],
+      "tour": [
+        [
+          790,
+          1580,
+          2.0
+        ],
+        [
+          395,
+          1540,
+          2.0
+        ],
+        [
+          205,
+          1440,
+          2.0
+        ]
+      ],
+      "tour_start": 0.06,
+      "caption": "انظر [y]جيدًا[/y]"
+    },
+    {
+      "scene": "host",
+      "host": "point",
+      "line": "ما الذي جعل شادي كاذبًا؟ اكتب جوابك في التعليقات قبل الحل.",
+      "caption": "ما الذي [r]كشفه[/r]؟",
+      "sub": "اكتب جوابك في التعليقات",
+      "timer": true
+    }
+  ],
+  "thumb": {
+    "text": "شاهدٌ\\nلم [y]ينبح[/y]",
+    "focus": [
+      790,
+      1600,
+      1.6
+    ]
+  }
+}
