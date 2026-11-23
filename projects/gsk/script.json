@@ -1,48 +1,360 @@
 {
  "title": "أربعون عامًا… وشجرة عائلة",
  "paper": "kraft",
+ "assets": {
+  "house": {
+   "src": "assets/house.jpg"
+  },
+  "manhome": {
+   "src": "assets/manhome.jpg"
+  },
+  "tape": {
+   "src": "assets/tape.jpg"
+  },
+  "news": {
+   "src": "assets/news.jpg"
+  },
+  "news2": {
+   "src": "assets/news2.jpg"
+  },
+  "laptop": {
+   "src": "assets/laptop.jpg"
+  },
+  "tree": {
+   "src": "assets/tree.jpg"
+  },
+  "swab": {
+   "src": "assets/swab.jpg"
+  },
+  "pipette": {
+   "src": "assets/pipette.jpg"
+  },
+  "arrest": {
+   "src": "assets/arrest.jpg"
+  },
+  "cuffs": {
+   "src": "assets/cuffs.jpg"
+  },
+  "dna": {
+   "src": "assets/dna.jpg"
+  },
+  "lab": {
+   "src": "assets/lab.jpg"
+  },
+  "gavel": {
+   "src": "assets/gavel.jpg"
+  }
+ },
+ "beats": [
+  {
+   "line": "أربعين عامًا… وثلاثة عشر قتيلًا. ثم قبضوا عليه بسبب شجرة عائلة.",
+   "bg": "dark",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "tape",
+     "x": 540,
+     "y": 900,
+     "w": 860,
+     "tilt": -0.03,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "text": "أربعون عامًا",
+     "x": 540,
+     "y": 1560,
+     "size": 92,
+     "style": "big",
+     "at": 1.1
+    },
+    {
+     "type": "text",
+     "text": "و[r]13[/r] قتيلًا",
+     "x": 540,
+     "y": 360,
+     "size": 64,
+     "style": "label",
+     "at": 2.4
+    }
+   ]
+  },
+  {
+   "line": "في كاليفورنيا، بين ألف وتسعمئة وأربعة وسبعين وستة وثمانين، كان رجل يهاجم النساء في بيوتهنّ.",
+   "bg": "cream",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "house",
+     "x": 540,
+     "y": 930,
+     "w": 800,
+     "tilt": 0.03,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "text": "كاليفورنيا · [y]1974–1986[/y]",
+     "x": 540,
+     "y": 1560,
+     "size": 66,
+     "style": "label",
+     "at": 1.2
+    }
+   ]
+  },
+  {
+   "line": "الشرطة أعطته ثلاثة أسماء… ولم تعرف اسمه الحقيقي.",
+   "bg": "kraft",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "news",
+     "x": 540,
+     "y": 900,
+     "w": 820,
+     "tilt": -0.02,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "text": "ثلاثة أسماء…",
+     "x": 540,
+     "y": 1560,
+     "size": 88,
+     "style": "big",
+     "at": 1.0
+    },
+    {
+     "type": "text",
+     "text": "و[r]لا اسم[/r] واحد",
+     "x": 540,
+     "y": 340,
+     "size": 70,
+     "style": "label",
+     "at": 2.2
+    }
+   ]
+  },
+  {
+   "line": "لا بصمة، ولا شاهد، ولا كاميرا. فقط حمض نووي محفوظ في ملف قديم.",
+   "bg": "dark",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "dna",
+     "x": 540,
+     "y": 950,
+     "w": 780,
+     "tilt": 0.04,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "text": "الدليل الوحيد: [b]الحمض النووي[/b]",
+     "x": 540,
+     "y": 1560,
+     "size": 74,
+     "style": "big",
+     "at": 1.2
+    }
+   ]
+  },
+  {
+   "line": "في ألفين وثمانية عشر، أخذوا ذلك الحمض ورفعوه إلى موقع للأنساب.",
+   "bg": "blue",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "laptop",
+     "x": 540,
+     "y": 900,
+     "w": 720,
+     "tilt": -0.03,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "text": "موقع [y]للأنساب[/y]",
+     "x": 540,
+     "y": 1560,
+     "size": 90,
+     "style": "big",
+     "at": 1.1
+    }
+   ]
+  },
+  {
+   "line": "الموقع لم يعطهم القاتل… أعطاهم أبناء عم بعيدين، وراثيًا فقط.",
+   "bg": "cream",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "tree",
+     "x": 540,
+     "y": 940,
+     "w": 700,
+     "tilt": 0.03,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "text": "أقارب [y]بعيدون[/y] فقط",
+     "x": 540,
+     "y": 1560,
+     "size": 76,
+     "style": "big",
+     "at": 1.2
+    }
+   ]
+  },
+  {
+   "line": "فبدأ المحققون يبنون الشجرة بالمقلوب: من الأقارب إلى الجدّ، ومن الجدّ إلى رجل واحد.",
+   "bg": "kraft",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "tree",
+     "x": 300,
+     "y": 1000,
+     "w": 520,
+     "tilt": -0.05,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "arrow",
+     "from": [
+      520,
+      1180
+     ],
+     "to": [
+      760,
+      880
+     ],
+     "at": 1.6
+    },
+    {
+     "type": "photo",
+     "asset": "manhome",
+     "x": 790,
+     "y": 860,
+     "w": 420,
+     "tilt": 0.05,
+     "tape": true,
+     "at": 2.0
+    },
+    {
+     "type": "text",
+     "text": "رجل [r]واحد[/r]",
+     "x": 540,
+     "y": 1580,
+     "size": 86,
+     "style": "big",
+     "at": 2.6
+    }
+   ]
+  },
+  {
+   "line": "ثم جمعوا قمامته سرًّا… وطابقوا الحمض. كان شرطيًا سابقًا، في الثانية والسبعين.",
+   "bg": "dark",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "swab",
+     "x": 540,
+     "y": 920,
+     "w": 760,
+     "tilt": 0.03,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "text": "كان [y]شرطيًا[/y] سابقًا",
+     "x": 540,
+     "y": 1560,
+     "size": 78,
+     "style": "big",
+     "at": 1.4
+    }
+   ]
+  },
+  {
+   "line": "والأغرب: هو نفسه كان يعرف كيف تُدار التحقيقات… ولم يتوقع أداة يستعملها الملايين للترفيه.",
+   "bg": "green",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "arrest",
+     "x": 540,
+     "y": 930,
+     "w": 780,
+     "tilt": -0.02,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "text": "التويست: [r]أداة ترفيه[/r]",
+     "x": 540,
+     "y": 1560,
+     "size": 72,
+     "style": "big",
+     "at": 1.4
+    }
+   ]
+  },
+  {
+   "line": "أربعون عامًا انتهت بشجرة عائلة. هل تقبل أن تُستخدم بصمتك الوراثية لاصطياد قاتل؟",
+   "bg": "cream",
+   "items": [
+    {
+     "type": "photo",
+     "asset": "gavel",
+     "x": 540,
+     "y": 1000,
+     "w": 700,
+     "tilt": 0.04,
+     "tape": true,
+     "at": 0.2
+    },
+    {
+     "type": "text",
+     "text": "هل تقبل؟",
+     "x": 540,
+     "y": 1560,
+     "size": 96,
+     "style": "big",
+     "at": 1.3
+    },
+    {
+     "type": "text",
+     "text": "اكتب رأيك في التعليقات",
+     "x": 540,
+     "y": 340,
+     "size": 56,
+     "style": "note",
+     "at": 2.6
+    }
+   ]
+  }
+ ],
+ "cover": {
+  "text": "شجرة عائلة<br/>[y]كشفت[/y] قاتلًا",
+  "tag": "جرائم حقيقية",
+  "bg": "dark",
+  "asset": "tree",
+  "size": 96
+ },
  "voice": {
   "name": "ar-SA-HamedNeural",
   "rate": "-4%"
- },
- "assets": {
-  "coldcase": {
-   "query": "cold case police files evidence"
-  },
-  "house": {
-   "query": "house at night suburban"
-  },
-  "dna": {
-   "query": "dna double helix"
-  },
-  "tree": {
-   "query": "family tree chart"
-  },
-  "arrest": {
-   "query": "handcuffs"
-  },
-  "lab": {
-   "query": "forensic scientist laboratory"
-  },
-  "news": {
-   "query": "newspaper stack"
-  },
-  "street": {
-   "query": "suburban street california"
-  },
-  "gavel": {
-   "query": "judge gavel"
-  },
-  "police": {
-   "query": "police officers investigation"
-  },
-  "computer": {
-   "query": "laptop research"
-  },
-  "mugshot": {
-   "query": "police lineup suspects"
-  }
- },
- "beats": [],
- "cover": {}
+ }
 }
