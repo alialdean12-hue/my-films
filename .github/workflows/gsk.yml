@@ -1,0 +1,64 @@
+name: GSK film · voice, photos and render
+on:
+  push:
+    paths:
+      - '.github/workflows/gsk.yml'
+      - 'projects/gsk/**'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: |
+          sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg
+          python3 -m pip install --quiet edge-tts pillow numpy
+          node -v
+      - name: Voice (edge-tts, house voice)
+        run: |
+          python3 - <<'PY'
+          import json, subprocess, sys
+          ep = json.load(open('projects/gsk/video.json'))
+          v = ep.get('voice', {})
+          lines = [{'id': f'b{i}', 'text': b['line']} for i, b in enumerate(ep['beats'])]
+          json.dump(lines, open('/tmp/lines.json', 'w'), ensure_ascii=False)
+          subprocess.run([sys.executable, 'studio-kit/scripts/tts_edge.py', '/tmp/lines.json', '/tmp/voice',
+                          '--voice', v.get('name', 'ar-SA-HamedNeural'), f"--rate={v.get('rate', '-4%')}"], check=True)
+          PY
+      - name: Photos from the media cache / open sources
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          sys.path.insert(0, 'studio-kit/scripts'); import images as IM
+          ep = json.load(open('projects/gsk/video.json'))
+          os.makedirs('projects/gsk/media', exist_ok=True)
+          for name, a in ep['assets'].items():
+              q = a.get('query')
+              if not q: continue
+              try:
+                  res = IM.fetch_mixed(q, 'projects/gsk/media', photos=a.get('photos', 'auto'))
+                  a['src'] = os.path.basename(res[0]['file'])
+                  print('ok', name, a['src'])
+              except BaseException as e:
+                  print('FAIL', name, e)
+          json.dump(ep, open('projects/gsk/video.resolved.json', 'w'), ensure_ascii=False, indent=1)
+          PY
+      - name: Render (preview sheets only)
+        env:
+          HYPERFRAMES_BROWSER_PATH: ''
+        run: |
+          python3 studio-kit/collage/make_collage.py projects/gsk/video.resolved.json projects/gsk/build --preview || true
+          ls -la projects/gsk/build || true
+      - name: Commit what we got
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f projects/gsk/media projects/gsk/build projects/gsk/video.resolved.json voice_out 2>/dev/null || true
+          git add -A projects/gsk
+          git diff --cached --quiet && exit 0
+          git commit -qm "gsk: voice + photos + preview"
+          git push

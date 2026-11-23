@@ -1,0 +1,48 @@
+{
+ "title": "أربعون عامًا… وشجرة عائلة",
+ "paper": "kraft",
+ "voice": {
+  "name": "ar-SA-HamedNeural",
+  "rate": "-4%"
+ },
+ "assets": {
+  "coldcase": {
+   "query": "cold case files police evidence"
+  },
+  "house": {
+   "query": "suburban house california night"
+  },
+  "dna": {
+   "query": "dna double helix laboratory"
+  },
+  "tree": {
+   "query": "family tree genealogy document"
+  },
+  "arrest": {
+   "query": "police arrest handcuffs"
+  },
+  "screen": {
+   "query": "computer keyboard research screen"
+  },
+  "news": {
+   "query": "old newspaper archive"
+  },
+  "tape": {
+   "query": "crime scene tape"
+  },
+  "swab": {
+   "query": "dna test tube swab"
+  },
+  "court": {
+   "query": "courtroom judge gavel"
+  },
+  "street": {
+   "query": "california suburban street"
+  },
+  "lab": {
+   "query": "forensic scientist laboratory"
+  }
+ },
+ "beats": [],
+ "cover": {}
+}
