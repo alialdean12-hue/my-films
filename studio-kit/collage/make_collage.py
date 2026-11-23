@@ -125,7 +125,7 @@ def schedule(ep, durs):
     if D < MIN and "--preview" not in sys.argv:
         words = sum(len(b["line"].split()) for b in ep["beats"]); add = int(words * (MIN / D - 1)) + 3
         sys.exit(f"TOO SHORT: the narration lasts {D:.1f} s but every video must be at least {MIN:.0f} s. Explain the topic more: add about {add} words. Video not rendered.")
-    if D > float(ep.get("max_duration", 180)): sys.exit(f"TOO LONG: {D:.1f} s; Shorts/Reels allow at most {ep.get('max_duration', 180)} s. Shorten the lines.")
+    if D > float(ep.get("max_duration", 80)): sys.exit(f"TOO LONG: {D:.1f} s; Shorts/Reels allow at most {ep.get('max_duration', 180)} s. Shorten the lines.")
     for i in range(len(out)): out[i].append(round(out[i+1][0] - 0.05, 2) if i + 1 < len(out) else D)
     return out, D
 
