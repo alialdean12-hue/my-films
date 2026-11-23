@@ -84,7 +84,7 @@ def ensure(queries):
 def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=0, video_q=None, photos="auto"):
     """candidates for one scene: Wikimedia photos + Pixabay photos (videos only if n_vid>0).
     Each item has "kind" (photo|video) and "source"; "file" is a jpg or mp4, "thumb" a jpg for the sheet.
-    Looks first in the GitHub media cache (remote_media.py), so it works when the sandbox blocks these sites."""
+    Looks first in media_cache (filled here or by GitHub through ensure())."""
     c = from_cache(q, photos)
     if c: return c
     os.makedirs(out, exist_ok=True); res = []
