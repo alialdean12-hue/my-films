@@ -20,7 +20,7 @@ def scene(i, b, s, e, c0, c1):
         js += tjs(i, s); js.append(f'tl.fromTo("#wal{i}",{{attr:{{transform:"translate(540 1600)"}}}},{{attr:{{transform:"translate(540 1150)"}},duration:.5,ease:"back.out(1.5)"}},{s+.3:.2f});')
         for n in range(5): js.append(f'tl.fromTo("#bill{i}{n}",{{opacity:1,y:0}},{{opacity:0,y:-500,x:{(n-2)*120},rotation:{n*20},duration:.9,ease:"power2.in"}},{s+1.2+n*.25:.2f});')
     elif k == "word":
-        h += f'<div class="t" id="big{i}" style="top:760px;font-size:230px;opacity:0"><span style="background:#151515;color:#ffd21f;padding:0 40px 40px">{b.get("word","")}</span></div>'
+        h += f'<div class="t" id="big{i}" style="top:{b.get("top",760)}px;font-size:{b.get("size",230)}px;opacity:0"><span style="background:#151515;color:#ffd21f;padding:0 40px 40px">{b.get("word","")}</span></div>'
         h += f'<div class="t" id="sub{i}" style="top:1180px;font-size:56px;color:#555;opacity:0">{b.get("sub","")}</div>'
         js += [f'tl.fromTo("#big{i}",{{opacity:0,scale:2.5}},{{opacity:1,scale:1,duration:.3,ease:"power4.in"}},{s+.9:.2f});', f'tl.fromTo("#S{i}",{{x:0}},{{x:12,duration:.05,yoyo:true,repeat:5}},{s+1.2:.2f});', f'tl.fromTo("#sub{i}",{{opacity:0}},{{opacity:1,duration:.4}},{s+1.6:.2f});']
     elif k == "basket":
