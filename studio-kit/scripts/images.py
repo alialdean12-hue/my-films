@@ -64,7 +64,7 @@ def vertical(src, dst, dur, start=0.0, fps=30):
     subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-stream_loop", "-1", "-ss", f"{start}", "-i", src, "-t", f"{dur:.2f}", "-an",
                     "-vf", f"scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps={fps}", "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p", dst], check=True)
     return dst
-def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=3, video_q=None, photos="auto"):
+def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=0, video_q=None, photos="auto"):
     """candidates for one scene: Wikimedia photos + Pixabay photos + Pixabay videos (any part may be empty).
     Each item has "kind" (photo|video) and "source"; "file" is a jpg or mp4, "thumb" a jpg for the sheet."""
     os.makedirs(out, exist_ok=True); res = []
