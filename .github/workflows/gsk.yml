@@ -1,64 +1,64 @@
-name: GSK film · voice, photos and render
+name: GSK film · voice and photos
 on:
+  workflow_dispatch:
   push:
     paths:
       - '.github/workflows/gsk.yml'
-      - 'projects/gsk/**'
+      - 'projects/gsk/script.json'
   workflow_dispatch:
 permissions:
   contents: write
 jobs:
-  build:
+  voice:
     runs-on: ubuntu-24.04
-    timeout-minutes: 30
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
-      - name: Tools
+      - name: Install
         run: |
           sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg
-          python3 -m pip install --quiet edge-tts pillow numpy
-          node -v
-      - name: Voice (edge-tts, house voice)
+          python3 -m pip install --quiet edge-tts pillow numpy html2image 2>/dev/null || python3 -m pip install --quiet edge-tts pillow numpy
+      - name: Voice
         run: |
+          mkdir -p out/voice
           python3 - <<'PY'
           import json, subprocess, sys
-          ep = json.load(open('projects/gsk/video.json'))
+          ep = json.load(open('projects/gsk/script.json'))
+          json.dump([{'id': f'b{i}', 'text': b['line']} for i, b in enumerate(ep['beats'])], open('/tmp/lines.json','w'), ensure_ascii=False)
           v = ep.get('voice', {})
-          lines = [{'id': f'b{i}', 'text': b['line']} for i, b in enumerate(ep['beats'])]
-          json.dump(lines, open('/tmp/lines.json', 'w'), ensure_ascii=False)
-          subprocess.run([sys.executable, 'studio-kit/scripts/tts_edge.py', '/tmp/lines.json', '/tmp/voice',
-                          '--voice', v.get('name', 'ar-SA-HamedNeural'), f"--rate={v.get('rate', '-4%')}"], check=True)
+          subprocess.run([sys.executable, 'studio-kit/scripts/tts_edge.py', '/tmp/lines.json', 'out/voice',
+                          '--voice', v.get('name','ar-SA-HamedNeural'), f"--rate={v.get('rate','-4%')}"], check=True)
           PY
-      - name: Photos from the media cache / open sources
+      - name: Photos
         run: |
           python3 - <<'PY'
           import json, os, sys
           sys.path.insert(0, 'studio-kit/scripts'); import images as IM
-          ep = json.load(open('projects/gsk/video.json'))
-          os.makedirs('projects/gsk/media', exist_ok=True)
+          ep = json.load(open('projects/gsk/script.json'))
+          os.makedirs('out/media', exist_ok=True)
+          cred = []
           for name, a in ep['assets'].items():
               q = a.get('query')
               if not q: continue
               try:
-                  res = IM.fetch_mixed(q, 'projects/gsk/media', photos=a.get('photos', 'auto'))
-                  a['src'] = os.path.basename(res[0]['file'])
-                  print('ok', name, a['src'])
+                  res = IM.fetch_mixed(q, 'out/media', photos=a.get('photos','auto'))
+                  if res:
+                      a['src'] = 'media/' + os.path.basename(res[0]['file'])
+                      r = res[0]
+                      cred.append(f"{name} (صورة): {str(r.get('title',''))[:60]} — {r.get('author','')} — {r.get('license','')} — {r.get('page','')}")
+                      print('ok', name, a['src'])
+                  else:
+                      print('EMPTY', name)
               except BaseException as e:
-                  print('FAIL', name, e)
-          json.dump(ep, open('projects/gsk/video.resolved.json', 'w'), ensure_ascii=False, indent=1)
+                  print('FAIL', name, type(e).__name__, e)
+          json.dump(ep, open('out/video.json','w'), ensure_ascii=False, indent=1)
+          open('out/CREDITS.txt','w').write("\n".join(cred) + "\n")
           PY
-      - name: Render (preview sheets only)
-        env:
-          HYPERFRAMES_BROWSER_PATH: ''
-        run: |
-          python3 studio-kit/collage/make_collage.py projects/gsk/video.resolved.json projects/gsk/build --preview || true
-          ls -la projects/gsk/build || true
-      - name: Commit what we got
+      - name: Commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f projects/gsk/media projects/gsk/build projects/gsk/video.resolved.json voice_out 2>/dev/null || true
-          git add -A projects/gsk
+          git add -f out
           git diff --cached --quiet && exit 0
-          git commit -qm "gsk: voice + photos + preview"
+          git commit -qm "gsk: voice + photos"
           git push
