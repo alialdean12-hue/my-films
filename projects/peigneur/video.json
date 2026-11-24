@@ -1,0 +1,116 @@
+{
+ "title": "البحيرة التي ابتلعت نفسها",
+ "music": "suspense",
+ "music_gain": 0.14,
+ "voice": {"name": "ar-SA-HamedNeural", "rate": "+4%"},
+ "min_duration": 50,
+ "max_duration": 80,
+ "sources": [
+  "Dale H. Easley (Univ. of Dubuque), 'Pulling the Plug on Lake Peigneur' — 20 Nov 1980, 3.5 مليار جالون، انعكاس قناة ديلكامبري، شلال 50 قدمًا، طفو 9 صناديق بعد يومين، خروج 50 عاملًا بسلام",
+  "US Mine Safety and Health Administration, 'Report of Mine Inundation: Jefferson Island Mine' (1981) — 48 عاملًا تحت الأرض، نجاح الإخلاء، سبب الانفجار غير محسوم",
+  "UPI, 'Settlement reached in Jeff Island accident', 7 Jul 1983 — 32 مليون دولار لشركة Diamond Crystal و12.8 مليون لـ Live Oak Gardens",
+  "The Washington Post (21 Nov 1980) — غرق منصة الحفر النفطية و11 صندوقًا داخل الحفرة",
+  "University of Louisiana at Lafayette Special Collections — عمق البحيرة الحالي نحو 200 قدم، أعمق بحيرة في لويزيانا"
+ ],
+ "cover": {"text": "بحيرة [y]اختفت[/y]", "beat": 1, "label": "أغرب الحوادث", "tag": "حوادث حقيقية"},
+ "tags": ["حوادث_حقيقية", "كارثة"],
+ "caption_doc": {
+  "hook": "حفرةٌ واحدة جفّفت بحيرة كاملة… وسحبت كل شيء حولها إلى باطن الأرض.",
+  "question": "هل رأيت من قبل ماءً يجري إلى الأعلى؟ اكتب في التعليقات 👇",
+  "youtube_title": "البحيرة التي ابتلعت نفسها في ساعة",
+  "hashtags": ["#حوادث_حقيقية", "#كارثة", "#لويزيانا", "#قصص"],
+  "audience": "الحوادث الغريبة"
+ },
+ "characters": {
+  "rig": {"head": "hard_hat", "head_color": "#e8b026", "hair": "short", "hair_color": "#2a2420", "wear": "work", "color": "#2f5d8a", "pants_color": "#3a3f4a", "skin": "light", "beard": "stubble"},
+  "rig2": {"head": "hard_hat", "head_color": "#e8b026", "hair": "short", "hair_color": "#2a2420", "wear": "work", "color": "#2f5d8a", "pants_color": "#3a3f4a", "skin": "light", "beard": "stubble", "bandage": true},
+  "miner": {"head": "hard_hat", "head_color": "#d8d8d8", "hair": "short", "hair_color": "#1c1a18", "wear": "work", "color": "#8a6a3a", "pants_color": "#4a4238", "skin": "tan", "beard": "short"},
+  "boss": {"hair": "bald", "wear": "suit", "color": "#2b2f38", "skin": "light", "beard": "none", "glasses": true, "build": "heavy"}
+ },
+ "beats": [
+  {
+   "line": "هذه ليست حفرة… هذه بحيرةٌ كاملة، ابتلعت نفسها في ساعة.",
+   "cap": "بحيرة [y]ابتلعت نفسها[/y]",
+   "place": "sea",
+   "time": "day",
+   "cam": "zoom",
+   "focus": [540, 1250],
+   "cast": [{"who": "rig", "x": 520, "face": "shock", "scale": 0.85}],
+   "fx": [{"kind": "shake", "at": 1.2}]
+  },
+  {
+   "line": "في ولاية لويزيانا، كانت بحيرة بانيور هادئة، عمقها ثلاثة أمتار، وفي وسطها منصة حفر.",
+   "cap": "لويزيانا · [y]1980[/y]",
+   "place": "sea",
+   "time": "day",
+   "cast": [{"who": "rig", "x": 640, "pose": "stand", "face": "calm", "scale": 0.8}],
+   "fx": [{"kind": "glint"}]
+  },
+  {
+   "line": "وفي العشرين من نوفمبر ألف وتسعمئة وثمانين، دارت الحفارة… فدخل رأسها في فراغٍ لم يتوقعه أحد.",
+   "cap": "20 [y]نوفمبر[/y]",
+   "place": "sea",
+   "time": "day",
+   "cast": [{"who": "rig2", "x": 460, "face": "shock", "scale": 0.9}],
+   "fx": [{"kind": "flash", "at": 0.9}, {"kind": "shake", "at": 0.9}]
+  },
+  {
+   "line": "تحت البحيرة كان منجم ملح، أنفاقه بعرض أربعة طرق، وفيه ثمانية وأربعون عاملًا في الأسفل.",
+   "cap": "منجم [y]ملح[/y] تحته",
+   "place": "plain",
+   "time": "night",
+   "cast": [{"who": "miner", "x": 380, "pose": "walk", "to": 560, "face": "curious", "scale": 0.85}, {"who": "miner", "x": 760, "flip": true, "face": "calm", "scale": 0.7}]
+  },
+  {
+   "line": "فبدأت البحيرة كلها تنزل إلى المنجم… وظهرت دوّامة تسحب المنصة والقوارب والأشجار.",
+   "cap": "كل البحيرة [r]نزلت[/r]",
+   "place": "sea",
+   "time": "day",
+   "cam": "zoom",
+   "focus": [540, 1180],
+   "cast": [{"who": "rig2", "x": 300, "face": "shock", "scale": 0.8}],
+   "fx": [{"kind": "smoke", "x": 620, "y": 1300}, {"kind": "shake", "at": 0.4}]
+  },
+  {
+   "line": "وسحبت أحد عشر صندوقًا، وقرابة سبعين فدانًا من الأرض، وحدائق الجزيرة كلها.",
+   "cap": "11 [y]صندوقًا[/y] إلى القاع",
+   "place": "plain",
+   "time": "sunset",
+   "cast": [{"who": "rig2", "x": 300, "face": "sad", "scale": 0.8}, {"who": "miner", "x": 800, "flip": true, "face": "shock", "scale": 0.75}],
+   "fx": [{"kind": "birds", "y": 700}]
+  },
+  {
+   "line": "ثم انعكس مجرى القناة… فوقف الماء شلالًا يدخل إلى الحفرة بدل أن يخرج منها.",
+   "cap": "الماء [y]رجع[/y] للخلف",
+   "place": "sea",
+   "time": "sunset",
+   "cam": "pan",
+   "cast": [{"who": "rig", "x": 520, "face": "curious", "scale": 0.75}]
+  },
+  {
+   "line": "العمال صعدوا كلهم أحياء… لا بالحظ، بل بالتدريب وسرعة الإنذار.",
+   "cap": "48 عاملًا [y]خرجوا[/y]",
+   "place": "plain",
+   "time": "night",
+   "cast": [{"who": "miner", "x": 360, "pose": "stand", "face": "joy", "scale": 0.85}, {"who": "miner", "x": 560, "flip": true, "face": "joy", "scale": 0.8}, {"who": "rig", "x": 800, "face": "joy", "scale": 0.8}],
+   "fx": [{"kind": "stars"}]
+  },
+  {
+   "line": "ثم طفت تسعة من الصناديق من تحت الأرض… والشركتان دفعتا اثنين وثلاثين مليونًا ثمنًا للخطأ.",
+   "cap": "9 صناديق [y]طفت[/y]",
+   "place": "sea",
+   "time": "day",
+   "cast": [{"who": "boss", "x": 760, "face": "angry", "scale": 0.8}],
+   "fx": [{"kind": "glint", "y": 1200}]
+  },
+  {
+   "line": "وبقيت بانيور أعمق بحيرة في الولاية: ستين مترًا بدل ثلاثة… هل تعرف حادثة أغرب؟",
+   "cap": "60 [y]مترًا[/y] بدل 3",
+   "place": "sea",
+   "time": "sunset",
+   "cam": "push",
+   "cast": [{"who": "rig", "x": 520, "face": "calm", "scale": 0.7}],
+   "fx": [{"kind": "rays"}]
+  }
+ ]
+}

@@ -1,0 +1,62 @@
+name: Film · voice + render
+# Pick a project folder under projects/ and its style. The runner has network for
+# edge-tts and Chromium, so it writes the narration and renders the video.
+# Results: builds/<project>/video_phone.mp4, cover.jpg, CAPTION.md, الوصف.txt, sheet.jpg
+on:
+  workflow_dispatch:
+    inputs:
+      project:
+        description: 'Project folder under projects/ (its json is projects/<name>/video.json)'
+        default: 'peigneur'
+        required: true
+      style:
+        description: 'Style number 1-10'
+        default: '7'
+        required: true
+permissions:
+  contents: write
+jobs:
+  make:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install
+        run: |
+          sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg
+          python3 -m pip install --quiet edge-tts numpy pillow
+          npm i -g playwright >/dev/null && npx playwright install --with-deps chromium >/dev/null
+          npx --yes hyperframes --version
+      - name: Make the film
+        env:
+          NODE_PATH: /usr/local/lib/node_modules
+          PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
+        run: |
+          OUT="$RUNNER_TEMP/out"
+          python3 studio-kit/make.py "${{ inputs.style }}" "projects/${{ inputs.project }}/video.json" "$OUT"
+          D="builds/${{ inputs.project }}"; mkdir -p "$D"
+          cp "$OUT"/video_phone.mp4 "$OUT"/cover.jpg "$OUT"/cover_check.jpg "$OUT"/CAPTION.md "$OUT"/SOURCES.txt "$OUT"/sheet.jpg "$D"/ 2>/dev/null || true
+          cp "$OUT"/"مصادر الصور.txt" "$D"/ 2>/dev/null || true
+          cp "$OUT"/deliver/*/*/"الوصف.txt" "$D"/ 2>/dev/null || true
+          cp "$OUT"/deliver/*/*/*.mp4 "$D"/ 2>/dev/null || true
+          ls -lh "$D"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: film-${{ inputs.project }}
+          path: builds/${{ inputs.project }}
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Commit the finished files
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -f "builds/${{ inputs.project }}"
+          git diff --cached --quiet && exit 0
+          git commit -qm "build: ${{ inputs.project }}"
+          git pull --rebase -q origin "${GITHUB_REF_NAME}" || true
+          git push
