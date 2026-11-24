@@ -24,7 +24,7 @@ jobs:
           - {style: 4, json: studio-kit/engines/examples/kinetic.json}
           - {style: 5, json: studio-kit/engines/examples/threed.json}
           - {style: 6, json: studio-kit/engines/examples/paper.json}
-          - {style: 7, json: studio-kit/engines/examples/stick.json}
+          - {style: 7, json: studio-kit/engines/examples/cine.json}
           - {style: 8, json: studio-kit/engines/examples/anime.json}
           - {style: 9, json: studio-kit/engines/examples/cartoon.json}
           - {style: 10, json: studio-kit/series/saw_5tory/examples/001-part1.json}

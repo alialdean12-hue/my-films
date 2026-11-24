@@ -1,0 +1,326 @@
+{
+ "title": "نجا من قنبلتين نوويتين",
+ "music": "suspense",
+ "music_gain": 0.14,
+ "voice": {
+  "name": "ar-SA-HamedNeural",
+  "rate": "+4%"
+ },
+ "sources": [
+  "The Guardian, obituary of Tsutomu Yamaguchi, 6 Jan 2010 — engineer, in Hiroshima on 6 Aug 1945 on a business trip, back in Nagasaki for the 9 Aug bomb, died aged 93",
+  "BBC News, 'Man who survived two atomic bombs dies', 6 Jan 2010 — about 3 km from both blasts, officially recognised as a double survivor in 2009",
+  "The Independent, interview 2009 — burns on the upper body and ruptured eardrums; he was telling his supervisor about Hiroshima when the second bomb fell"
+ ],
+ "cover": {
+  "text": "نجا [y]مرتين[/y]!",
+  "beat": 4
+ },
+ "characters": {
+  "yama": {
+   "head": "none",
+   "hair": "short",
+   "hair_color": "#1a1a1a",
+   "wear": "shirt",
+   "color": "#e8e0c8",
+   "pants_color": "#4a4a3a",
+   "skin": "light",
+   "beard": "none",
+   "hold": {
+    "left": "bag"
+   }
+  },
+  "yama_hurt": {
+   "head": "none",
+   "hair": "short",
+   "hair_color": "#1a1a1a",
+   "wear": "shirt",
+   "color": "#c8bea0",
+   "pants_color": "#4a4a3a",
+   "skin": "light",
+   "beard": "none",
+   "hold": {},
+   "bandage": true
+  },
+  "yama_shadow": {
+   "head": "none",
+   "hair": "short",
+   "hair_color": "#111",
+   "wear": "shirt",
+   "color": "#111",
+   "pants_color": "#111",
+   "skin": "#111",
+   "beard": "none",
+   "hold": {
+    "left": "bag"
+   }
+  },
+  "boss": {
+   "head": "none",
+   "hair": "bald",
+   "wear": "suit",
+   "skin": "light",
+   "beard": "none",
+   "glasses": true,
+   "build": "heavy"
+  },
+  "yama_old": {
+   "age": "old",
+   "head": "none",
+   "hair": "short",
+   "hair_color": "#e8e4dc",
+   "wear": "suit",
+   "color": "#3a3f4a",
+   "skin": "light",
+   "beard": "none",
+   "glasses": true
+  }
+ },
+ "beats": [
+  {
+   "line": "رجلٌ واحد نجا من قنبلتين نوويتين… في ثلاثة أيام فقط!",
+   "cap": "نجا من [y]قنبلتين[/y] نوويتين!",
+   "place": "ruins",
+   "cast": [
+    {
+     "who": "yama",
+     "x": 560,
+     "face": "shock",
+     "scale": 1.05
+    }
+   ],
+   "fx": [
+    {
+     "kind": "mushroom",
+     "x": 250,
+     "y": 1240,
+     "scale": 0.9
+    },
+    {
+     "kind": "mushroom",
+     "x": 860,
+     "y": 1240,
+     "scale": 0.9,
+     "at": 1.4
+    }
+   ]
+  },
+  {
+   "line": "اسمه تسوتومو ياماغوتشي، مهندسٌ ياباني يصمّم السفن.",
+   "cap": "تسوتومو [y]ياماغوتشي[/y]",
+   "say": "اسمه تسوتومو ياماغوتشي، مهندسٌ يابانيٌّ يصمّم السفن.",
+   "place": "office",
+   "view": "harbor",
+   "cast": [
+    {
+     "who": "yama",
+     "x": 760,
+     "flip": true
+    }
+   ]
+  },
+  {
+   "line": "في صيف 1945، سافر في رحلة عمل إلى مدينة هيروشيما.",
+   "cap": "[y]هيروشيما[/y] · 1945",
+   "place": "city",
+   "cast": [
+    {
+     "who": "yama",
+     "x": 280,
+     "to": 420,
+     "pose": "walk"
+    }
+   ]
+  },
+  {
+   "line": "وصباح السادس من أغسطس، وهو يمشي إلى عمله، رأى طائرةً وحيدة في السماء.",
+   "cap": "6 [y]أغسطس[/y]",
+   "place": "city",
+   "cast": [
+    {
+     "who": "yama",
+     "x": 520,
+     "face": "curious",
+     "scale": 0.95
+    }
+   ],
+   "fx": [
+    {
+     "kind": "plane",
+     "y": 640
+    }
+   ]
+  },
+  {
+   "line": "ثم ومضةٌ أقوى من الشمس… أول قنبلة نووية في التاريخ، على بعد ثلاثة كيلومترات منه.",
+   "cap": "على بعد [r]3 كم[/r]",
+   "place": "city",
+   "cast": [
+    {
+     "who": "yama_shadow",
+     "x": 420,
+     "face": "shock"
+    }
+   ],
+   "fx": [
+    {
+     "kind": "flash",
+     "at": 0.6
+    },
+    {
+     "kind": "mushroom",
+     "x": 760,
+     "y": 1250,
+     "scale": 1.2,
+     "at": 0.6
+    },
+    {
+     "kind": "shake",
+     "at": 0.6
+    }
+   ]
+  },
+  {
+   "line": "احترق نصف جسده، وتمزّقت أذناه… لكنه نجا.",
+   "cap": "بقي [y]حيًّا[/y]",
+   "place": "ruins",
+   "cast": [
+    {
+     "who": "yama_hurt",
+     "x": 520,
+     "pose": "sit",
+     "face": "sad"
+    }
+   ],
+   "fx": [
+    {
+     "kind": "smoke"
+    }
+   ]
+  },
+  {
+   "line": "وبعد يومين، عاد بالقطار إلى بيته… في مدينة ناغازاكي.",
+   "cap": "عائدًا إلى [y]ناغازاكي[/y]",
+   "place": "train",
+   "cast": [
+    {
+     "who": "yama_hurt",
+     "window": 2,
+     "face": "tired"
+    }
+   ]
+  },
+  {
+   "line": "وفي التاسع من أغسطس، حكى لمديره ما رآه، فلم يصدّقه.",
+   "cap": "مديره [r]لم يصدّقه[/r]",
+   "place": "office",
+   "cast": [
+    {
+     "who": "yama_hurt",
+     "x": 300,
+     "face": "curious",
+     "scale": 0.95
+    },
+    {
+     "who": "boss",
+     "x": 800,
+     "face": "angry",
+     "scale": 0.95,
+     "flip": true
+    }
+   ]
+  },
+  {
+   "line": "وفي تلك اللحظة… ومضةٌ ثانية فوق ناغازاكي.",
+   "cap": "القنبلة [r]الثانية[/r]",
+   "place": "office",
+   "cast": [
+    {
+     "who": "yama_hurt",
+     "x": 300,
+     "face": "shock",
+     "scale": 0.95
+    },
+    {
+     "who": "boss",
+     "x": 800,
+     "face": "shock",
+     "scale": 0.95,
+     "flip": true
+    }
+   ],
+   "fx": [
+    {
+     "kind": "mushroom",
+     "x": 770,
+     "y": 980,
+     "scale": 0.45,
+     "at": 0.8
+    },
+    {
+     "kind": "flash",
+     "at": 0.8
+    },
+    {
+     "kind": "shake",
+     "at": 0.8
+    }
+   ]
+  },
+  {
+   "line": "ونجا مرةً أخرى!",
+   "cap": "نجا [y]مرةً أخرى[/y]",
+   "place": "ruins",
+   "time": "sunset",
+   "cast": [
+    {
+     "who": "yama_hurt",
+     "x": 540,
+     "face": "sad"
+    }
+   ],
+   "fx": [
+    {
+     "kind": "smoke",
+     "color": "#5a5050"
+    },
+    {
+     "kind": "rays"
+    }
+   ]
+  },
+  {
+   "line": "عاش حتى الثالثة والتسعين، يدعو إلى عالمٍ بلا سلاحٍ نووي.",
+   "cap": "عاش حتى [y]93[/y]",
+   "place": "garden",
+   "cast": [
+    {
+     "who": "yama_old",
+     "x": 420
+    }
+   ],
+   "fx": [
+    {
+     "kind": "petals"
+    }
+   ]
+  },
+  {
+   "line": "لو كنت مكانه… هل كنت ستعود إلى بيتك؟ اكتب في التعليقات.",
+   "cap": "لو كنت [y]مكانه[/y]؟",
+   "place": "night_garden",
+   "cast": [
+    {
+     "who": "yama_old",
+     "x": 420,
+     "pose": "sit",
+     "face": "sad"
+    }
+   ],
+   "fx": [
+    {
+     "kind": "petals"
+    }
+   ]
+  }
+ ]
+}
