@@ -1,12 +1,6 @@
-QA PROBLEMS (fix the JSON: shorter captions / smaller size / move x):
-  QA could not run: nymous> (/home/runner/work/_temp/out/project/_qa.js:2:20)
-    at Module._compile (node:internal/modules/cjs/loader:1781:14)
-    at Object..js (node:internal/modules/cjs/loader:1913:10) {
-  code: 'MODULE_NOT_FOUND',
-  requireStack: [ '/home/runner/work/_temp/out/project/_qa.js' ]
-}
-
-Node.js v22.23.5
-
-QA FAILED: video not rendered. Fix and run again (or add --force).
-make exit: 1
+/home/runner/work/_temp/out/cover_check.jpg
+QA OK
+LENGTH 74.69 s
+DELIVER /home/runner/work/_temp/out/deliver/رجل العود/البحيرة التي ابتلعت نفسها (upload exactly these files, nothing else)
+DONE /home/runner/work/_temp/out : deliver/ (ready to upload) + video.mp4 video_phone.mp4 video_16x9.mp4 video_1x1.mp4 cover.jpg cover_check.jpg CAPTION.md
+make exit: 0
