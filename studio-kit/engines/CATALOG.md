@@ -20,6 +20,12 @@ Use these names in the JSON keys. Mix freely. Engines: see README.md.
   - `head` (28): `astronaut`, `beret`, `cap`, `chef`, `cowboy`, `crown`, `diver`, `explorer`, `ghutra`, `hard_hat`, `headband`, `hijab`, `knight_helmet`, `kumma`, `massar`, `niqab`, `pharaoh`, `pilot_cap`, `pirate`, `police_cap`, `rice_hat`, `roman_helmet`, `sailor_cap`, `shemagh`, `taqiyah`, `topknot`, `turban`, `viking_helmet` · `head_color` · `agal` (with shemagh/ghutra)
   - `wear` (32): `thobe`, `dishdasha`, `jalabiya`, `abaya`, `kimono`, `sari`, `toga`, `egypt`, `dress`, `hanfu`, `royal`, `suit`, `shirt`, `lab`, `military`, `police`, `work`, `jeans`, `dashiki`, `cowboy`, `knight`, `viking`, `roman`, `samurai`, `pirate`, `astronaut`, `diver`, `chef`, `pilot`, `sailor`, `explorer`, `coat` · `color`, `pants_color`
   - `outer`: `bisht`, `cape` · `outer_color` · `khanjar` · `hold` {"right"/"left": `cane`, `coin`, `book`, `phone`, `beads`, `bag`, `lantern`}
+- **War & big events** (`war.py`):
+  - **place** also: `map`, `battlefield`, `trenches`, `palace`, `war_room`, `arab_city` · beat `"date": "2 أغسطس 1990"` = red stamp
+  - **map** (with `"place": "map"`): `region` `gulf`, `middle_east`, `arab_world`, `levant`, `europe`, `world`, `asia`, `egypt` or `[lon1, lat1, lon2, lat2]` · `color` {ISO: colour} · `labels` [ISO…] (Arabic names) · `flags` [ISO…] · `arrows` [{from, to (ISO or [lon, lat]), at, color, bend}] · `take` [{iso, color, at}] (country changes colour) · `pins` [{lon, lat, label, at}] · `hide_labels`. Real borders of every country (ISO-3 codes: IRQ KWT IRN SAU SYR JOR EGY ARE QAT BHR OMN YEM LBN PSX ISR TUR USA RUS GBR FRA DEU CHN JPN AFG …).
+  - **fx** also: `army` {`units`: soldiers/tanks/jets/ships, `n`, `from`, `to`, `y`, `dir` 1/-1, `flag`: ISO, `color`, `scale`, `front`} · `explosion` {x, y, at, scale} · `flag` {code, x} (waving flag on a pole)
+  - **flags** drawn: IRQ KWT IRN SAU EGY SYR JOR ARE QAT LBN PSX YEM OMN BHR LBY TUR USA RUS GBR FRA DEU JPN ISR CHN AFG
+  - character `beard: "mustache"` · leaders: one character entry per person (e.g. a general in `military` + `beret`, an emir in `thobe` + `ghutra` + `bisht`)
 - Design rule: robes (thobe, abaya…) are drawn per pose so they fall with the body; no joints are visible. Make one character entry per look (e.g. `ali` and `ali_hurt` with `bandage`).
 
 ## Shared options (every engine)
