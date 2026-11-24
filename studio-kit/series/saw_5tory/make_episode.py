@@ -466,7 +466,7 @@ def main():
     args = parser.parse_args()
     ep = json.load(open(args.episode)); OUT = os.path.abspath(args.outdir)
     P = os.path.join(OUT, "project"); os.makedirs(P, exist_ok=True)
-    tpl = os.path.join(KIT, "styles", "kinetic")
+    tpl = os.path.join(KIT, "assets")
     shutil.copy(os.path.join(tpl, "gsap.min.js"), P); shutil.copytree(os.path.join(tpl, "fonts"), os.path.join(P, "fonts"), dirs_exist_ok=True)
     if args.layout_proof:
         print('Layout proof ONLY: approximate timings, no speech or final video.')

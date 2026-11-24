@@ -1,14 +1,10 @@
 # studio-kit
-- `ملف صناعة الفيديوهات.md` : الصقه في تعليمات الـ Agent (9 أساليب).
-- `engines/` : محرّكات جاهزة للأساليب 1 و3 و4 و5 و6 و7 و9 (ملف JSON → فيديو). اقرأ `engines/README.md`.
-- `styles/<style>/` : قوالب جاهزة تعمل كما هي (انسخها ثم عدّل النص والتوقيت).
-- `scripts/` : tts_edge.py (صوت) · sfx_lib.py (مؤثرات) · mix.py (دمج) · pixabay.py (لقطات) · render.sh (إخراج).
-- `anime/` : مولّد الأنمي ومؤثراته.
-ضع المجلد في `~/my-films/studio-kit/`. يحتاج: node 22+، ffmpeg، pip install edge-tts numpy.
-قالب vox-real يحتاج لقطة (assets/v1c.mp4) وصورة (img/p1.jpg): ولّدهما بـ pixabay.py.
+- `ملف صناعة الفيديوهات.md` (في جذر المستودع): تعليمات الـ Agent (4 أساليب).
+- `make.py`: أمر واحد لكل الأساليب: 1 وثائقي · 2 Vox كولاج · 3 رجل العود السينمائي · 4 ألغاز saw.
+- `engines/`: محرّكا الأسلوبين 1 و3، ومُركِّب الشخصيات `characters.py`. اقرأ `engines/README.md` و`engines/CATALOG.md`.
+- `collage/`: محرّك الأسلوب 2. · `series/saw_5tory/`: الأسلوب 4.
+- `topics/`: مجالات الحساب الثابتة (`ACCOUNT.md`) والقنوات والحسابات المرجعية (`channels.json`، `social.md`).
+- `scripts/`: الصوت (`voice.py`، `tts_edge.py`)، الصور (`images.py`)، الموسيقى والمؤثرات والدمج، `trends.py` (مشاهدات حقيقية)، `remote.py` (الجلب عن طريق GitHub)، `doctor.sh`.
+- `assets/`: الخطوط ومكتبة الحركة المشتركة.
 
-## اختبار البحث في Pixabay
-
-- احفظ المفتاح في **Repository secrets** باسم `PIXABAY_KEY`. لا تلصقه في ملف البحث أو وصف المهمة.
-- مهمة **Remote fetch** على GitHub تجلب الصور (ويكيميديا وPixabay) والصوت (edge-tts) تلقائيًا حين تحجبها بيئة الـ Agent: المحركات تطلبها بنفسها وتنتظر 1-3 دقائق. الملفات: `scripts/remote.py` و`scripts/voice.py` و`.github/workflows/remote.yml`.
-- في ملخّص التشغيل تجد روابط صفحات Pixabay، لا المفتاح ولا روابط الملفات المؤقتة. الاختبار يقرأ بداية معاينة واحدة من كل نوع ولا ينشر ملفات الوسائط في المستودع. النتائج تُعاد من الذاكرة المؤقتة لمدة 24 ساعة، ويُذكر صراحةً إن لم يُختبر المفتاح مجددًا.
+مهمة **Remote fetch** على GitHub تجلب الصور والصوت ومشاهدات يوتيوب تلقائيًا حين تحجبها بيئة الـ Agent. مفتاح Pixabay محفوظ في **Repository secrets** باسم `PIXABAY_KEY`، ولا يُكتب في أي ملف.

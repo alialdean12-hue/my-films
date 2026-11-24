@@ -1,4 +1,4 @@
-"""Style 7 · cinematic stick story (رجل العود السينمائي). Characters are built from a description (characters.py),
+"""Style 3 · cinematic stick story (رجل العود السينمائي). Characters are built from a description (characters.py),
 placed in illustrated places with effects, camera moves and big captions. JSON -> video.
   python3 cine.py story.json OUTDIR [--preview]
 Story json:
@@ -8,7 +8,7 @@ Story json:
                        "flip": false, "scale": 1, "to": 600, "pose2": .., "face2": .., "at": 1.5, "window": 2}],
              "fx": [{"kind": "mushroom|flash|shake|plane|smoke|petals|rain|rays|glint|birds|stars", "x":.., "y":.., "at":.., "scale":..}],
              "cam": "push|zoom|pan|still", "view": "harbor|hills|desert" (office/room window)}]
-See README.md (style 7) and CATALOG.md for every name."""
+See README.md (style 3) and CATALOG.md for every name."""
 import math, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import characters as C
