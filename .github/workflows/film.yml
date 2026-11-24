@@ -30,12 +30,11 @@ jobs:
           python3 -m pip install --quiet edge-tts numpy pillow
           npm i -g playwright >/dev/null && npx playwright install --with-deps chromium >/dev/null
           npx --yes hyperframes --version
+          echo "NODE_PATH=$(npm root -g)" >> "$GITHUB_ENV"
       - name: Make the film
         env:
-          NODE_PATH: /usr/local/lib/node_modules
           PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
         run: |
-          echo "NODE_PATH=$NODE_PATH npm-root=$(npm root -g)" >> /dev/stderr
           OUT="$RUNNER_TEMP/out"
           D="builds/${{ inputs.project }}"; mkdir -p "$D"
           set +e
