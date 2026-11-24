@@ -36,8 +36,11 @@ jobs:
           PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
         run: |
           OUT="$RUNNER_TEMP/out"
-          python3 studio-kit/make.py "${{ inputs.style }}" "projects/${{ inputs.project }}/video.json" "$OUT"
           D="builds/${{ inputs.project }}"; mkdir -p "$D"
+          set +e
+          python3 studio-kit/make.py "${{ inputs.style }}" "projects/${{ inputs.project }}/video.json" "$OUT" 2>&1 | tee "$D/build-log.txt"
+          echo "make exit: ${PIPESTATUS[0]}" >> "$D/build-log.txt"
+          set -e
           cp "$OUT"/video_phone.mp4 "$OUT"/cover.jpg "$OUT"/cover_check.jpg "$OUT"/CAPTION.md "$OUT"/SOURCES.txt "$OUT"/sheet.jpg "$D"/ 2>/dev/null || true
           cp "$OUT"/"مصادر الصور.txt" "$D"/ 2>/dev/null || true
           cp "$OUT"/deliver/*/*/"الوصف.txt" "$D"/ 2>/dev/null || true
@@ -55,6 +58,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          mkdir -p "builds/${{ inputs.project }}"
           git add -f "builds/${{ inputs.project }}"
           git diff --cached --quiet && exit 0
           git commit -qm "build: ${{ inputs.project }}"
