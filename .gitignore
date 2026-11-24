@@ -24,3 +24,5 @@ projects/*/voice/
 projects/*/assets/
 */build/
 voice_cache/
+trends_cache/
+TRENDS.md

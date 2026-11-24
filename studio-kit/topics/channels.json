@@ -1,0 +1,9 @@
+{
+ "about": "Reference channels whose latest videos and view counts guide topic choice. Add Arabic channels that get high views in a niche (find their channel id: the UC... in the channel page source). mine = the user's own channel.",
+ "channels": [
+  {"name": "saw_story (قناتك)", "id": "UCEvAWURmaBXlXamNUlZ2Q5g", "niche": "mine"},
+  {"name": "المؤرخ الصغير", "id": "UClGgUJCR3ged_BSjDk8c1Iw", "niche": "أحداث عربية حديثة وسياسة وتاريخ"},
+  {"name": "Bendia", "id": "UCvRXYkB-LLJvYv4rX2Ssmww", "niche": "شرح كل… علم النفس والإنسان والتاريخ"},
+  {"name": "ومضة", "id": "UCwnXMfLiyVE7QDHJ705QK2w", "niche": "شخصيات تاريخية إسلامية وصحة"}
+ ]
+}

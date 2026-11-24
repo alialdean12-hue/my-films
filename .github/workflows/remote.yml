@@ -3,7 +3,7 @@ name: Remote fetch
 # studio-kit/scripts/remote.py pushes remote_requests/<kind>-*.json; results go to branch <kind>-cache.
 on:
   push:
-    branches-ignore: ['media-cache', 'voice-cache']
+    branches-ignore: ['media-cache', 'voice-cache', 'trends-cache']
     paths: ['remote_requests/**']
   workflow_dispatch:
 permissions:
@@ -30,7 +30,7 @@ jobs:
           MEDIA_CACHE: /nonexistent
         run: |
           git config --global user.name "media-bot"; git config --global user.email "media-bot@users.noreply.github.com"
-          for kind in media voice; do
+          for kind in media voice trends; do
             ls remote_requests/$kind-*.json >/dev/null 2>&1 || continue
             if git ls-remote --exit-code origin $kind-cache >/dev/null; then
               git fetch -q --depth 1 origin $kind-cache && git worktree add -q cache-$kind FETCH_HEAD
@@ -46,7 +46,10 @@ jobs:
                   if os.path.exists(os.path.join(d, "done")): continue
                   os.makedirs(d, exist_ok=True)
                   try:
-                      if kind == "media":
+                      if kind == "trends":
+                          import trends as T
+                          json.dump(T.parse(T.feed(it["cid"])), open(os.path.join(d, "feed.json"), "w"), ensure_ascii=False)
+                      elif kind == "media":
                           import images as IM
                           res = IM.fetch_mixed(it["q"], d, photos=it.get("photos", "auto"))
                           for r in res: r["file"] = os.path.basename(r["file"]); r["thumb"] = os.path.basename(r.get("thumb") or r["file"])
