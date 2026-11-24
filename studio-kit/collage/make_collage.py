@@ -386,7 +386,7 @@ html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflo
 def main():
     path = os.path.abspath(sys.argv[1]); ep = json.load(open(path)); ep["_dir"] = os.path.dirname(path)
     OUT = os.path.abspath(sys.argv[2]); P = os.path.join(OUT, "project"); os.makedirs(P, exist_ok=True)
-    tpl = os.path.join(KIT, "styles", "kinetic"); shutil.copy(os.path.join(tpl, "gsap.min.js"), P); shutil.copytree(os.path.join(tpl, "fonts"), os.path.join(P, "fonts"), dirs_exist_ok=True)
+    tpl = os.path.join(KIT, "assets"); shutil.copy(os.path.join(tpl, "gsap.min.js"), P); shutil.copytree(os.path.join(tpl, "fonts"), os.path.join(P, "fonts"), dirs_exist_ok=True)
     check_repeats(ep)
     print("1/5 cut-outs..."); A = prepare_assets(ep, P)
     print("2/5 voice..."); durs = voice(ep, P); sch, D = schedule(ep, durs)

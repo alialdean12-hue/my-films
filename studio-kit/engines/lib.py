@@ -38,7 +38,7 @@ def run(name, beats, scene, css="", bg="#111", voice="ar-SA-HamedNeural", rate="
     OUT = os.path.abspath(sys.argv[2]); P = OUT + "/project"
     ep = load(); voice = ep.get("voice", {}).get("name", voice); rate = ep.get("voice", {}).get("rate", rate); D = float(ep.get("duration", D))
     os.makedirs(P + "/voice", exist_ok=True)
-    shutil.copy(KIT + "/styles/kinetic/gsap.min.js", P); shutil.copytree(KIT + "/styles/kinetic/fonts", P + "/fonts", dirs_exist_ok=True)
+    shutil.copy(KIT + "/assets/gsap.min.js", P); shutil.copytree(KIT + "/assets/fonts", P + "/fonts", dirs_exist_ok=True)
     json.dump([{"id": f"b{i}", "text": b.get("say", b["line"])} for i, b in enumerate(beats)], open(P + "/lines.json", "w"), ensure_ascii=False)
     vf = ep.get("voice_files")   # folder with b0.wav/mp3... made by another TTS (last resort)
     if vf and not os.path.isabs(vf): vf = os.path.join(ep["_dir"], vf)
@@ -111,7 +111,7 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     elif bed == "beat":
         t = .5
         while t < D - .5: it.append({"file": "sfx/hit.wav", "at": round(t, 2), "gain": .14}); t += .5
-    MOOD = {"doc": "mystery", "voxflat": "inspire", "kinetic": "tech", "threed": "epic", "paper": "calm", "stick": "happy", "cine": "suspense", "cartoon": "kids", "anime": "sad"}
+    MOOD = {"doc": "mystery", "cine": "suspense"}
     mood = ep.get("music", MOOD.get(name, "calm"))
     if mood and mood != "none":
         import music

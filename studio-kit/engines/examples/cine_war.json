@@ -1,0 +1,194 @@
+{
+ "title": "سقوط الكويت في ساعات",
+ "music": "suspense",
+ "sources": [
+  "Britannica — Persian Gulf War: Iraq invaded Kuwait on 2 August 1990",
+  "UN Security Council Resolution 660 (2 Aug 1990)"
+ ],
+ "characters": {
+  "saddam": {
+   "head": "beret",
+   "head_color": "#2a3a2a",
+   "wear": "military",
+   "beard": "mustache",
+   "skin": "tan",
+   "build": "heavy",
+   "beard_color": "#1a1a1a"
+  },
+  "emir": {
+   "age": "old",
+   "head": "ghutra",
+   "wear": "thobe",
+   "outer": "bisht",
+   "beard": "short",
+   "beard_color": "#e8e4dc",
+   "skin": "tan"
+  },
+  "officer": {
+   "head": "beret",
+   "wear": "military",
+   "skin": "tan",
+   "beard": "stubble"
+  },
+  "citizen": {
+   "head": "ghutra",
+   "wear": "thobe",
+   "skin": "tan",
+   "beard": "short"
+  }
+ },
+ "beats": [
+  {
+   "line": "في فجر الثاني من أغسطس عام 1990، استيقظ الكويتيون على صوت الدبابات.",
+   "cap": "فجر [r]الغزو[/r]",
+   "date": "2 أغسطس 1990",
+   "place": "map",
+   "map": {
+    "region": "gulf",
+    "color": {
+     "IRQ": "#c8a878",
+     "KWT": "#8ac08a"
+    },
+    "labels": [
+     "IRQ",
+     "KWT",
+     "SAU",
+     "IRN"
+    ],
+    "flags": [
+     "IRQ",
+     "KWT"
+    ],
+    "arrows": [
+     {
+      "from": "IRQ",
+      "to": "KWT",
+      "at": 0.8
+     }
+    ],
+    "take": [
+     {
+      "iso": "KWT",
+      "color": "#c62a30",
+      "at": 2.2
+     }
+    ]
+   }
+  },
+  {
+   "line": "مئة ألف جندي عراقي عبروا الحدود في وقت واحد.",
+   "cap": "[r]100 ألف[/r] جندي",
+   "place": "battlefield",
+   "fx": [
+    {
+     "kind": "army",
+     "units": "tanks",
+     "flag": "IRQ",
+     "from": -500,
+     "to": 700,
+     "y": 1600
+    },
+    {
+     "kind": "army",
+     "units": "soldiers",
+     "n": 9,
+     "from": -300,
+     "to": 900,
+     "y": 1720,
+     "front": true
+    },
+    {
+     "kind": "explosion",
+     "x": 860,
+     "y": 1300,
+     "at": 1.4
+    }
+   ]
+  },
+  {
+   "line": "وفي بغداد، كان صدام حسين يتابع الخطة من غرفة العمليات.",
+   "cap": "غرفة [y]العمليات[/y]",
+   "place": "war_room",
+   "cast": [
+    {
+     "who": "saddam",
+     "x": 330,
+     "face": "angry"
+    },
+    {
+     "who": "officer",
+     "x": 760,
+     "face": "calm",
+     "flip": true
+    }
+   ]
+  },
+  {
+   "line": "أما أمير الكويت فغادر القصر قبل وصول القوات بدقائق.",
+   "cap": "خرج قبل [y]دقائق[/y]",
+   "place": "palace",
+   "cast": [
+    {
+     "who": "emir",
+     "x": 300,
+     "to": 700,
+     "pose": "walk",
+     "face": "sad"
+    }
+   ]
+  },
+  {
+   "line": "وفي الشوارع، رأى الناس الطائرات فوق رؤوسهم.",
+   "cap": "[r]الطائرات[/r] فوق المدينة",
+   "place": "arab_city",
+   "cast": [
+    {
+     "who": "citizen",
+     "x": 540,
+     "face": "shock"
+    }
+   ],
+   "fx": [
+    {
+     "kind": "army",
+     "units": "jets",
+     "dir": -1,
+     "from": 1500,
+     "to": -700,
+     "y": 520
+    },
+    {
+     "kind": "flag",
+     "code": "KWT",
+     "x": 150
+    }
+   ]
+  },
+  {
+   "line": "وخلال ساعات فقط، سقطت الكويت بالكامل.",
+   "cap": "سقطت في [r]ساعات[/r]",
+   "place": "map",
+   "map": {
+    "region": "gulf",
+    "color": {
+     "KWT": "#c62a30",
+     "IRQ": "#c62a30"
+    },
+    "labels": [
+     "IRQ"
+    ],
+    "pins": [
+     {
+      "lon": 47.98,
+      "lat": 29.37,
+      "label": "مدينة الكويت",
+      "at": 0.6
+     }
+    ],
+    "hide_labels": [
+     "KWT"
+    ]
+   }
+  }
+ ]
+}

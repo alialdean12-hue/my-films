@@ -1,4 +1,4 @@
-"""Style 7 · cinematic stick story (رجل العود السينمائي). Characters are built from a description (characters.py),
+"""Style 3 · cinematic stick story (رجل العود السينمائي). Characters are built from a description (characters.py),
 placed in illustrated places with effects, camera moves and big captions. JSON -> video.
   python3 cine.py story.json OUTDIR [--preview]
 Story json:
@@ -8,15 +8,16 @@ Story json:
                        "flip": false, "scale": 1, "to": 600, "pose2": .., "face2": .., "at": 1.5, "window": 2}],
              "fx": [{"kind": "mushroom|flash|shake|plane|smoke|petals|rain|rays|glint|birds|stars", "x":.., "y":.., "at":.., "scale":..}],
              "cam": "push|zoom|pan|still", "view": "harbor|hills|desert" (office/room window)}]
-See README.md (style 7) and CATALOG.md for every name."""
+See README.md (style 3) and CATALOG.md for every name."""
 import math, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 import characters as C
+import war as W
 from lib import run, load, mk, R
 ep = load(); B = ep["beats"]; CAST = ep.get("characters", {})
 K = C.K; G = 1600
-PLACES = ["city", "ruins", "office", "room", "train", "garden", "night_garden", "desert", "desert_night", "sea", "street_night", "plain"]
-FX = ["mushroom", "flash", "shake", "plane", "smoke", "petals", "rain", "rays", "glint", "birds", "stars"]
+PLACES = W.PLACES + ["city", "ruins", "office", "room", "train", "garden", "night_garden", "desert", "desert_night", "sea", "street_night", "plain"]
+FX = ["army", "explosion", "flag", "mushroom", "flash", "shake", "plane", "smoke", "petals", "rain", "rays", "glint", "birds", "stars"]
 
 # ------------------------------------------------------------------ drawing helpers
 SKY = {"day": ("#8ac0e8", "#f6e6c8"), "sunset": ("#5a3a6a", "#f0a060"), "night": ("#070b1f", "#3b3f6e"), "dark": ("#3a1e1a", "#c86a3a")}
@@ -80,8 +81,11 @@ def sea(i, time):
             + f'<g id="wv{i}">' + "".join(f'<path d="M{-300+k*180},{1320+r*120} q45,-24 90,0 t90,0" stroke="#9ac8e8" stroke-width="5" fill="none" opacity=".6"/>' for r in range(7) for k in range(11)) + '</g>'
             + f'<g transform="translate(760 1270)"><path d="M-160,0 L160,0 L120,60 L-120,60Z" fill="#6b4a2e" stroke="{K}" stroke-width="6"/><path d="M0,0 V-260" stroke="{K}" stroke-width="8"/><path d="M0,-250 Q120,-150 0,-30Z" fill="#f6f0dc" stroke="{K}" stroke-width="5"/></g>')
 
-def place(i, b):
+def place(i, b, s=0, J=None):
     p = b.get("place", "plain"); t = b.get("time", "day")
+    if p == "map" or "map" in b: return W.map_svg(i, b.get("map", {}), s, J)
+    wp = W.place(i, p, t, sky, ground, R)
+    if wp: return wp
     if p == "city": return sky(i, t) + sun_moon(t) + (stars(i) if t == "night" else "") + town(i)
     if p == "ruins": return sky(i, "dark" if t == "day" else t) + town(i, ruined=True)
     if p == "office": return interior(i, b.get("view", "hills"))
@@ -108,10 +112,17 @@ def plane_svg(i, k, x, y, sc):
 # ------------------------------------------------------------------ scene
 def scene(i, b, s, e, c0, c1):
     js = []; J = js.append; dur = c1 - c0
-    back, front = [place(i, b)], []
+    back, front = [place(i, b, s, J)], []
     for k, f in enumerate(b.get("fx", [])):
         kind = f.get("kind"); at = s + f.get("at", 0)
         if kind not in FX: print(f"WARNING beat {i+1}: unknown fx {kind} (use {FX})")
+        if kind == "army":
+            (front if f.get("front") else back).append(W.force(i, k, f, s, f.get("dur", e - s), J)); continue
+        if kind == "explosion":
+            front.append(W.explosion(i, k, f.get("x", 540), f.get("y", 1300), f.get("scale", 1.0), at, J)); continue
+        if kind == "flag":
+            back.append(W.flag_pole(f.get("code", "IRQ"), f.get("x", 200), f.get("y", G - 60), i, k, f.get("w", 150)))
+            J(f'tl.fromTo("#fg{i}_{k}",{{skewY:0}},{{skewY:5,duration:.6,yoyo:true,repeat:{int(dur/.6)},ease:"sine.inOut"}},{c0:.2f});'); continue
         if kind == "mushroom":
             x, y, sc = f.get("x", 760), f.get("y", 1250), f.get("scale", 1.0)
             back.append(mushroom(i, k, x, y, sc))
@@ -186,12 +197,16 @@ def scene(i, b, s, e, c0, c1):
         J(f'tl.fromTo("#V{i}",{{attr:{{transform:"translate(0 0) scale(1)"}}}},{{attr:{{transform:"translate({540 - 1.6*fx:.0f} {960 - 1.6*fy:.0f}) scale(1.6)"}},duration:{min(1.2, dur):.2f},ease:"power2.inOut"}},{s+.3:.2f});')
     elif cam == "pan": J(f'tl.fromTo("#V{i}",{{attr:{{transform:"translate(60 0) scale(1.1)"}}}},{{attr:{{transform:"translate(-160 0) scale(1.1)"}},duration:{dur:.2f},ease:"none"}},{c0:.2f});')
     cap = f'<div class="cap" id="cp{i}">{mk(b.get("cap", ""))}</div>' if b.get("cap") else ""
+    if b.get("date"):
+        cap += f'<div class="date" id="dt{i}">{b["date"]}</div>'
+        J(f'tl.fromTo("#dt{i}",{{scale:2.2,opacity:0,rotation:-14}},{{scale:1,opacity:1,rotation:-6,duration:.35,ease:"power3.in"}},{s+.4:.2f});')
     if cap: J(f'tl.fromTo("#cp{i}",{{y:40,opacity:0}},{{y:0,opacity:1,duration:.35,ease:"back.out(2)"}},{s+.15:.2f});')
     html = (f'<svg class="full" viewBox="0 0 1080 1920" width="1080" height="1920"><g id="W{i}"><g id="V{i}">{"".join(back)}{"".join(people)}{"".join(front)}</g></g>'
             f'<rect width="1080" height="1920" fill="url(#vigC)"/></svg>{cap}')
     return html, js
 
-CSS = (".cap{position:absolute;left:70px;right:70px;top:240px;text-align:center;font-weight:900;font-size:92px;line-height:1.25;color:#fff;"
+CSS = (".date{position:absolute;left:70px;top:470px;padding:6px 26px;border:8px solid #d0202a;color:#d0202a;background:rgba(255,248,230,.92);font-weight:900;font-size:56px;transform-origin:50% 50%}"
+       ".cap{position:absolute;left:70px;right:70px;top:240px;text-align:center;font-weight:900;font-size:92px;line-height:1.25;color:#fff;"
        "paint-order:stroke fill;-webkit-text-stroke:14px #111;text-shadow:0 8px 0 rgba(0,0,0,.35)}")
 OVER = (f'<svg width="0" height="0" style="position:absolute"><defs>{C.DEFS}<radialGradient id="vigC" cx="50%" cy="50%" r="72%"><stop offset=".55" stop-color="#000" stop-opacity="0"/>'
         f'<stop offset="1" stop-color="#000" stop-opacity=".7"/></radialGradient></defs></svg>')

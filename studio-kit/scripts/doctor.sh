@@ -13,7 +13,7 @@ done
 python3 -c "import rembg" 2>/dev/null && ok "python: rembg (style 2 cut-outs)" || { pip install -q "rembg[cpu]" 2>/dev/null || pip install -q --break-system-packages "rembg[cpu]" 2>/dev/null; python3 -c "import rembg" 2>/dev/null && fixed "python: rembg" || echo "WARN    rembg not installed: only style 2 (cut-out stickers) needs it -> pip install 'rembg[cpu]'"; }
 npx --yes hyperframes --version >/dev/null 2>&1 && ok "hyperframes" || miss hyperframes "npm i -g hyperframes (needs network)"
 node -e "require('playwright')" 2>/dev/null && ok "playwright (quality check)" || { npm i -g playwright >/dev/null 2>&1; node -e "require('playwright')" 2>/dev/null && fixed playwright || echo "WARN    playwright missing: quality check is skipped -> npm i -g playwright && npx playwright install chromium"; }
-[ -f "$KIT/styles/kinetic/fonts/cairo-ar.woff2" ] && ok "Cairo font" || miss "Cairo font" "git pull the repository again"
+[ -f "$KIT/assets/fonts/cairo-ar.woff2" ] && ok "Cairo font" || miss "Cairo font" "git pull the repository again"
 T=$(mktemp -d); echo '[{"id":"t","text":"مرحبا"}]' > $T/l.json
 python3 "$KIT/scripts/tts_edge.py" $T/l.json $T >/dev/null 2>&1 && [ -s $T/t.wav ] && ok "edge-tts voice works" || echo "OK      edge-tts blocked here: the engines will make the voice through GitHub automatically (needs git push)"; rm -rf $T
 [ -n "$PIXABAY_KEY" ] && ok "PIXABAY_KEY set here" || echo "OK      PIXABAY_KEY not set here: Pixabay photos come through GitHub when needed"

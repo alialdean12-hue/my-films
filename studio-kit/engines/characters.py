@@ -72,14 +72,15 @@ def face(kind, spec):
          "angry": (E, "M-14,-30 L20,-14 M48,-14 L84,-30", f'<path d="M20,62 L54,58" stroke="{K}" stroke-width="7" fill="none" stroke-linecap="round"/>')}[kind]
     eyes, brows, mouth = m
     bc = spec.get("beard_color", "#e8e4dc" if old else "#2a1d18")
-    bw = {"none": 0, "stubble": 1, "short": 2, "full": 3, "long": 4, "goatee": 5}[spec.get("beard", "none" if f or child else "short")]
+    bw = {"none": 0, "stubble": 1, "short": 2, "full": 3, "long": 4, "goatee": 5, "mustache": 6}[spec.get("beard", "none" if f or child else "short")]
     beard = ""
     if bw == 1: beard = f'<path d="M0,64 Q38,98 84,62 Q80,92 42,100 Q8,96 0,64Z" fill="{bc}" opacity=".35"/>'
     if bw in (2, 3, 4):
         low = {2: 114, 3: 132, 4: 176}[bw]
         beard = f'<path d="M-4,60 Q38,96 86,58 Q84,{low-20} 42,{low} Q4,{low-20} -4,60Z" fill="{bc}" stroke="{K}" stroke-width="4"/>'
     if bw == 5: beard = f'<path d="M24,74 Q38,84 54,74 Q52,104 38,110 Q26,104 24,74Z" fill="{bc}" stroke="{K}" stroke-width="4"/>'
-    must = f'<path d="M18,56 Q38,48 64,56" stroke="{bc}" stroke-width="9" fill="none" stroke-linecap="round"/>' if bw >= 2 else ""
+    must = (f'<path d="M14,58 Q38,44 68,58 Q60,68 38,62 Q20,68 14,58Z" fill="{bc}" stroke="{K}" stroke-width="3"/>' if bw == 6 else
+            f'<path d="M18,56 Q38,48 64,56" stroke="{bc}" stroke-width="9" fill="none" stroke-linecap="round"/>' if bw >= 2 else "")
     wr = (f'<path d="M-30,-58 Q4,-66 40,-58 M-24,-44 Q4,-50 34,-44" stroke="{K}" stroke-width="3" fill="none" opacity=".5"/>'
           f'<path d="M-6,28 Q-14,40 -8,52 M86,28 Q94,40 88,52" stroke="{K}" stroke-width="3" fill="none" opacity=".5"/>') if old else ""
     gl = (f'<g fill="none" stroke="{K}" stroke-width="5"><circle cx="4" cy="4" r="24"/><circle cx="66" cy="4" r="24"/><path d="M28,2 Q35,-4 42,2 M-20,0 L-60,-8"/></g>') if spec.get("glasses") else ""

@@ -20,14 +20,9 @@ jobs:
         include:
           - {style: 1, json: studio-kit/engines/examples/doc.json}
           - {style: 2, json: studio-kit/collage/examples/gold.json}
-          - {style: 3, json: studio-kit/engines/examples/voxflat.json}
-          - {style: 4, json: studio-kit/engines/examples/kinetic.json}
-          - {style: 5, json: studio-kit/engines/examples/threed.json}
-          - {style: 6, json: studio-kit/engines/examples/paper.json}
-          - {style: 7, json: studio-kit/engines/examples/cine.json}
-          - {style: 8, json: studio-kit/engines/examples/anime.json}
-          - {style: 9, json: studio-kit/engines/examples/cartoon.json}
-          - {style: 10, json: studio-kit/series/saw_5tory/examples/001-part1.json}
+          - {style: 3, json: studio-kit/engines/examples/cine.json}
+          - {style: 3, json: studio-kit/engines/examples/cine_war.json}
+          - {style: 4, json: studio-kit/series/saw_5tory/examples/001-part1.json}
     name: style ${{ matrix.style }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
