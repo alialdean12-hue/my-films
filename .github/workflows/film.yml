@@ -35,6 +35,7 @@ jobs:
           NODE_PATH: /usr/local/lib/node_modules
           PIXABAY_KEY: ${{ secrets.PIXABAY_KEY }}
         run: |
+          echo "NODE_PATH=$NODE_PATH npm-root=$(npm root -g)" >> /dev/stderr
           OUT="$RUNNER_TEMP/out"
           D="builds/${{ inputs.project }}"; mkdir -p "$D"
           set +e
