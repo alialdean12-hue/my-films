@@ -1,0 +1,219 @@
+{
+ "title": "كنز تحت الرمل",
+ "music": "mystery",
+ "no_facts": true,
+ "cover": {
+  "text": "[y]كنز[/y] تحت الرمل",
+  "beat": 3
+ },
+ "characters": {
+  "rashid": {
+   "head": "shemagh",
+   "wear": "thobe",
+   "outer": "bisht",
+   "beard": "full",
+   "skin": "tan",
+   "hold": {
+    "left": "lantern"
+   }
+  },
+  "rashid2": {
+   "head": "shemagh",
+   "wear": "thobe",
+   "outer": "bisht",
+   "beard": "full",
+   "skin": "tan",
+   "hold": {
+    "right": "coin"
+   }
+  },
+  "wife": {
+   "sex": "f",
+   "head": "hijab",
+   "wear": "abaya",
+   "skin": "light"
+  },
+  "boy": {
+   "age": "child",
+   "head": "taqiyah",
+   "wear": "thobe",
+   "skin": "tan"
+  },
+  "elder": {
+   "age": "old",
+   "head": "ghutra",
+   "wear": "thobe",
+   "outer": "bisht",
+   "beard": "long",
+   "skin": "tan",
+   "hold": {
+    "right": "cane"
+   }
+  }
+ },
+ "beats": [
+  {
+   "line": "في ليلةٍ مقمرة، كان راشد يعود إلى خيمته عبر الصحراء، وفانوسه يضيء طريقه.",
+   "cap": "ليلة [y]مقمرة[/y]",
+   "place": "desert_night",
+   "cast": [
+    {
+     "who": "rashid",
+     "x": 220,
+     "to": 460,
+     "pose": "walk",
+     "face": "tired"
+    }
+   ]
+  },
+  {
+   "line": "وفجأة… لمح بريقًا غريبًا يخرج من بين حبات الرمل.",
+   "cap": "[y]بريق[/y] في الرمل",
+   "place": "desert_night",
+   "cast": [
+    {
+     "who": "rashid",
+     "x": 420,
+     "face": "curious"
+    }
+   ],
+   "fx": [
+    {
+     "kind": "glint",
+     "x": 760,
+     "at": 0.8
+    }
+   ],
+   "cam": "zoom",
+   "focus": [
+    560,
+    1420
+   ]
+  },
+  {
+   "line": "ركع وأخذ يحفر بيديه، والريح تذرّ الرمل حوله.",
+   "cap": "أخذ [y]يحفر[/y]",
+   "place": "desert_night",
+   "cast": [
+    {
+     "who": "rashid",
+     "x": 520,
+     "pose": "kneel",
+     "face": "curious"
+    }
+   ]
+  },
+  {
+   "line": "ثم خرجت من الرمل قطعةٌ ذهبيةٌ لامعة، عليها نقوشٌ لم يرَ مثلها من قبل.",
+   "cap": "قطعة [y]ذهبية[/y]!",
+   "place": "desert_night",
+   "cast": [
+    {
+     "who": "rashid2",
+     "x": 520,
+     "pose": "kneel",
+     "face": "shock",
+     "face2": "joy",
+     "at": 1.6
+    }
+   ],
+   "fx": [
+    {
+     "kind": "glint",
+     "x": 600,
+     "y": 1080,
+     "at": 0.4
+    },
+    {
+     "kind": "shake",
+     "at": 0.3
+    }
+   ]
+  },
+  {
+   "line": "ركض إلى خيمته، وأيقظ زوجته وابنه ليريهما ما وجد.",
+   "cap": "أيقظ [y]أهله[/y]",
+   "place": "room",
+   "view": "desert",
+   "cast": [
+    {
+     "who": "rashid2",
+     "x": 260,
+     "face": "joy"
+    },
+    {
+     "who": "wife",
+     "x": 560,
+     "face": "shock"
+    },
+    {
+     "who": "boy",
+     "x": 820,
+     "face": "joy",
+     "flip": true
+    }
+   ]
+  },
+  {
+   "line": "لكن ابنه الصغير سأله سؤالًا أسكته: وماذا لو كان صاحبها يبحث عنها الآن؟",
+   "cap": "وماذا لو كان [r]صاحبها[/r] يبحث عنها؟",
+   "place": "room",
+   "view": "desert",
+   "cast": [
+    {
+     "who": "rashid2",
+     "x": 300,
+     "face": "sad"
+    },
+    {
+     "who": "boy",
+     "x": 760,
+     "face": "curious",
+     "flip": true
+    }
+   ]
+  },
+  {
+   "line": "في الصباح، ذهب راشد إلى شيخ القبيلة، وسلّمه القطعة ليعيدها إلى صاحبها.",
+   "cap": "أعادها إلى [y]صاحبها[/y]",
+   "place": "desert",
+   "time": "day",
+   "cast": [
+    {
+     "who": "rashid",
+     "x": 300,
+     "face": "calm"
+    },
+    {
+     "who": "elder",
+     "x": 780,
+     "face": "joy",
+     "flip": true
+    }
+   ],
+   "fx": [
+    {
+     "kind": "birds"
+    }
+   ]
+  },
+  {
+   "line": "فالكنز الحقيقي… أن تنام وضميرك مرتاح. وأنت، ماذا كنت ستفعل؟ اكتب في التعليقات.",
+   "cap": "ماذا كنت [y]ستفعل[/y]؟",
+   "place": "desert_night",
+   "cast": [
+    {
+     "who": "rashid",
+     "x": 540,
+     "pose": "sit",
+     "face": "joy"
+    }
+   ],
+   "fx": [
+    {
+     "kind": "stars"
+    }
+   ]
+  }
+ ]
+}
