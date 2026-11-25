@@ -82,6 +82,8 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
         elif "--preview" not in sys.argv and not ep.get("no_facts"):
             sys.exit('SOURCES MISSING: add "sources": ["<site or book> — <what it confirms>", ...] to the json (one per fact/number), or "no_facts": true for pure fiction. Video not rendered.')
     import post
+    if ep.get("contrast", True):
+        post.contrast(P, [[min(s + 1.9, (sch[i+1][0] - .3) if i + 1 < len(sch) else D - .2), f"S{i}"] for i, (s, e) in enumerate(sch)])
     if ep.get("qa", True):
         probs = post.qa(P, sch, D)
         if probs:
