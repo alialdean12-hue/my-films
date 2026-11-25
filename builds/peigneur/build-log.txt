@@ -1,0 +1,6 @@
+/home/runner/work/_temp/out/cover_check.jpg
+QA OK
+LENGTH 74.69 s
+DELIVER /home/runner/work/_temp/out/deliver/رجل العود/البحيرة التي ابتلعت نفسها (upload exactly these files, nothing else)
+DONE /home/runner/work/_temp/out : deliver/ (ready to upload) + video.mp4 video_phone.mp4 video_16x9.mp4 video_1x1.mp4 cover.jpg cover_check.jpg CAPTION.md
+make exit: 0
