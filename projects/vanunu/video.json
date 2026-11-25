@@ -63,7 +63,7 @@
   "woman": {
    "sex": "f",
    "age": "young",
-   "hair": "long",
+   "hair": "ponytail",
    "hair_color": "#c8a24a",
    "wear": "dress",
    "color": "#c0405a",
@@ -158,7 +158,7 @@
   },
   {
    "line": "رأى غرفًا تحت الأرض وآلات لا تُصنع إلا لشيء واحد: القنبلة.",
-   "cap": "تسع [y]سنوات[/y] في الداخل",
+   "cap": "تسع [y]سنوات[/y]",
    "place": "room",
    "time": "night",
    "cast": [
