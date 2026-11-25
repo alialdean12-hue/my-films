@@ -1,7 +1,70 @@
-[0;93m2026-11-25 14:32:55.525692050 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[0;93m2026-11-25 14:36:12.095299836 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 Downloading data from 'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx' to file '/home/runner/.rembg/models/u2net/u2net.onnx'.
 1/5 cut-outs...
-  0%|                                               | 0.00/176M [00:00<?, ?B/s]  6%|██▏                                    | 10.2M/176M [00:00<00:01, 102MB/s] 12%|████▋                                  | 21.1M/176M [00:00<00:01, 106MB/s] 18%|███████                                | 32.1M/176M [00:00<00:01, 108MB/s] 25%|█████████▌                             | 43.2M/176M [00:00<00:01, 109MB/s] 31%|████████████                           | 54.2M/176M [00:00<00:01, 109MB/s] 37%|██████████████▍                        | 65.2M/176M [00:00<00:01, 110MB/s] 43%|████████████████▉                      | 76.2M/176M [00:00<00:00, 110MB/s] 50%|███████████████████▎                   | 87.3M/176M [00:00<00:00, 110MB/s] 56%|█████████████████████▊                 | 98.3M/176M [00:00<00:00, 110MB/s] 62%|████████████████████████▊               | 109M/176M [00:01<00:00, 110MB/s] 68%|███████████████████████████▎            | 120M/176M [00:01<00:00, 110MB/s] 75%|█████████████████████████████▊          | 131M/176M [00:01<00:00, 110MB/s] 81%|████████████████████████████████▎       | 142M/176M [00:01<00:00, 110MB/s] 87%|██████████████████████████████████▊     | 153M/176M [00:01<00:00, 110MB/s] 93%|█████████████████████████████████████▎  | 164M/176M [00:01<00:00, 110MB/s]100%|███████████████████████████████████████▊| 175M/176M [00:01<00:00, 110MB/s]  0%|                                               | 0.00/176M [00:00<?, ?B/s]100%|███████████████████████████████████████| 176M/176M [00:00<00:00, 1.54TB/s]
+  0%|                                               | 0.00/176M [00:00<?, ?B/s]  5%|██                                    | 9.61M/176M [00:00<00:01, 96.1MB/s] 11%|████▍                                  | 20.0M/176M [00:00<00:01, 101MB/s] 17%|██████▊                                | 30.6M/176M [00:00<00:01, 103MB/s] 23%|█████████▏                             | 41.3M/176M [00:00<00:01, 105MB/s] 30%|███████████▌                           | 52.0M/176M [00:00<00:01, 105MB/s] 35%|█████████████▍                        | 62.5M/176M [00:00<00:01, 86.5MB/s] 42%|███████████████▊                      | 73.1M/176M [00:00<00:01, 92.3MB/s] 48%|██████████████████                    | 83.9M/176M [00:00<00:01, 85.3MB/s] 54%|████████████████████▍                 | 94.4M/176M [00:01<00:01, 80.5MB/s] 60%|███████████████████████▏               | 105M/176M [00:01<00:00, 81.1MB/s] 66%|█████████████████████████▌             | 116M/176M [00:01<00:00, 87.6MB/s] 72%|████████████████████████████           | 126M/176M [00:01<00:00, 93.4MB/s] 78%|██████████████████████████████▍        | 137M/176M [00:01<00:00, 97.8MB/s] 84%|█████████████████████████████████▋      | 148M/176M [00:01<00:00, 101MB/s] 90%|████████████████████████████████████▏   | 159M/176M [00:01<00:00, 103MB/s] 97%|██████████████████████████████████████▋ | 170M/176M [00:01<00:00, 106MB/s]  0%|                                               | 0.00/176M [00:00<?, ?B/s]100%|███████████████████████████████████████| 176M/176M [00:00<00:00, 1.02TB/s]
+Checking browser...
+Browser: download
+[INFO] [Render] Pipeline started {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","platform":"linux","arch":"x64","nodeVersion":"v22.23.5","fps":{"num":24,"den":1},"format":"mp4","quality":"high","browserGpuMode":"auto","forceScreenshot":false,"protocolTimeout":300000,"browserTimeout":120000,"pageNavigationTimeout":60000,"playerReadyTimeout":45000}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"pipeline","status":"checkpoint","elapsedMs":5,"message":"started","format":"mp4","quality":"high","browserGpuMode":"auto","forceScreenshot":false,"protocolTimeoutMs":300000,"pageNavigationTimeoutMs":60000,"playerReadyTimeoutMs":45000,"requestedWorkers":1}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"compile","status":"start","elapsedMs":8,"needsAlpha":false}
+[INFO] Compiled composition metadata {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","entryFile":"index.html","staticDuration":79.26,"width":1080,"height":1920,"videoCount":0,"audioCount":0,"renderModeHints":{"recommendScreenshot":false,"reasons":[]}}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"compile","status":"end","elapsedMs":199,"durationMs":190,"needsAlpha":false}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"compile","status":"checkpoint","elapsedMs":199,"message":"composition metadata resolved","width":1080,"height":1920,"videoCount":0,"audioCount":0,"imageCount":0,"deviceScaleFactor":1,"forceScreenshot":false,"compositionHash":"f8c3e77cb268e203"}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"browser_probe","status":"start","elapsedMs":200,"forceScreenshot":false,"stagePhase":"calibrating"}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"browser_probe","status":"end","elapsedMs":212,"durationMs":11,"forceScreenshot":false,"stagePhase":"calibrating"}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"browser_probe","status":"checkpoint","elapsedMs":213,"message":"duration resolved","durationSeconds":79.26,"totalFrames":1903,"compositionHash":"f8c3e77cb268e203","beginFrameStalled":false}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"video_extract","status":"start","elapsedMs":213,"videoCount":0}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"video_extract","status":"end","elapsedMs":214,"durationMs":0,"videoCount":0}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"video_extract","status":"checkpoint","elapsedMs":218,"message":"frames resolved","videoCount":0,"extractedVideoCount":0,"totalFramesExtracted":0,"maxFramesPerVideo":0,"avgFramesPerExtractedVideo":null,"vfrPreflightCount":null,"vfrPreflightMs":null,"cacheHits":null,"cacheMisses":null,"transientRetries":null,"minVideoFrameCoverageRatio":null,"authoredTimedClipCount":14}
+[INFO] [Render] No HDR sources detected, rendering SDR {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3"}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"hdr_detection","status":"checkpoint","elapsedMs":219,"message":"resolved","requestedHdrMode":"auto","effectiveHdr":"sdr","nativeHdrVideoCount":0,"nativeHdrImageCount":0}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"audio_process","status":"start","elapsedMs":219,"audioCount":0}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"file_server","status":"start","elapsedMs":220,"reused":false}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"audio_process","status":"end","elapsedMs":225,"durationMs":6,"audioCount":0}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"file_server","status":"end","elapsedMs":228,"durationMs":7}
+[hyperframes] browserGpuMode probe → software (WebGL unavailable)
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"capture_calibration","status":"checkpoint","elapsedMs":531,"message":"skipped","requestedWorkers":1,"totalFrames":1903,"htmlInCanvasDetected":false,"lowMemoryMode":false,"deInversionEligible":false,"deParallelRouterEligible":false}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"worker_resolution","status":"checkpoint","elapsedMs":533,"message":"resolved","workerCount":1}
+[INFO] streaming-encode gate {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","enabled":true,"reason":"single_worker","configFlag":true,"durationCapEnabled":false,"outputFormat":"mp4","workerCount":1,"durationSeconds":79.26,"maxDurationSeconds":240}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"capture_strategy","status":"checkpoint","elapsedMs":534,"message":"resolved","workerCount":1,"forceScreenshot":false,"captureBeyondViewport":null,"useStreamingEncode":true,"useLayeredComposite":false,"usePageSideCompositing":false,"hasHdrContent":false,"hasShaderTransitions":false,"isPngSequence":false}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"capture_streaming","status":"start","elapsedMs":535,"stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1903,"framesCompleted":0,"captureMode":"beginframe","captureOperation":"beginFrame"}
+[Browser:WARN] GSAP target #i1_2 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i2_2 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i4_0 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i5_1 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i7_0 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i9_0 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i9_2 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i11_2 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"capture_streaming","status":"checkpoint","elapsedMs":30535,"message":"stage still running","stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1903,"framesCompleted":230,"captureMode":"beginframe","captureOperation":"beginFrame","heartbeatIndex":1,"stageElapsedMs":30000}
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"capture_streaming","status":"checkpoint","elapsedMs":60537,"message":"stage still running","stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1903,"framesCompleted":412,"captureMode":"beginframe","captureOperation":"beginFrame","heartbeatIndex":2,"stageElapsedMs":60002}
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"capture_streaming","status":"checkpoint","elapsedMs":120539,"message":"stage still running","stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1903,"framesCompleted":874,"captureMode":"beginframe","captureOperation":"beginFrame","heartbeatIndex":3,"stageElapsedMs":120004}
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"capture_streaming","status":"checkpoint","elapsedMs":240540,"message":"stage still running","stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1903,"framesCompleted":1772,"captureMode":"beginframe","captureOperation":"beginFrame","heartbeatIndex":4,"stageElapsedMs":240005}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"capture_streaming","status":"end","elapsedMs":257816,"durationMs":257281,"stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1903,"framesCompleted":1903,"captureMode":"beginframe","captureOperation":"encode"}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"assemble","status":"start","elapsedMs":257818,"stagePhase":"capturing","hasAudio":false,"workerCount":1,"forceScreenshot":false,"totalFrames":1903,"framesCompleted":1903,"captureMode":"beginframe","captureOperation":"encode"}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"assemble","status":"end","elapsedMs":257951,"durationMs":133,"stagePhase":"capturing","hasAudio":false,"workerCount":1,"forceScreenshot":false,"totalFrames":1903,"framesCompleted":1903,"captureMode":"beginframe","captureOperation":"encode"}
+[INFO] [Render:trace] {"renderJobId":"dc7cb0c9-98e8-47b1-88c7-6ced371ed2e3","phase":"pipeline","status":"checkpoint","elapsedMs":258088,"message":"artifact validated","totalElapsedMs":258087}
 2/5 voice...
-TOO LONG: 80.5 s; Shorts/Reels allow at most 80 s. Shorten the lines.
-make exit: 1
+3/5 html...
+QA OK
+4/5 sound + render...
+5/5 cover...
+DONE /home/runner/work/_temp/out/video.mp4 /home/runner/work/_temp/out/cover.jpg
+DELIVER /home/runner/work/_temp/out/deliver/Vox/جريمة دبي التي حُكم فيها في القاهرة (upload exactly these files, nothing else)
+make exit: 0
