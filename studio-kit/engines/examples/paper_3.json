@@ -1,0 +1,121 @@
+{
+ "title": "رحلة الجبال",
+ "landmark": "mountains",
+ "land": "green",
+ "music": "inspire",
+ "beats": [
+  {
+   "line": "في الصباح، بدأ المسافرون رحلتهم.",
+   "k": "scene",
+   "time": "dawn",
+   "cap": "بداية الرحلة",
+   "extras": [
+    "people"
+   ]
+  },
+  {
+   "line": "مرّوا بقريةٍ صغيرة وطاحونة.",
+   "k": "scene",
+   "time": "day",
+   "landmark": "windmill",
+   "cap": "قرية وطاحونة",
+   "extras": [
+    "sheep"
+   ]
+  },
+  {
+   "line": "ثم بدأ الثلج يتساقط.",
+   "k": "scene",
+   "time": "dusk",
+   "landmark": "igloo",
+   "land": "snow",
+   "cap": "الثلج",
+   "extras": [
+    "snowfall"
+   ]
+  },
+  {
+   "line": "وفي الليل، ناموا تحت النجوم.",
+   "k": "night",
+   "cap": "تحت النجوم",
+   "landmark": "mountains"
+  },
+  {
+   "line": "حملوا معهم الخبز والماء والخرائط، وانطلقوا قبل شروق الشمس.",
+   "k": "scene",
+   "time": "dawn",
+   "cap": "خبز وماء وخرائط",
+   "extras": [
+    "people"
+   ]
+  },
+  {
+   "line": "كان أهل القرية كرماء، فقدّموا لهم الحليب والتمر.",
+   "k": "scene",
+   "time": "day",
+   "landmark": "windmill",
+   "cap": "أهل كرماء",
+   "extras": [
+    "sheep"
+   ]
+  },
+  {
+   "line": "اشتدّ البرد، فاحتموا في كوخٍ ثلجي صغير حتى هدأت الريح.",
+   "k": "scene",
+   "time": "dusk",
+   "landmark": "igloo",
+   "land": "snow",
+   "cap": "كوخ ثلجي",
+   "extras": [
+    "snowfall"
+   ]
+  },
+  {
+   "line": "وفي اليوم التالي، وصلوا إلى قمة الجبل ورأوا العالم كله تحتهم.",
+   "k": "scene",
+   "time": "dawn",
+   "cap": "القمة",
+   "extras": [
+    "people"
+   ]
+  },
+  {
+   "line": "وعادوا إلى بيوتهم يحملون قصصًا سيحكونها سنواتٍ طويلة.",
+   "k": "scene",
+   "cap": "قصص لا تنسى",
+   "landmark": "mountains",
+   "time": "dawn"
+  },
+  {
+   "line": "مرّوا بغابةٍ كثيفة، وسمعوا أصوات الطيور والماء يجري بين الصخور.",
+   "k": "scene",
+   "time": "day",
+   "landmark": "windmill",
+   "cap": "مرّوا بغابةٍ كثيفة",
+   "extras": [
+    "sheep"
+   ]
+  },
+  {
+   "line": "وتعلّموا في الطريق أن الصبر أهم من السرعة في الجبال.",
+   "k": "scene",
+   "time": "dusk",
+   "landmark": "igloo",
+   "land": "snow",
+   "cap": "وتعلّموا في الطريق أن الصبر ",
+   "extras": [
+    "snowfall"
+   ]
+  },
+  {
+   "line": "وتعاونوا في حمل الأمتعة، فمن تعب حمل عنه رفاقه.",
+   "k": "scene",
+   "time": "dawn",
+   "cap": "وتعاونوا في حمل الأمتعة",
+   "extras": [
+    "people"
+   ]
+  }
+ ],
+ "no_facts": true
+}
