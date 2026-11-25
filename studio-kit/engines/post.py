@@ -106,8 +106,9 @@ def caption(ep, OUT, style):
     def cut(t, n=60):   # never cut a word in half
         t = t.strip(); return t if len(t) <= n else t[:n].rsplit(" ", 1)[0].rstrip("،,.… ") + "…"
     yt_title = cut(c.get("youtube_title") or (title if len(title) >= 6 else hook))
-    tiktok_tags = (own + niche)[:3] + BROAD[:1]
-    yt_tags = (own + niche)[:3]
+    uniq = lambda xs: list(dict.fromkeys(xs))          # never repeat a hashtag
+    tiktok_tags = uniq(own + niche)[:3] + BROAD[:1]
+    yt_tags = uniq(own + niche)[:3]
     ig_tags = list(dict.fromkeys(own + niche + BROAD))[:12]
     story = " ".join(lines[1:4])
     sep = "━━━━━━━━━━"
