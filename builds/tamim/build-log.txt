@@ -1,0 +1,15 @@
+1/5 cut-outs...
+Traceback (most recent call last):
+  File "/home/runner/work/my-films/my-films/studio-kit/collage/make_collage.py", line 413, in <module>
+    main()
+    ~~~~^^
+  File "/home/runner/work/my-films/my-films/studio-kit/collage/make_collage.py", line 391, in main
+    print("1/5 cut-outs..."); A = prepare_assets(ep, P)
+                                  ~~~~~~~~~~~~~~^^^^^^^
+  File "/home/runner/work/my-films/my-films/studio-kit/collage/make_collage.py", line 104, in prepare_assets
+    if not os.path.exists(out): cutout.sticker(src, out, a.get("outline", 14))
+                                ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/my-films/my-films/studio-kit/collage/cutout.py", line 9, in sticker
+    from rembg import remove, new_session
+ModuleNotFoundError: No module named 'rembg'
+make exit: 1
