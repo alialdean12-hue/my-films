@@ -26,3 +26,4 @@ projects/*/assets/
 voice_cache/
 trends_cache/
 TRENDS.md
+builds/*/*.mp4
