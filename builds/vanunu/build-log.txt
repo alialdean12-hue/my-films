@@ -1,0 +1,2 @@
+TOO LONG: the narration lasts 93.6 s but Shorts/Reels allow at most 80 s. Remove about 28 words. Video not rendered.
+make exit: 1
