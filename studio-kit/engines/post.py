@@ -100,9 +100,12 @@ def caption(ep, OUT, style):
     q = c.get("question", lines[-1] if "؟" in lines[-1] else "ما رأيك؟ اكتب في التعليقات 👇")
     niche = c.get("hashtags") or ep.get("hashtags") or TAGS.get(style, ["#معلومة"])
     if isinstance(niche, str): niche = niche.split()
+    if ep.get("no_facts"): niche = [t for t in niche if "حقيقي" not in t] + ["#قصة"]
     own = ["#" + t.replace(" ", "_").lstrip("#") for t in ep.get("tags", [])]
     cover_words = re.sub(r"\s+", " ", cover_words)
-    yt_title = c.get("youtube_title") or (title if 15 <= len(title) <= 60 else (cover_words if len(cover_words) >= 15 else hook))[:70]
+    def cut(t, n=60):   # never cut a word in half
+        t = t.strip(); return t if len(t) <= n else t[:n].rsplit(" ", 1)[0].rstrip("،,.… ") + "…"
+    yt_title = cut(c.get("youtube_title") or (title if len(title) >= 6 else hook))
     tiktok_tags = (own + niche)[:3] + BROAD[:1]
     yt_tags = (own + niche)[:3]
     ig_tags = list(dict.fromkeys(own + niche + BROAD))[:12]
@@ -133,6 +136,15 @@ def caption(ep, OUT, style):
 (للنشر، لا تنسخ: انشر النسخة الأصلية النظيفة في كل منصة بلا شعار منصة أخرى. أوقات مقترحة للمنطقة العربية: تيك توك 8–11 مساءً · يوتيوب 6–9 مساءً · إنستغرام 7–9 مساءً. نص الغلاف: «{cover_words}».)
 """
     open(os.path.join(OUT, "CAPTION.md"), "w").write(doc)
+    # one copy-ready text per platform (see deliver): clean hashtags, digits, no separators inside
+    parts = {"1 عنوان يوتيوب": f"{yt_title} #shorts",
+             "2 وصف يوتيوب": f"{hook}\n{story}\n\n{q}\n\n{' '.join(yt_tags)}",
+             "3 تيك توك": f"{cut(hook, 90)} {q} {' '.join(tiktok_tags)}",
+             "4 انستجرام": f"{hook}\n\n{story}\n\n{q}\nاحفظ الفيديو وأرسله لصديق يحب {c.get('audience', 'هذه القصص')} 📌\n.\n{' '.join(ig_tags)}"}
+    parts = {k: re.sub(r"[ \t]+", " ", re.sub(r"\\([#_*])", r"\1", v)).strip() + "\n" for k, v in parts.items()}
+    notes = (f"أوقات نشر مقترحة للمنطقة العربية: تيك توك 8–11 مساءً · يوتيوب 6–9 مساءً · إنستغرام 7–9 مساءً.\n"
+             f"انشر النسخة الأصلية النظيفة في كل منصة بلا شعار منصة أخرى.\nنص الغلاف: «{cover_words}».\n")
+    json.dump({"parts": parts, "notes": notes}, open(os.path.join(OUT, "captions.json"), "w"), ensure_ascii=False, indent=1)
 
 # ------------------------------------------------------------------ 4. extra formats: 16:9 (YouTube) and 1:1 (square), blurred background fill
 def formats(OUT, src="video.mp4"):
@@ -160,7 +172,7 @@ def deliver_saw(ep, OUT):
         if os.path.exists(os.path.join(OUT, src)): shutil.copy(os.path.join(OUT, src), os.path.join(d, dst))
     print("DELIVER", d); return d
 def deliver(ep, OUT, style):
-    """OUT/deliver/<Drive folder>/<title>/ with ONLY: <title>.mp4, غلاف.jpg, الوصف.txt (captions + sources + photo credits at the end).
+    """OUT/deliver/<Drive folder>/<title>/ with ONLY: <title>.mp4, غلاف.jpg and 5 plain-text files (1 عنوان يوتيوب, 2 وصف يوتيوب, 3 تيك توك, 4 انستجرام, 5 مصادر وملاحظات).
     Wide/square videos only when "formats": true. Nothing else goes to Drive."""
     t = re.sub(r'[\\/:*?"<>|\n]', " ", re.sub(r"\[/?[yr]\]|<[^>]+>", "", ep.get("title", "video"))).strip() or "video"
     d = os.path.join(OUT, "deliver", ep.get("drive_folder", DRIVE.get(style, "فيديوهات")), t)
@@ -169,9 +181,14 @@ def deliver(ep, OUT, style):
     if ep.get("formats"): pairs += [("video_16x9.mp4", f"{t} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - مربع.mp4")]
     for src, dst in pairs:
         if os.path.exists(os.path.join(OUT, src)): shutil.copy(os.path.join(OUT, src), os.path.join(d, dst))
-    txt = open(os.path.join(OUT, "CAPTION.md")).read() if os.path.exists(os.path.join(OUT, "CAPTION.md")) else ""
+    cj = os.path.join(OUT, "captions.json")
+    if os.path.exists(cj):   # one plain-text file per platform: open it in Drive, Select all, Copy
+        C = json.load(open(cj))
+        for name, txt in C["parts"].items(): open(os.path.join(d, f"{name}.txt"), "w", encoding="utf-8-sig").write(txt)
+        notes = C["notes"]
+    else: notes = ""
     for f in ("SOURCES.txt", "CREDITS.txt"):
-        if os.path.exists(os.path.join(OUT, f)): txt += "\n━━━━━━━━━━\n" + open(os.path.join(OUT, f)).read()
-    open(os.path.join(d, "الوصف.txt"), "w").write(txt)
+        if os.path.exists(os.path.join(OUT, f)): notes += "\n" + open(os.path.join(OUT, f)).read()
+    open(os.path.join(d, "5 مصادر وملاحظات.txt"), "w", encoding="utf-8-sig").write(notes)
     print("DELIVER", d, "(upload exactly these files, nothing else)")
     return d

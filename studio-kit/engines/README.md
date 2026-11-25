@@ -22,7 +22,7 @@ Every finished run gives: `video.mp4` (master), **`video_phone.mp4` (send this)*
 |---|---|---|
 | `mysteries` | 1 | ألغاز التاريخ الحقيقية: وثائقي بلون أبيض وأسود وعناوين خبرية |
 
-- **Delivery folder:** every run makes `deliver/<Drive folder>/<title>/` with ONLY `<title>.mp4`, `غلاف.jpg`, `الوصف.txt` (captions, then sources and photo credits). Upload exactly that (the .txt becomes the Google Doc «الوصف»). `"formats": true` adds `<title> - أفقي.mp4` and `<title> - مربع.mp4`.
+- **Delivery folder:** every run makes `deliver/<Drive folder>/<title>/` with ONLY `<title>.mp4`, `غلاف.jpg` and 5 plain-text files, one per platform plus sources (upload as plain text, never as Google Docs; was `الوصف.txt` (captions, then sources and photo credits). Upload exactly that (the .txt becomes the Google Doc «الوصف»). `"formats": true` adds `<title> - أفقي.mp4` and `<title> - مربع.mp4`.
 - `"formats": true` also makes the 16:9 and 1:1 files.
 
 ```sh
