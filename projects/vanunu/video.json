@@ -1,0 +1,127 @@
+{
+ "title": "موظف واحد فضح القنبلة",
+ "music": "mystery",
+ "music_gain": 0.14,
+ "voice": {"name": "ar-SA-HamedNeural", "rate": "+4%"},
+ "min_duration": 50,
+ "max_duration": 80,
+ "sources": [
+  "The Sunday Times, 5 Oct 1986 — «Revealed: The Secrets of Israel's Nuclear Arsenal»: 100–200 رأس نووي في ديمونا، بناءً على صور ومعلومات موردخاي فعنونو، وتحقّق منها الخبيران Frank Barnaby وTheodore Taylor",
+  "The Guardian, 16 Apr 2004 (profile) — فعنونو فنيّ نووي في ديمونا 1976–1985، خُدِع في روما 30 سبتمبر 1986، حُكم بالإعدام خيانةً وجاسوسية في محاكمة سرّية 1988، 18 عامًا منها 11 ونصف في الحبس الانفرادي، أُفرج عنه 21 نيسان 2004",
+  "BBC News — اعتقاله في روما بمخطّط من امرأة تُدعى «سيندي» (عميلة)، ثم نقله بحرًا إلى إسرائيل، واعتراف إسرائيل باحتجازه في 9 تشرين الثاني 1986",
+  "The Telegraph, 23 Jan 2017 — إدانته مرة أخرى بعد الإفراج بسبب لقاء أجانب (2013)، ومنعه من مغادرة إسرائيل",
+  "Democracy Now!, Aug 2004 — مقابلة بعد الإفراج: وصف معاملته بأنها «قاسية وهمجية»، وأكد أنه لم يندم"
+ ],
+ "cover": {"text": "موظف فضح [y]القنبلة[/y]", "beat": 1, "label": "مخابرات وأسرار", "tag": "أسرار المنطقة"},
+ "tags": ["أسرار_المنطقة", "مخابرات"],
+ "caption_doc": {
+  "hook": "فنيٌّ واحد خرج من مفاعل سريّ بصور… فقلب موازين المنطقة.",
+  "question": "هل كان بطلًا أم خائنًا؟ اكتب رأيك في التعليقات 👇",
+  "youtube_title": "الموظف الذي فضح السلاح النووي الإسرائيلي",
+  "hashtags": ["#أسرار_المنطقة", "#مخابرات", "#ديمونا", "#قصص_تاريخية"],
+  "audience": "قصص المخابرات"
+ },
+ "characters": {
+  "vanunu": {"sex": "m", "age": "adult", "hair": "short", "hair_color": "#3a2a1e", "beard": "stubble", "wear": "work", "color": "#8a8f96", "pants_color": "#3a3f46", "skin": "light"},
+  "vanunu_old": {"sex": "m", "age": "old", "hair": "short", "hair_color": "#d8d4cc", "beard": "short", "beard_color": "#d8d4cc", "wear": "shirt", "color": "#4a5560", "skin": "light"},
+  "woman": {"sex": "f", "age": "young", "hair": "long", "hair_color": "#c8a24a", "wear": "dress", "color": "#c0405a", "skin": "light"},
+  "agent": {"sex": "m", "age": "adult", "hair": "short", "hair_color": "#1c1a18", "wear": "suit", "color": "#22262c", "skin": "light", "glasses": true},
+  "editor": {"sex": "m", "age": "old", "hair": "short", "hair_color": "#b0aca4", "wear": "suit", "color": "#3a3d44", "beard": "short", "beard_color": "#b0aca4", "glasses": true},
+  "guard": {"sex": "m", "age": "adult", "head": "cap", "head_color": "#2a3038", "wear": "police", "color": "#2c3642", "skin": "tan"}
+ },
+ "beats": [
+  {
+   "line": "موظفٌ واحد كشف أخطر سرّ في الشرق… فدفع ثمانية عشر عامًا من حياته.",
+   "cap": "سرٌّ واحد [y]وُجد[/y]",
+   "place": "desert",
+   "time": "day",
+   "cam": "push",
+   "cast": [{"who": "vanunu", "x": 540, "face": "calm", "scale": 0.9}],
+   "fx": [{"kind": "glint", "y": 900}]
+  },
+  {
+   "line": "في صحراء النقب، جنوب إسرائيل، يقف مفاعل ديمونا. لا لافتة على بابه، ولا اسم في الخرائط.",
+   "cap": "ديمونا · [y]بلا اسم[/y]",
+   "place": "desert",
+   "time": "sunset",
+   "cam": "zoom",
+   "focus": [540, 1100],
+   "cast": [{"who": "vanunu", "x": 300, "scale": 0.7, "face": "curious"}]
+  },
+  {
+   "line": "وفي سبعينيات القرن الماضي، عمل فيه شابٌّ اسمه مردخاي فعنونو، فنيًّا للمعادن.",
+   "cap": "مردخاي [y]فعنونو[/y]",
+   "say": "وفي سبعينيات القرن الماضي، عمل فيه شابٌّ اسمه مردخاي فعنونو، فنيًّا للمعادن.",
+   "place": "office",
+   "view": "desert",
+   "cast": [{"who": "vanunu", "x": 540, "pose": "stand", "face": "calm"}]
+  },
+  {
+   "line": "تسع سنوات وهو يرى ما لا يراه أحد: غرف تحت الأرض، وآلات لا تُصنع إلا لشيء واحد.",
+   "cap": "تسع [y]سنوات[/y] في الداخل",
+   "place": "room",
+   "time": "night",
+   "cast": [{"who": "vanunu", "x": 380, "face": "curious", "scale": 0.95}, {"who": "guard", "x": 800, "flip": true, "face": "calm", "scale": 0.8}]
+  },
+  {
+   "line": "وفي ألف وتسعمئة وخمسة وثمانين، خرج من إسرائيل… وفي حقيبته صورٌ خرجت من الداخل.",
+   "cap": "صورٌ [r]خرجت[/r]",
+   "place": "train",
+   "time": "night",
+   "cast": [{"who": "vanunu", "window": 2, "face": "tired"}]
+  },
+  {
+   "line": "في لندن، جلس أمام صحيفة «صنداي تايمز» وقال كل شيء… وبعد أسابيع تحقّق خبراء من الصور.",
+   "cap": "لندن · [y]1986[/y]",
+   "place": "office",
+   "view": "hills",
+   "cast": [{"who": "vanunu", "x": 320, "face": "calm", "scale": 0.9}, {"who": "editor", "x": 790, "flip": true, "face": "curious", "scale": 0.9}]
+  },
+  {
+   "line": "في الخامس من أكتوبر، خرج العنوان: مئة إلى مئتي رأس نووي، تحت الصحراء.",
+   "cap": "100–200 [r]رأس نووي[/r]",
+   "date": "5 أكتوبر 1986",
+   "place": "desert_night",
+   "cam": "zoom",
+   "focus": [540, 1200],
+   "fx": [{"kind": "stars"}]
+  },
+  {
+   "line": "لكن الخطر لم يكن في الصفحة… كان في امرأةٍ قابلها قبل النشر، وقالت له: تعال إلى روما.",
+   "cap": "«سيندي» [r]في روما[/r]",
+   "place": "street_night",
+   "cast": [{"who": "woman", "x": 360, "face": "joy", "scale": 0.95}, {"who": "vanunu", "x": 760, "flip": true, "face": "joy", "scale": 0.95}]
+  },
+  {
+   "line": "في الثلاثين من سبتمبر، دخل روما… فاختُطف هناك، وغُطّ في النوم، وعاد إلى إسرائيل بالسفينة.",
+   "cap": "اختُطف في [r]روما[/r]",
+   "place": "street_night",
+   "time": "night",
+   "cast": [{"who": "agent", "x": 300, "face": "angry", "scale": 0.95}, {"who": "agent", "x": 840, "flip": true, "face": "angry", "scale": 0.95}],
+   "fx": [{"kind": "shake", "at": 0.8}, {"kind": "smoke", "x": 560, "y": 1500}]
+  },
+  {
+   "line": "حُوكم في محاكمة سرّية، وحُكم عليه ثمانية عشر عامًا… أحد عشر منها في زنزانةٍ وحده.",
+   "cap": "18 عامًا · [r]11 وحده[/r]",
+   "place": "room",
+   "time": "night",
+   "cast": [{"who": "vanunu", "x": 540, "pose": "sit", "face": "sad", "scale": 0.95}]
+  },
+  {
+   "line": "خرج سنة ألفين وأربعة، لكن إسرائيل لم تسمح له بالمغادرة… ولا بالكلام عن ديمونا حتى اليوم.",
+   "cap": "لم يُغادر [y]إسرائيل[/y]",
+   "place": "street_night",
+   "time": "night",
+   "cast": [{"who": "vanunu_old", "x": 520, "face": "tired", "scale": 0.85}]
+  },
+  {
+   "line": "قنبلةٌ لم تُرمَ يومًا… عرف العالم بها من موظفٍ واحد. هل كان بطلًا أم خائنًا؟",
+   "cap": "بطلٌ أم [y]خائن[/y]؟",
+   "place": "desert",
+   "time": "sunset",
+   "cam": "push",
+   "cast": [{"who": "vanunu_old", "x": 520, "face": "calm", "scale": 0.8}],
+   "fx": [{"kind": "rays"}]
+  }
+ ]
+}
