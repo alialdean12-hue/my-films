@@ -111,7 +111,7 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     elif bed == "beat":
         t = .5
         while t < D - .5: it.append({"file": "sfx/hit.wav", "at": round(t, 2), "gain": .14}); t += .5
-    MOOD = {"doc": "mystery", "cine": "suspense"}
+    MOOD = {"doc": "mystery", "voxflat": "inspire", "kinetic": "tech", "threed": "epic", "paper": "calm", "stick": "happy", "cine": "suspense", "cartoon": "kids", "anime": "sad"}
     mood = ep.get("music", MOOD.get(name, "calm"))
     if mood and mood != "none":
         import music

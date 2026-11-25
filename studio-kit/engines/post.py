@@ -163,7 +163,7 @@ if __name__ == "__main__":
         if step == "cover": cover(ep, P, OUT, sch, D)
 
 # ------------------------------------------------------------------ 5. delivery folder (ready to upload to Google Drive as it is)
-DRIVE = {"doc": "وثائقي", "collage": "Vox", "cine": "رجل العود", "saw": "الغاز saw"}
+DRIVE = {"doc": "وثائقي", "collage": "Vox", "voxflat": "رسوم Vox", "kinetic": "نصوص متحركة", "threed": "ثلاثي الأبعاد", "paper": "ورق مقصوص", "stick": "رجل العود", "cine": "رجل العود", "anime": "أنمي", "cartoon": "هل تعلم", "saw": "الغاز saw"}
 def deliver_saw(ep, OUT):
     """puzzle parts: الغاز saw/<title>/<title> - اللغز.mp4 | - الحل.mp4, غلاف اللغز.jpg | غلاف الحل.jpg (+ wide/square)"""
     t = re.sub(r'[\\/:*?"<>|\n]', " ", ep.get("title", "لغز")).strip(); part = "اللغز" if int(ep.get("part", 1)) == 1 else "الحل"

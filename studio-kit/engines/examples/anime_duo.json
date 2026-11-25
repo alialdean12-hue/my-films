@@ -1,0 +1,118 @@
+{
+ "title": "لقاء",
+ "sky": "dusk",
+ "character": {
+  "hair": "pink",
+  "eyes": "purple",
+  "gender": "girl"
+ },
+ "character2": {
+  "hair": "black",
+  "eyes": "blue",
+  "gender": "boy",
+  "shirt": "#3a2a1a"
+ },
+ "music": "calm",
+ "no_facts": true,
+ "beats": [
+  {
+   "line": "التقيا تحت المطر صدفةً.",
+   "k": "together",
+   "sky": "storm",
+   "rain": true,
+   "sub": "صدفة تحت المطر"
+  },
+  {
+   "line": "قالت: لم أرك منذ سنوات!",
+   "k": "duo",
+   "speaker": 1,
+   "emotion": "surprised",
+   "emotion2": "happy",
+   "sky": "dusk",
+   "sub": "لم أرك منذ سنوات!"
+  },
+  {
+   "line": "قال: كنتُ أنتظر هذه اللحظة.",
+   "k": "talk2",
+   "emotion": "happy",
+   "sky": "dusk",
+   "sub": "كنت أنتظر هذه اللحظة"
+  },
+  {
+   "line": "ابتسما، وتوقّف المطر.",
+   "k": "duo",
+   "speaker": 2,
+   "emotion": "happy",
+   "emotion2": "happy",
+   "sky": "sunset",
+   "sub": "توقّف المطر",
+   "petals": true
+  },
+  {
+   "line": "لقاء.",
+   "k": "title",
+   "sky": "sunset",
+   "title": "لقاء"
+  },
+  {
+   "line": "قالت: كنتُ أظنّ أنك سافرت ولن تعود إلى هذه المدينة أبدًا.",
+   "k": "duo",
+   "speaker": 1,
+   "emotion": "sad",
+   "emotion2": "happy",
+   "sky": "dusk",
+   "sub": "ظننتك لن تعود"
+  },
+  {
+   "line": "قال: سافرت فعلًا، لكن كل الطرق كانت تعيدني إلى هنا.",
+   "k": "talk2",
+   "emotion": "happy",
+   "sky": "dusk",
+   "sub": "كل الطرق تعيدني"
+  },
+  {
+   "line": "مشيا معًا في الشارع المبلّل، يتذكّران أيام المدرسة والضحكات القديمة.",
+   "k": "together",
+   "sky": "storm",
+   "rain": true,
+   "sub": "ذكريات قديمة"
+  },
+  {
+   "line": "قالت: هل تذكر الشجرة التي كتبنا عليها أسماءنا؟ ما زالت هناك.",
+   "k": "duo",
+   "speaker": 1,
+   "emotion": "happy",
+   "emotion2": "happy",
+   "sky": "dusk",
+   "sub": "الشجرة ما زالت هناك"
+  },
+  {
+   "line": "ضحك وقال: إذن لنذهب إليها الآن، قبل أن يعود المطر.",
+   "k": "talk2",
+   "emotion": "happy",
+   "sky": "dusk",
+   "sub": "لنذهب الآن"
+  },
+  {
+   "line": "وهكذا، تحوّل لقاءٌ صغير تحت المطر إلى بدايةٍ جديدة.",
+   "k": "together",
+   "sky": "storm",
+   "rain": true,
+   "sub": "بداية جديدة"
+  },
+  {
+   "line": "وتوقفا تحت مظلة متجر صغير، يضحكان من كل شيء ومن لا شيء.",
+   "k": "together",
+   "sky": "storm",
+   "rain": true,
+   "sub": "وتوقفا تحت مظلة متجر صغير"
+  },
+  {
+   "line": "قال: لم يتغير شيءٌ فيكِ، ما زلتِ تضحكين بالطريقة نفسها.",
+   "k": "talk2",
+   "emotion": "happy",
+   "sky": "dusk",
+   "sub": "قال: لم يتغير شيءٌ فيكِ"
+  }
+ ]
+}
