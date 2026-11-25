@@ -39,10 +39,6 @@
    "cut": true,
    "query": "security camera cctv building"
   },
-  "shirt": {
-   "cut": true,
-   "query": "white shirt fabric on floor"
-  },
   "court": {
    "vintage": true,
    "query": "courthouse columns egypt"
@@ -82,6 +78,10 @@
   "fingerprint": {
    "cut": true,
    "query": "fingerprint evidence magnifier"
+  },
+  "tape": {
+   "vintage": true,
+   "query": "crime scene police tape"
   }
  },
  "cover": {
@@ -242,24 +242,24 @@
    "items": [
     {
      "type": "text",
-     "text": "قميصٌ [r]ملطّخ[/r]",
+     "text": "خارج [y]البناية[/y]",
      "y": 420,
-     "size": 88,
+     "size": 92,
      "at": 0.1
     },
     {
      "type": "photo",
-     "asset": "shirt",
+     "asset": "tape",
      "x": 540,
      "y": 1080,
-     "w": 620,
+     "w": 660,
      "at": 0.4
     },
     {
      "type": "text",
-     "text": "خارج البناية",
+     "text": "ملابسُ ملطّخة بالدماء",
      "y": 1560,
-     "size": 62,
+     "size": 58,
      "at": 1.4
     }
    ]
