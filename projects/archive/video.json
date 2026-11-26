@@ -37,20 +37,20 @@
    "query": "old warehouse building exterior"
   },
   "papers": {
-   "cut": true,
-   "query": "stack of document files paper"
+   "vintage": true,
+   "query": "cardboard archive boxes stacked"
   },
   "street": {
    "vintage": true,
-   "query": "tehran city street buildings"
+   "query": "tehran skyline milad tower"
   },
   "clock": {
    "cut": true,
    "query": "wall clock face close up"
   },
   "torch": {
-   "cut": true,
-   "query": "welding torch sparks metal"
+   "vintage": true,
+   "query": "cutting metal sparks workshop"
   },
   "safe": {
    "cut": true,
@@ -58,7 +58,7 @@
   },
   "cd": {
    "cut": true,
-   "query": "cd dvd discs stack"
+   "query": "stack of file folders documents"
   },
   "cargo": {
    "vintage": true,
@@ -70,7 +70,7 @@
   },
   "whitehouse": {
    "vintage": true,
-   "query": "american flag waving close up"
+   "query": "capitol building washington dome"
   },
   "flags": {
    "vintage": true,
@@ -158,24 +158,25 @@
    "items": [
     {
      "type": "text",
-     "text": "2016 · [y]شورآباد[/y]",
-     "y": 400,
-     "size": 100,
+     "text": "حي [y]شورآباد[/y]",
+     "y": 390,
+     "size": 108,
      "at": 0.1
     },
     {
      "type": "photo",
      "asset": "street",
      "x": 540,
-     "y": 1100,
+     "y": 1060,
      "w": 760,
      "at": 0.5
     },
     {
-     "type": "pin",
-     "x": 620,
-     "y": 1120,
-     "at": 1.8
+     "type": "text",
+     "text": "2016 · جنوب طهران",
+     "y": 1520,
+     "size": 58,
+     "at": 1.6
     }
    ]
   },
@@ -185,29 +186,24 @@
    "items": [
     {
      "type": "text",
-     "text": "ليلة [y]31 يناير[/y]",
-     "y": 400,
-     "size": 100,
+     "text": "ليلة [y]الاقتحام[/y]",
+     "y": 390,
+     "size": 108,
      "at": 0.1
     },
     {
      "type": "cutout",
      "asset": "clock",
      "x": 540,
-     "y": 1090,
-     "w": 620,
+     "y": 1060,
+     "w": 600,
      "at": 0.5
     },
     {
-     "type": "arrow",
-     "from": [
-      300,
-      1500
-     ],
-     "to": [
-      520,
-      1240
-     ],
+     "type": "text",
+     "text": "31 يناير 2018",
+     "y": 1520,
+     "size": 62,
      "at": 1.6
     }
    ]
@@ -220,15 +216,15 @@
      "type": "text",
      "text": "[r]الإنذار[/r] مقطوع",
      "y": 390,
-     "size": 100,
+     "size": 104,
      "at": 0.1
     },
     {
-     "type": "cutout",
+     "type": "photo",
      "asset": "torch",
      "x": 540,
-     "y": 1090,
-     "w": 660,
+     "y": 1080,
+     "w": 760,
      "at": 0.5
     }
    ]
@@ -239,7 +235,7 @@
    "items": [
     {
      "type": "text",
-     "text": "6 ساعات [y]ونصف[/y]",
+     "text": "[y]ست[/y] ساعات ونصف",
      "y": 390,
      "size": 104,
      "at": 0.1
@@ -248,14 +244,14 @@
      "type": "cutout",
      "asset": "safe",
      "x": 540,
-     "y": 1100,
+     "y": 1090,
      "w": 660,
      "at": 0.5
     },
     {
      "type": "underline",
      "x": 540,
-     "y": 1480,
+     "y": 1470,
      "w": 480,
      "at": 1.6
     }
@@ -267,24 +263,24 @@
    "items": [
     {
      "type": "text",
-     "text": "55,000 [y]صفحة[/y]",
+     "text": "[y]الحمولة[/y]",
      "y": 380,
-     "size": 104,
+     "size": 112,
      "at": 0.1
     },
     {
      "type": "cutout",
      "asset": "cd",
      "x": 540,
-     "y": 1100,
-     "w": 640,
+     "y": 1040,
+     "w": 620,
      "at": 0.5
     },
     {
      "type": "text",
-     "text": "183 قرصًا · 55,000 ملف",
+     "text": "55 ألف صفحة · 183 قرصًا",
      "y": 1520,
-     "size": 62,
+     "size": 60,
      "at": 1.6
     }
    ]
@@ -316,25 +312,25 @@
    "items": [
     {
      "type": "text",
-     "text": "30 أبريل [y]2018[/y]",
-     "y": 390,
-     "size": 96,
+     "text": "[y]عرضٌ[/y] علني",
+     "y": 380,
+     "size": 112,
      "at": 0.1
     },
     {
      "type": "photo",
      "asset": "stage",
      "x": 540,
-     "y": 1100,
+     "y": 1070,
      "w": 780,
      "at": 0.5
     },
     {
-     "type": "circle",
-     "x": 540,
-     "y": 1100,
-     "r": 330,
-     "at": 1.7
+     "type": "text",
+     "text": "30 أبريل 2018",
+     "y": 1530,
+     "size": 62,
+     "at": 1.6
     }
    ]
   },
@@ -344,18 +340,25 @@
    "items": [
     {
      "type": "text",
-     "text": "[r]انسحاب[/r] 8 مايو",
+     "text": "[y]انسحاب[/y] أمريكا",
      "y": 390,
-     "size": 102,
+     "size": 108,
      "at": 0.1
     },
     {
      "type": "photo",
      "asset": "whitehouse",
      "x": 540,
-     "y": 1100,
+     "y": 1080,
      "w": 760,
      "at": 0.5
+    },
+    {
+     "type": "text",
+     "text": "8 مايو 2018",
+     "y": 1530,
+     "size": 62,
+     "at": 1.6
     }
    ]
   },
@@ -398,7 +401,7 @@
    "items": [
     {
      "type": "text",
-     "text": "في [y]2019[/y]",
+     "text": "[y]اليورانيوم[/y]",
      "y": 380,
      "size": 112,
      "at": 0.1
@@ -407,16 +410,16 @@
      "type": "cutout",
      "asset": "lab",
      "x": 540,
-     "y": 1030,
+     "y": 1040,
      "w": 600,
      "at": 0.5
     },
     {
      "type": "text",
-     "text": "يورانيوم في موقع لم تعلنه إيران",
-     "y": 1500,
+     "text": "2019 · موقع لم تعلنه إيران",
+     "y": 1520,
      "size": 58,
-     "at": 1.5
+     "at": 1.6
     }
    ]
   },
