@@ -5,10 +5,11 @@ Use these names in the JSON keys. Mix freely. Engines: see README.md.
 ## 1 · Documentary (`doc.py`)
 - **grade** (default `natural` = the photo as it is; the others darken it): `natural`, `sepia`, `bw`, `cold`, `warm`, `noir`, `vivid`, `faded`, `green`, `red`, `night`, `old_film`, `clean`
 - **cam**: `in`, `out`, `left`, `right`, `up`, `down`, `still`, `fast_in` or [scaleFrom, scaleTo, dx, dy]
-- **caption**: `gold`, `box`, `lower`, `news`, `type`, `big`, `top`, `red`
+- **caption**: `paper`, `gold`, `box`, `lower`, `news`, `type`, `big`, `top`, `red`
 - **transition**: `fade`, `cut`, `slide`, `up`, `zoom`, `blur`, `flash`, `glitch`
 - **overlay** (list): `circle` (at [x,y,r]), `arrow` (arrow [[x1,y1],[x2,y2]]), `route`, `zoombox` (box [x,y,w]), `redact`, `film`, `letterbox`, `vhs`, `counter` (number, unit), `stamp` (stamp), `quote` (quote), `split` (img2 or query2)
 - per beat: `img` or `query`, `cap`, `date`, `flash`
+- **style 11 (`hybrid.py`) adds:** `sticker` {`query` | `img`, `pick`, `x`, `y`, `size`, `rotate`, `outline`} = cut-out of a person/object popping over the photo · caption `paper` (default in style 11): torn paper strip with tape, `[y]` yellow marker, `[r]` red marker
 
 ## 7 · رجل العود السينمائي (`cine.py` + `characters.py`)
 - **place** (12): `city`, `ruins`, `office`, `room`, `train`, `garden`, `night_garden`, `desert`, `desert_night`, `sea`, `street_night`, `plain` · **time**: `day`, `sunset`, `night` · **view** (office/room window): `hills`, `harbor`, `desert`
