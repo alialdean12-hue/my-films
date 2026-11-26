@@ -1,0 +1,6 @@
+  wikimedia: HTTPError
+  wikimedia: HTTPError
+  wikimedia: HTTPError
+media candidates: look at /home/runner/work/_temp/out/candidates (beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set "pick": number
+TOO LONG: the narration lasts 81.2 s but Shorts/Reels allow at most 80 s. Remove about 5 words. Video not rendered.
+make exit: 1
