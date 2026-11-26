@@ -75,7 +75,7 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     lint = subprocess.run(["npx", "hyperframes", "lint"], cwd=P, capture_output=True, text=True).stdout
     if "✗" in lint: print(lint); sys.exit("LINT")
     json.dump({"sch": sch, "D": D}, open(P + "/schedule.json", "w"))
-    FACT = {"doc", "voxflat", "threed", "cartoon", "paper", "cine"}   # styles that state facts: every number/claim needs a source
+    FACT = {"doc", "hybrid", "voxflat", "threed", "cartoon", "paper", "cine"}   # styles that state facts: every number/claim needs a source
     if name in FACT:
         src = ep.get("sources") or []
         if src: open(OUT + "/SOURCES.txt", "w").write("مصادر المعلومات:\n" + "\n".join(f"- {x}" for x in src) + "\n")
@@ -113,7 +113,7 @@ html,body{{margin:0;background:{bg}}}#root{{position:relative;width:1080px;heigh
     elif bed == "beat":
         t = .5
         while t < D - .5: it.append({"file": "sfx/hit.wav", "at": round(t, 2), "gain": .14}); t += .5
-    MOOD = {"doc": "mystery", "voxflat": "inspire", "kinetic": "tech", "threed": "epic", "paper": "calm", "stick": "happy", "cine": "suspense", "cartoon": "kids", "anime": "sad"}
+    MOOD = {"doc": "mystery", "hybrid": "mystery", "voxflat": "inspire", "kinetic": "tech", "threed": "epic", "paper": "calm", "stick": "happy", "cine": "suspense", "cartoon": "kids", "anime": "sad"}
     mood = ep.get("music", MOOD.get(name, "calm"))
     if mood and mood != "none":
         import music

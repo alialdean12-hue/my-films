@@ -1,16 +1,31 @@
 """Find photos for a video: several candidates per query from Pixabay, Wikimedia Commons or Openverse, a numbered contact sheet to pick from, and a credits file.
   python3 images.py "titanic ship" outdir [--source pixabay|wikimedia|openverse|auto] [--n 6]
 Python use: fetch(query, outdir, source, n) -> [{"file","title","author","license","page"}], sheet(files, out_jpg)
-source "auto": wikimedia first (best for history, real people, places, artworks), then pixabay, then openverse.
+source "auto": Wikipedia article photos ("wiki"), then Openverse (free real photos: Commons, Flickr CC), Wikimedia search, and a little Pixabay stock.
 Pixabay needs PIXABAY_KEY. Wikimedia/Openverse need no key; credits are written for licences that ask for them."""
 import json, os, re, subprocess, sys, time, urllib.parse, urllib.request
-UA = "studio-kit/1.0 (educational video tool)"
+UA = "MyFilmsStudioKit/1.2 (https://github.com/alialdean12-hue/my-films; educational shorts) python-urllib"
+DOWN = set()   # sites that keep refusing (429) are skipped for the rest of the run; the other open sources are used
 def get(url, tries=4):
+    """polite download: on 429 (too many requests) waits a little (Retry-After, max 15 s) and retries once; a site that refuses twice is skipped."""
+    host = urllib.parse.urlparse(url).netloc
+    if host in DOWN: raise RuntimeError(f"{host} is refusing requests: skipped")
+    refused = 0
     for k in range(tries):
         try: return urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=40).read()
         except Exception as e:
-            if k == tries - 1: raise
-            time.sleep(15 + 10 * k if getattr(e, "code", 0) == 429 else 2 + 3 * k)   # 429 = too many requests: wait longer
+            if getattr(e, "code", 0) == 429:
+                refused += 1
+                if refused >= 2:
+                    if not host.startswith("upload."): DOWN.add(host)   # image files: only this one fails
+                    raise
+                ra = (getattr(e, "headers", None) or {}).get("Retry-After") or 8
+                try: ra = float(ra)
+                except ValueError: ra = 8
+                time.sleep(min(15, ra))
+            elif k == tries - 1: raise
+            else: time.sleep(2 + 3 * k)
+    raise RuntimeError("download failed")
 def _save(url, path): open(path, "wb").write(get(url)); return path
 def pixabay(q, out, n):
     key = os.environ.get("PIXABAY_KEY")
@@ -35,8 +50,10 @@ def wikimedia(q, out, n):
         if len(res) >= n: break
     return res
 def openverse(q, out, n):
-    d = json.loads(get("https://api.openverse.org/v1/images/?" + urllib.parse.urlencode({"q": q, "page_size": n * 2, "license_type": "commercial"}))); res = []
+    """open photos (Wikimedia Commons, Flickr CC, museums) with their licence; commercial use allowed; no tiny images."""
+    d = json.loads(get("https://api.openverse.org/v1/images/?" + urllib.parse.urlencode({"q": q, "page_size": n * 3, "license_type": "commercial", "mature": "false"}))); res = []
     for r in d.get("results", []):
+        if (r.get("width") or 999) < 500 or (r.get("height") or 999) < 400: continue
         try: f = _save(r["url"], os.path.join(out, f"ov{r['id'][:8]}.jpg"))
         except Exception: continue
         res.append(dict(file=f, title=r.get("title", ""), author=r.get("creator", ""), license=f"{r.get('license','')} {r.get('license_version','')}".strip(), page=r.get("foreign_landing_url", "")))
@@ -66,36 +83,43 @@ def vertical(src, dst, dur, start=0.0, fps=30):
     return dst
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__))); import remote
 CACHE = os.environ.get("MEDIA_CACHE") or os.path.join(remote.ROOT, "media_cache")
-def cache_key(q, photos="auto"):
-    import hashlib; return hashlib.sha1(f"{q.strip().lower()}|{photos}".encode()).hexdigest()[:12]
-def from_cache(q, photos="auto"):
+def cache_key(q, photos="auto", wiki=None):
+    import hashlib; return hashlib.sha1(f"{q.strip().lower()}|{photos}|{wiki or ''}".encode()).hexdigest()[:12]
+def from_cache(q, photos="auto", wiki=None):
     """photos already fetched (here or by GitHub). Returns the list or None."""
-    d = os.path.join(CACHE, cache_key(q, photos)); m = os.path.join(d, "credits.json")
+    d = os.path.join(CACHE, cache_key(q, photos, wiki)); m = os.path.join(d, "credits.json")
     if not os.path.exists(m): return None
     res = json.load(open(m))
     for r in res: r["file"] = os.path.join(d, os.path.basename(r["file"])); r["thumb"] = os.path.join(d, os.path.basename(r.get("thumb") or r["file"]))
     return res
 def ensure(queries):
-    """queries = [(q, photos)]. When this machine cannot reach Wikimedia, GitHub fetches all missing ones in ONE request."""
-    miss = {cache_key(q, p): dict(key=cache_key(q, p), q=q, photos=p) for q, p in queries if q and not from_cache(q, p)}
+    """queries = [(q, photos)] or [(q, photos, wiki)]. When this machine cannot reach Wikimedia, GitHub fetches all missing ones in ONE request."""
+    queries = [tuple(x) + (None,) * (3 - len(x)) for x in queries]
+    miss = {cache_key(q, p, w): dict(key=cache_key(q, p, w), q=q, photos=p, wiki=w) for q, p, w in queries if q and not from_cache(q, p, w)}
     if not miss or not remote.blocked("https://commons.wikimedia.org/"): return
     bad = remote.request("media", list(miss.values()), CACHE)
     if bad: print("NO PHOTOS for:", " | ".join(b["q"] for b in bad), "-> change these queries (simpler English words).", file=sys.stderr)
-def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=0, video_q=None, photos="auto"):
+def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=0, video_q=None, photos="auto", wiki=None):
     """candidates for one scene: Wikimedia photos + Pixabay photos (videos only if n_vid>0).
     Each item has "kind" (photo|video) and "source"; "file" is a jpg or mp4, "thumb" a jpg for the sheet.
     Looks first in media_cache (filled here or by GitHub through ensure())."""
-    c = from_cache(q, photos)
+    c = from_cache(q, photos, wiki)
     if c: return c
     os.makedirs(out, exist_ok=True); res = []
-    plan = {"auto": [("wikimedia", n_wm), ("pixabay", n_px)], "wikimedia": [("wikimedia", n_wm + n_px)], "pixabay": [("pixabay", n_wm + n_px)], "openverse": [("openverse", n_wm + n_px)], "none": []}[photos]
+    for t in ([wiki] if isinstance(wiki, str) else (wiki or [])):   # real photos of the event first
+        try:
+            for r in wiki_article(t, out, 4): r.update(kind="photo", source="wikipedia", thumb=r["file"]); res.append(r)
+        except Exception as e: print(f"  wikipedia «{t}»: {type(e).__name__}", file=sys.stderr)
+    plan = {"auto": [("openverse", 3), ("wikimedia", 2), ("pixabay", max(1, n_px - 1))], "wikimedia": [("wikimedia", n_wm + n_px)], "pixabay": [("pixabay", n_wm + n_px)], "openverse": [("openverse", n_wm + n_px)], "none": []}[photos]
     for src, n in plan:
         try:
             for r in SRC[src](q, out, n): r.update(kind="photo", source=src, thumb=r["file"]); res.append(r)
         except Exception as e: print(f"  {src}: {type(e).__name__}", file=sys.stderr)
-    if not res and photos == "auto":
+    if photos == "auto" and sum(r["source"] != "pixabay" for r in res) < 2:   # too few real photos: ask Openverse for more
         try:
-            for r in openverse(q, out, n_wm + n_px): r.update(kind="photo", source="openverse", thumb=r["file"]); res.append(r)
+            seen = {r.get("page") for r in res}
+            for r in openverse(q + " photo", out, 4):
+                if r.get("page") not in seen: r.update(kind="photo", source="openverse", thumb=r["file"]); res.append(r)
         except Exception: pass
     if n_vid:
         try:
@@ -105,6 +129,23 @@ def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=0, video_q=None, photos="auto"):
     return res
 def mixed_sheet(res, out):
     return sheet([r["thumb"] for r in res], out, labels=[f"{'VIDEO' if r['kind'] == 'video' else 'PHOTO'} {r['source'].upper()}" for r in res])
+def wiki_article(title, out, n=6, lang="en"):
+    """real photos of a real event/person/place: the images of its Wikipedia article (only free files hosted on Wikimedia Commons)."""
+    if ":" in title[:4]: lang, title = title.split(":", 1)
+    d = json.loads(get(f"https://{lang}.wikipedia.org/api/rest_v1/page/media-list/" + urllib.parse.quote(title.replace(" ", "_"))))
+    res = []
+    for it in d.get("items", []):
+        if it.get("type") != "image" or not it.get("srcset"): continue
+        src = "https:" + it["srcset"][-1]["src"]
+        if "/wikipedia/commons/" not in src or src.lower().endswith((".svg", ".svg.png", ".gif")): continue
+        name = it.get("title", "").replace("File:", "")
+        if name.lower().endswith((".svg", ".gif")) or re.search(r"coat.of.arms|emblem|logo|flag.of|seal.of|signature|map", name, re.I): continue
+        f = os.path.join(out, "wa" + re.sub(r"[^A-Za-z0-9]", "", name)[:40] + ".jpg")
+        try: _save(src, f)
+        except Exception: continue
+        res.append(dict(file=f, title=name, author="Wikimedia Commons", license="see page (free licence on Commons)", page="https://commons.wikimedia.org/wiki/" + urllib.parse.quote(it.get("title", "").replace(" ", "_"))))
+        if len(res) >= n: break
+    return res
 SRC = {"pixabay": pixabay, "wikimedia": wikimedia, "openverse": openverse}
 def fetch(q, out, source="auto", n=6):
     os.makedirs(out, exist_ok=True); order = ["wikimedia", "pixabay", "openverse"] if source == "auto" else [source]

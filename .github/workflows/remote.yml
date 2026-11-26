@@ -51,7 +51,7 @@ jobs:
                           json.dump(T.parse(T.feed(it["cid"])), open(os.path.join(d, "feed.json"), "w"), ensure_ascii=False)
                       elif kind == "media":
                           import images as IM
-                          res = IM.fetch_mixed(it["q"], d, photos=it.get("photos", "auto"))
+                          res = IM.fetch_mixed(it["q"], d, photos=it.get("photos", "auto"), wiki=it.get("wiki"))
                           for r in res: r["file"] = os.path.basename(r["file"]); r["thumb"] = os.path.basename(r.get("thumb") or r["file"])
                           json.dump(res, open(os.path.join(d, "credits.json"), "w"), ensure_ascii=False)
                       else:
@@ -60,7 +60,7 @@ jobs:
                           subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", os.path.join(d, "v.wav"), os.path.join(d, "v.flac")], check=True)
                           for x in ("l.json", "v.wav", "v.mp3", "durations.json"):
                               if os.path.exists(os.path.join(d, x)): os.remove(os.path.join(d, x))
-                      open(os.path.join(d, "done"), "w").close(); print("ok", kind, it["key"])
+                      open(os.path.join(d, "done"), "w").close(); print("ok", kind, it["key"]); __import__("time").sleep(1)
                   except (Exception, SystemExit) as e:
                       open(os.path.join(d, "error.txt"), "w").write(str(e)[:500]); print("FAIL", kind, it["key"], e)
           PY

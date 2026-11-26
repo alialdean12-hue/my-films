@@ -1,0 +1,168 @@
+{
+ "title": "تيتانيك",
+ "beats": [
+  {
+   "line": "في أبريل ألفٍ وتسعمئةٍ واثني عشر، أبحرت أضخم سفينة في العالم.",
+   "cap": "«تيتانيك»<br/><span style='font-size:58px;color:#e8d9b0'>السفينة التي لا تغرق</span>",
+   "date": "10 أبريل 1912",
+   "cam": [
+    1.0,
+    1.18,
+    -40,
+    0
+   ],
+   "query": "titanic ship painting",
+   "sticker": {
+    "query": "lifebuoy ring",
+    "size": 620,
+    "y": 1200,
+    "x": 600
+   },
+   "wiki": "Titanic"
+  },
+  {
+   "line": "من إنجلترا إلى نيويورك، وعلى متنها ألفان ومئتا شخص.",
+   "cap": "ساوثهامبتون ← نيويورك",
+   "date": "2,224 راكبًا",
+   "cam": [
+    1.25,
+    1.0,
+    0,
+    30
+   ],
+   "route": true,
+   "query": "old map compass"
+  },
+  {
+   "line": "تلقّى الطاقم ستةَ تحذيراتٍ من الجليد… وتجاهلوها.",
+   "cap": "<span style='color:#ff5a4a'>6</span> تحذيرات… تُجوهلت",
+   "date": "14 أبريل · 11:40 م",
+   "cam": [
+    1.0,
+    1.2,
+    30,
+    -20
+   ],
+   "query": "ship deck night"
+  },
+  {
+   "line": "ثم ظهر جبلٌ جليدي، ولم يكن هناك وقت.",
+   "cap": "37 ثانية فقط",
+   "date": "",
+   "cam": [
+    1.4,
+    1.05,
+    0,
+    0
+   ],
+   "flash": true,
+   "query": "iceberg ocean",
+   "sticker": {
+    "query": "iceberg isolated",
+    "size": 520,
+    "y": 1250,
+    "x": 600
+   },
+   "wiki": "Titanic"
+  },
+  {
+   "line": "في ساعتين وأربعين دقيقة، غرقت السفينة.",
+   "cap": "غرقت في <span style='color:#c9a24a'>2:40</span> ساعة",
+   "date": "15 أبريل · 2:20 ص",
+   "cam": [
+    1.0,
+    1.15,
+    0,
+    40
+   ],
+   "query": "frozen ocean night"
+  },
+  {
+   "line": "وبقي حطامها مفقودًا ثلاثةً وسبعين عامًا.",
+   "cap": "مفقودة <span style='color:#c9a24a'>73</span> عامًا",
+   "date": "عُثر عليها 1985",
+   "cam": [
+    1.2,
+    1.0,
+    0,
+    -30
+   ],
+   "query": "shipwreck underwater",
+   "sticker": {
+    "query": "antique pocket watch",
+    "size": 560,
+    "y": 1200,
+    "x": 600
+   },
+   "wiki": "Titanic"
+  },
+  {
+   "line": "كانت السفينة تحمل أثرياء العالم، وعائلاتٍ فقيرة تحلم بحياةٍ جديدة في أمريكا.",
+   "cap": "أثرياء وفقراء",
+   "date": "",
+   "cam": [
+    1.25,
+    1.0,
+    0,
+    30
+   ],
+   "route": true,
+   "query": "old ship deck"
+  },
+  {
+   "line": "لم يكن على متنها قوارب نجاة تكفي إلا لنصف الركاب تقريبًا.",
+   "cap": "قوارب لنصفهم فقط",
+   "date": "",
+   "cam": [
+    1.0,
+    1.15,
+    0,
+    40
+   ],
+   "query": "lifeboat old"
+  },
+  {
+   "line": "وقيل إن السفينة لا يمكن أن تغرق، فقلّ الحذر بين الطاقم والركاب.",
+   "cap": "وقيل إن السفينة لا يمكن أن ت",
+   "date": "14 أبريل · 11:40 م",
+   "cam": [
+    1.0,
+    1.2,
+    30,
+    -20
+   ],
+   "query": "old ship crowd"
+  },
+  {
+   "line": "وارتطم الجبل الجليدي بجانب السفينة، ففتح فيها شقوقًا طويلة تحت الماء.",
+   "cap": "وارتطم الجبل الجليدي بجانب ا",
+   "date": "",
+   "cam": [
+    1.4,
+    1.05,
+    0,
+    0
+   ],
+   "flash": true,
+   "query": "iceberg close"
+  },
+  {
+   "line": "وصلت سفينة الإنقاذ بعد ساعات، فأنقذت نحو سبعمئة شخص فقط.",
+   "cap": "وصلت سفينة الإنقاذ بعد ساعات",
+   "date": "15 أبريل · 2:20 ص",
+   "cam": [
+    1.0,
+    1.15,
+    0,
+    40
+   ],
+   "query": "rescue ship sea"
+  }
+ ],
+ "sources": [
+  "Encyclopaedia Britannica — RMS Titanic (dates, passengers, sinking time)",
+  "Titanic Inquiry Project — ice warnings received"
+ ],
+ "category": 1,
+ "caption": "paper"
+}

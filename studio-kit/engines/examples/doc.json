@@ -11,7 +11,8 @@
     -40,
     0
    ],
-   "query": "titanic ship painting"
+   "query": "titanic ship painting",
+   "wiki": "Titanic"
   },
   {
    "line": "من إنجلترا إلى نيويورك، وعلى متنها ألفان ومئتا شخص.",
@@ -49,7 +50,8 @@
     0
    ],
    "flash": true,
-   "query": "iceberg ocean"
+   "query": "iceberg ocean",
+   "wiki": "Titanic"
   },
   {
    "line": "في ساعتين وأربعين دقيقة، غرقت السفينة.",
@@ -73,7 +75,8 @@
     0,
     -30
    ],
-   "query": "shipwreck underwater"
+   "query": "shipwreck underwater",
+   "wiki": "Titanic"
   },
   {
    "line": "كانت السفينة تحمل أثرياء العالم، وعائلاتٍ فقيرة تحلم بحياةٍ جديدة في أمريكا.",
