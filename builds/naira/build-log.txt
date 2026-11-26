@@ -1,6 +1,13 @@
   wikimedia: HTTPError
   wikimedia: HTTPError
   wikimedia: HTTPError
+  wikimedia: HTTPError
+/home/runner/work/_temp/out/cover_check.jpg
 media candidates: look at /home/runner/work/_temp/out/candidates (beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set "pick": number
-TOO LONG: the narration lasts 81.2 s but Shorts/Reels allow at most 80 s. Remove about 5 words. Video not rendered.
-make exit: 1
+CONTRAST: 5 texts made dark (light background), 15 white (dark background)
+QA OK
+LENGTH 79.70 s
+CONTRAST: 1 texts made dark (light background), 2 white (dark background)
+DELIVER /home/runner/work/_temp/out/deliver/أفلامي/جرائم حقيقية عربية/الجريمة التي حُكم فيها في 16 يومًا (upload exactly these files, nothing else)
+DONE /home/runner/work/_temp/out : deliver/ (ready to upload) + video.mp4 video_phone.mp4 video_16x9.mp4 video_1x1.mp4 cover.jpg cover_check.jpg CAPTION.md
+make exit: 0
