@@ -50,7 +50,7 @@
    "transition": "fade",
    "overlay": "film",
    "sticker": {
-    "query": "prison bars window",
+    "query": "handcuffs metal close up",
     "size": 560,
     "y": 1250,
     "x": 600
@@ -94,7 +94,7 @@
    "line": "كل الأحكام صادق عليها أمير البلاد… بعد استنفاد كل درجات التقاضي.",
    "cap": "تصديق الأمير",
    "date": "حكم نهائي",
-   "query": "Kuwait national assembly building",
+   "query": "Kuwait parliament building",
    "transition": "zoom",
    "overlay": "stamp",
    "stamp": "نهائي"
@@ -108,13 +108,13 @@
   {
    "line": "لكن ما حدث في القاعة نفسها… كان لها اسم آخر في الخارج.",
    "cap": "الاسم الآخر",
-   "query": "United Nations flags meeting",
+   "query": "united nations hall meeting",
    "transition": "cut"
   },
   {
    "line": "المفوضية الأممية للحقوق: خطوة للخلف.",
    "cap": "قلقٌ أممي",
-   "query": "United Nations building flags",
+   "query": "United Nations headquarters building",
    "overlay": "stamp",
    "stamp": "إدانة"
   },
@@ -134,7 +134,7 @@
   {
    "line": "سبعة أسماء… وصمتٌ حكومي عن التفاصيل.",
    "cap": "بلا تفاصيل",
-   "query": "empty courtroom seats",
+   "query": "empty wooden benches hall",
    "transition": "cut"
   },
   {
