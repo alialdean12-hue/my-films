@@ -125,11 +125,10 @@
    "line": "خرج رجلٌ أشعث رافعًا يديه: «أنا صدام حسين».",
    "cap": "«أنا صدام حسين»",
    "date": "نحو 20:30",
-   "query": "Reuters Baghdad 2003 newspaper front page",
+   "query": "old newspaper headlines",
    "flash": true,
    "overlay": "stamp",
-   "stamp": "قُبض عليه",
-   "source": "wikimedia"
+   "stamp": "قُبض عليه"
   },
   {
    "line": "في الحفرة: مسدس لم يُستخدم، و750 ألف دولار.",
