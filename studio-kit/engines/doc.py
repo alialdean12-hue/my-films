@@ -17,17 +17,31 @@ CAPS = {  # caption looks
  "top": ('top:320px;color:#fff;text-shadow:0 6px 24px #000', False), "red": ('top:1260px;color:#fff;', False),
  "paper": ('top:250px;color:#141414;-webkit-text-stroke:0;text-shadow:none', False),
 }
+ZONES = {"top": 250, "middle": 820, "low": 1330}
+def zone(i, b):
+    """hybrid layout of beat i: where the caption goes; the other layers use the free zones."""
+    if not HYB: return {}
+    z = b.get("cap_pos") or ["top", "low", "middle", "top", "middle", "low"][i % 6]
+    stk_y = {"top": 1250, "middle": 1380, "low": 830}[z]; date_y = {"top": 1560, "middle": 300, "low": 300}[z]
+    stamp_y = {"top": 1450, "middle": 1500, "low": 640}[z]
+    side = -1 if i % 2 else 1
+    return dict(cap=z, cap_y=ZONES[z], stk_x=540 + side * 210, stk_y=stk_y, date_y=date_y, stamp_y=stamp_y, card_x=540 - side * 230, card_y=stk_y - 60, side=side)
+PAPERS = [("#f6eedc", "#141414"), ("#ffffff", "#141414"), ("#ffe766", "#141414"), ("#161616", "#ffffff")]   # cream, white, sticky note, black label
 def capdiv(i, b):
     st = b.get("caption", ep.get("caption", "paper" if HYB else "gold")); css, bar = CAPS.get(st, CAPS["gold"]); t = b.get("cap", "")
     if st == "box": t = f'<span style="background:#f4ecd8;padding:6px 30px 16px;box-shadow:10px 10px 0 #c9a24a">{t}</span>'
     if st == "news": t = f'<span style="background:#c0392b;padding:6px 30px 16px">{t}</span>'
     if st == "red": t = f'<span style="background:#e5322d;padding:6px 30px 16px;transform:rotate(-2deg);display:inline-block">{t}</span>'
-    if st == "paper":   # torn paper strip with tape and a yellow marker on the key word
-        t = (f'<span class="tp" style="display:inline-block;background:#f6eedc;padding:20px 46px 30px;transform:rotate(-2deg);'
+    if st == "paper":   # torn paper strip with tape and a yellow marker on the key word; colour and angle change every beat
+        bg, fg = PAPERS[b.get("paper", i % 4)] if isinstance(b.get("paper", i % 4), int) else (b["paper"], "#141414")
+        rot = [-2, 3, -3, 2][i % 4]; Z = zone(i, b); css = f"top:{Z.get('cap_y', 250)}px;color:{fg};-webkit-text-stroke:0;text-shadow:none"
+        t = (f'<span class="tp" style="display:inline-block;background:{bg};color:{fg};padding:20px 46px 30px;transform:rotate({rot}deg);'
              f'clip-path:polygon(0 6%,4% 0,9% 5%,15% 1%,22% 6%,30% 0,38% 5%,46% 1%,55% 6%,63% 0,71% 5%,79% 1%,87% 6%,94% 0,100% 5%,98% 50%,100% 95%,94% 100%,86% 94%,78% 100%,70% 95%,61% 100%,52% 94%,44% 100%,36% 95%,27% 100%,19% 94%,11% 100%,4% 95%,0 100%,2% 50%);'
              f'box-shadow:0 14px 26px rgba(0,0,0,.35)">{t.replace("color:#ffd21f", "color:#141414;background:#ffd21f;padding:0 10px").replace("color:#ff3b3b", "color:#fff;background:#d0202a;padding:0 10px")}</span>'
              f'<span style="position:absolute;left:50%;top:-14px;width:150px;height:46px;margin-left:-75px;background:rgba(240,230,190,.75);transform:rotate(4deg)"></span>')
     if st == "lower": t = f'<span style="border-right:16px solid #c9a24a;padding-right:24px;background:linear-gradient(270deg,#000c,#0000)">{t}</span>'
+    if st == "paper" and HYB:   # a red marker line drawn under the strip
+        t += f'<svg width="700" height="40" style="position:absolute;left:50%;margin-left:-350px;bottom:-34px;overflow:visible"><path id="ul{i}" d="M20,20 Q180,6 350,18 T680,14" fill="none" stroke="#d0202a" stroke-width="12" stroke-linecap="round" stroke-dasharray="720" stroke-dashoffset="720"/></svg>'
     return (f'<div class="bar" id="br{i}"></div>' if bar else "") + f'<div class="cap" id="cp{i}" style="opacity:0;{css}">{t}</div>', bar
 def overlay(i, b, s, e):
     o = b.get("overlay"); h, js = "", []
@@ -44,7 +58,7 @@ def overlay(i, b, s, e):
         if k == "letterbox": sv += '<rect width="1080" height="260" fill="#000"/><rect y="1660" width="1080" height="260" fill="#000"/>'
         if k == "vhs": sv += "".join(f'<rect class="vh{i}" x="0" y="{(R(j)+1)*960:.0f}" width="1080" height="{4+abs(R(j+3))*10:.0f}" fill="#fff" opacity=".12"/>' for j in range(10)) + '<text x="70" y="140" text-anchor="end" font-size="56" font-family="monospace" fill="#fff" opacity=".8">▶ PLAY</text>'; js.append(f'tl.fromTo("#S{i} .vh{i}",{{y:0}},{{y:300,duration:.5,repeat:{int((e-s)/.5)+2},ease:"none"}},{s-.3:.2f});')
         if k == "counter": h += f'<div class="cap" id="cn{i}" style="top:640px;font-size:220px;color:#ffd21f;text-shadow:0 10px 40px #000">0</div>'; js.append(f'const o{i}={{v:0}};tl.to(o{i},{{v:{b.get("number",100)},duration:1.6,ease:"power2.out",onUpdate:()=>{{document.getElementById("cn{i}").textContent=Math.round(o{i}.v).toLocaleString("en")+"{b.get("unit","")}"}}}},{s+.3:.2f});')
-        if k == "stamp": h += f'<div class="cap" id="sp{i}" style="top:700px;font-size:120px;color:#e5322d"><span style="border:14px solid #e5322d;padding:0 30px 14px;display:inline-block;transform:rotate(-10deg)">{b.get("stamp","سرّي")}</span></div>'; js.append(f'tl.fromTo("#sp{i}",{{opacity:0,scale:3}},{{opacity:1,scale:1,duration:.25,ease:"power4.in"}},{s+.8:.2f});')
+        if k == "stamp": h += f'<div class="cap" id="sp{i}" style="top:{zone(i, b).get("stamp_y", 700)}px;font-size:120px;color:#e5322d"><span style="border:14px solid #e5322d;padding:0 30px 14px;display:inline-block;transform:rotate(-10deg)">{b.get("stamp","سرّي")}</span></div>'; js.append(f'tl.fromTo("#sp{i}",{{opacity:0,scale:3}},{{opacity:1,scale:1,duration:.25,ease:"power4.in"}},{s+.8:.2f});')
         if k == "quote": h += f'<div class="cap" id="qt{i}" style="top:560px;font-size:76px;color:#f4ecd8;font-style:italic">«{b.get("quote","")}»</div>'; js.append(f'tl.fromTo("#qt{i}",{{opacity:0}},{{opacity:1,duration:.8}},{s+.3:.2f});')
         if k == "split" and b.get("img2_ready"): h += f'<div id="sp2{i}" style="position:absolute;left:540px;top:0;width:540px;height:1920px;background:url(img/{i}b.jpg) center/cover;border-left:10px solid #fff;filter:{GRADES.get(b.get("grade", ep.get("grade", "sepia")))}"></div>'; js.append(f'tl.fromTo("#sp2{i}",{{x:540}},{{x:0,duration:.6,ease:"power3.out"}},{s+.5:.2f});')
     if sv: h = f'<svg class="full" width="1080" height="1920" viewBox="0 0 1080 1920">{sv}</svg>' + h
@@ -60,26 +74,45 @@ def scene(i, b, s, e, c0, c1):
         TOP.append(f'<video id="vid{i}" src="vid/{i}.mp4" data-start="{c0:.2f}" data-duration="{D:.2f}" data-track-index="0" muted playsinline style="position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:{g}"></video>')
         h = '<div class="vg"></div>'
     else: h = f'<div class="ph" id="ph{i}" style="background-image:url(img/{i}.jpg);filter:{g}"></div><div class="vg"></div>'
-    if b.get("_sticker"):   # cut-out sticker of the key person/object, pops in front of the photo
-        st = b.get("sticker", {}); x, y, w = st.get("x", 560), st.get("y", 1180), st.get("size", 640); rot = st.get("rotate", -4 if i % 2 else 4)
+    Z = zone(i, b)
+    if b.get("_card"):   # second real photo as a taped polaroid that flies in mid-beat (more shots per beat)
+        cx, cy = Z.get("card_x", 300), Z.get("card_y", 1100); r0 = 7 * Z.get("side", 1)
+        h += (f'<div id="cd{i}" style="position:absolute;left:{cx-230}px;top:{cy-270}px;width:460px;height:540px;background:#fff;padding:18px 18px 70px;box-sizing:border-box;box-shadow:0 22px 34px rgba(0,0,0,.45)">'
+              f'<div style="width:100%;height:100%;background:url(img/{i}b.jpg) center/cover"></div><div style="position:absolute;left:150px;top:-18px;width:160px;height:44px;background:rgba(240,230,190,.8)"></div></div>')
+        tc = s + (e - s) * .42
+        js.append(f'tl.fromTo("#cd{i}",{{x:{900*Z.get("side",1)},rotation:{r0*3},opacity:1}},{{x:0,rotation:{r0},duration:.45,ease:"power3.out"}},{tc:.2f});')
+        js.append(f'tl.to("#cd{i}",{{y:-14,duration:.9,ease:"sine.inOut",yoyo:true,repeat:{max(1, int((e-tc)/.9))}}},{tc+.5:.2f});')
+    if b.get("_sticker"):   # cut-out sticker of the key person/object, 4 different entrances
+        st = b.get("sticker", {}); x, y, w = st.get("x", Z.get("stk_x", 560)), st.get("y", Z.get("stk_y", 1180)), st.get("size", 600); rot = st.get("rotate", -4 if i % 2 else 4)
         h += (f'<img id="stk{i}" src="img/{i}s.png" style="position:absolute;left:{x - w/2:.0f}px;top:{y - w/2:.0f}px;width:{w}px;height:{w}px;object-fit:contain;'
               f'filter:drop-shadow(0 18px 18px rgba(0,0,0,.45))"/>')
-        js.append(f'tl.fromTo("#stk{i}",{{scale:0,rotation:{rot*4}}},{{scale:1,rotation:{rot},duration:.5,ease:"back.out(2)"}},{s+.5:.2f});')
-        js.append(f'tl.to("#stk{i}",{{rotation:{-rot*.4:.1f},duration:.5,ease:"sine.inOut",yoyo:true,repeat:{int((e-s)/.5)}}},{s+1.0:.2f});')
+        ent = st.get("enter", ["pop", "drop", "slide", "stamp"][i % 4])
+        frm = {"pop": f"scale:0,rotation:{rot*4}", "drop": "y:-1400,rotation:0", "slide": f"x:{-1200*Z.get('side',1)},rotation:{-rot*6}", "stamp": "scale:2.4,opacity:0"}[ent]
+        ease = {"pop": "back.out(2)", "drop": "bounce.out", "slide": "power3.out", "stamp": "power4.in"}[ent]
+        js.append(f'tl.fromTo("#stk{i}",{{{frm}}},{{scale:1,x:0,y:0,opacity:1,rotation:{rot},duration:{.8 if ent == "drop" else .5},ease:"{ease}"}},{s+.5:.2f});')
+        js.append(f'tl.to("#stk{i}",{{rotation:{-rot*.4:.1f},duration:.6,ease:"sine.inOut",yoyo:true,repeat:{int((e-s)/.6)}}},{s+1.3:.2f});')
     oh, oj = overlay(i, b, s, e); h += oh; js += oj
     if b.get("route"): o2, j2 = overlay(i, {"overlay": "route"}, s, e); h += o2; js += j2
-    if b.get("date"): h += f'<div class="dt" id="dt{i}" style="opacity:0"><span>{b["date"]}</span></div>'
+    if b.get("date"): h += f'<div class="dt" id="dt{i}" style="opacity:0;{("top:%dpx" % Z["date_y"]) if Z else ""}"><span>{b["date"]}</span></div>'
     ch, bar = capdiv(i, b); h += ch
     if b.get("flash"): h += f'<div id="fl{i}" style="position:absolute;inset:0;background:#fff;opacity:0"></div>'
-    tr = b.get("transition", ep.get("transition", "fade"))
+    tr = b.get("transition", ep.get("transition", ["tear", "slide_rot", "punch", "whip", "tear", "flash"][i % 6] if HYB else "fade"))
+    if tr == "tear": h += f'<div id="te{i}" style="position:absolute;top:-40px;bottom:-40px;width:90px;left:1080px;background:#f6eedc;clip-path:polygon(30% 0,70% 3%,40% 7%,80% 11%,35% 15%,75% 20%,30% 25%,85% 30%,40% 35%,70% 40%,30% 45%,80% 50%,35% 55%,75% 60%,40% 65%,85% 70%,30% 75%,70% 80%,35% 85%,80% 90%,40% 95%,70% 100%,0 100%,0 0);box-shadow:-8px 0 20px rgba(0,0,0,.4)"></div>'
     js.append(f'tl.fromTo("#{"vid" if b.get("_vsrc") else "ph"}{i}",{{scale:{a if not b.get("_vsrc") else 1.0},x:{dx if not b.get("_vsrc") else 0},y:{dy if not b.get("_vsrc") else 0}}},{{scale:{z if not b.get("_vsrc") else 1.08},x:{-dx if not b.get("_vsrc") else 0},y:{-dy if not b.get("_vsrc") else 0},duration:{D:.2f},ease:"none"}},{c0:.2f});')
     if i:
         js.append({"fade": f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.45}},{c0:.2f});', "cut": f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.05}},{c0+.3:.2f});',
                    "slide": f'tl.fromTo("#S{i}",{{x:1080}},{{x:0,duration:.45,ease:"power3.out"}},{c0:.2f});', "up": f'tl.fromTo("#S{i}",{{y:1920}},{{y:0,duration:.45,ease:"power3.out"}},{c0:.2f});',
                    "zoom": f'tl.fromTo("#S{i}",{{opacity:0,scale:1.5}},{{opacity:1,scale:1,duration:.45,ease:"power3.out"}},{c0:.2f});', "blur": f'tl.fromTo("#S{i}",{{opacity:0,filter:"blur(30px)"}},{{opacity:1,filter:"blur(0px)",duration:.5}},{c0:.2f});',
                    "flash": f'tl.fromTo("#S{i}",{{opacity:0}},{{opacity:1,duration:.05}},{c0+.3:.2f});tl.fromTo("#S{i}",{{filter:"brightness(4)"}},{{filter:"brightness(1)",duration:.4}},{c0+.3:.2f});',
-                   "glitch": f'tl.fromTo("#S{i}",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:.06,repeat:4,yoyo:true}},{c0+.2:.2f});'}.get(tr, ""))
+                   "glitch": f'tl.fromTo("#S{i}",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:.06,repeat:4,yoyo:true}},{c0+.2:.2f});',
+                   "tear": f'tl.fromTo("#S{i}",{{clipPath:"inset(0 0 0 100%)"}},{{clipPath:"inset(0 0 0 0%)",duration:.55,ease:"power2.inOut"}},{c0:.2f});tl.fromTo("#te{i}",{{x:0}},{{x:-1200,duration:.55,ease:"power2.inOut"}},{c0:.2f});',
+                   "slide_rot": f'tl.fromTo("#S{i}",{{x:1100,rotation:9}},{{x:0,rotation:0,duration:.5,ease:"power3.out"}},{c0:.2f});',
+                   "punch": f'tl.fromTo("#S{i}",{{opacity:0,scale:1.7}},{{opacity:1,scale:1,duration:.3,ease:"power4.out"}},{c0+.2:.2f});tl.fromTo("#S{i}",{{x:0}},{{x:12,duration:.05,yoyo:true,repeat:5}},{c0+.5:.2f});',
+                   "whip": f'tl.fromTo("#S{i}",{{x:-1100,filter:"blur(24px)"}},{{x:0,filter:"blur(0px)",duration:.4,ease:"power3.out"}},{c0:.2f});'}.get(tr, ""))
     if b.get("_vsrc") and i: js.append(f'tl.fromTo("#vid{i}",{{opacity:0}},{{opacity:1,duration:.45}},{c0:.2f});')
+    if HYB and not b.get("_vsrc") and e - s > 3:   # a "cut" to a closer framing halfway through the beat
+        js.append(f'tl.to("#ph{i}",{{scale:"+=0.14",x:"+={40*Z.get("side",1)}",duration:.18,ease:"power4.out"}},{s+(e-s)*.55:.2f});')
+    if HYB and b.get("caption", ep.get("caption", "paper")) == "paper": js.append(f'tl.to("#ul{i}",{{attr:{{"stroke-dashoffset":0}},duration:.45,ease:"power2.out"}},{s+.7:.2f});')
     if bar: js.append(f'tl.fromTo("#br{i}",{{scaleX:0}},{{scaleX:1,duration:.5,ease:"power2.out"}},{s+.1:.2f});')
     if b.get("caption", ep.get("caption", "paper" if HYB else "gold")) == "paper":
         js.append(f'tl.fromTo("#cp{i}",{{opacity:0,scale:1.6,rotation:-6}},{{opacity:1,scale:1,rotation:0,duration:.35,ease:"power3.in"}},{s+.2:.2f});')
@@ -124,6 +157,12 @@ def images():
         if r["kind"] == "video": b["_vsrc"] = r["file"]
         else: sh(["ffmpeg", "-y", "-loglevel", "error", "-i", r["file"], "-vf", "scale=-2:2100", "-q:v", "3", f"{out}/{i}.jpg"])
         credits.append(f"مشهد {i+1} ({'فيديو' if r['kind'] == 'video' else 'صورة'}): {r['title'][:60]} — {r['author']} — {r['license']} — {r['page']}")
+        if HYB and not (b.get("img2") or b.get("query2")) and b.get("card", True):
+            more = [x for x in fresh if key(x) not in used and x.get("kind") == "photo"]
+            if more:
+                r2 = more[min(len(more) - 1, int(b.get("card_pick", 1)) - 1)]; used[key(r2)] = i + 1
+                sh(["ffmpeg", "-y", "-loglevel", "error", "-i", r2["file"], "-vf", "scale=-2:900", "-q:v", "3", f"{out}/{i}b.jpg"]); b["_card"] = True
+                credits.append(f"صورة ثانية مشهد {i+1}: {r2['title'][:60]} — {r2['author']} — {r2['license']} — {r2['page']}")
         if b.get("img2") or b.get("query2"):
             q2 = b.get("query2"); cf2 = f"{cand}/q{i}b"; m2 = os.path.join(cf2, "credits.json")
             if b.get("img2"): src2 = b["img2"] if os.path.isabs(b["img2"]) else os.path.join(ep["_dir"], b["img2"])
