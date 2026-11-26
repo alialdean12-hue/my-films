@@ -79,7 +79,7 @@
   },
   {
    "line": "كل شيء كان مسجّلًا: كاميرات المراقبة صوّرت الواقعة كاملة.",
-   "cap": "الكاميرا صوّرت كل شيء",
+   "cap": "الكاميرا صوّرت",
    "query": "surveillance camera wall building",
    "overlay": "circle",
    "at": [
@@ -90,7 +90,7 @@
   },
   {
    "line": "بعد 48 ساعة فقط… أحالت النيابة المتهم إلى محكمة الجنايات.",
-   "cap": "48 ساعة",
+   "cap": "48 ساعة فقط",
    "date": "23 يونيو 2022",
    "query": "courthouse Egypt building",
    "transition": "zoom"
@@ -106,7 +106,7 @@
   {
    "line": "الحكم استند إلى اعتراف المتهم و26 شاهدًا وتقرير الطب الشرعي.",
    "cap": "26 شاهدًا",
-   "query": "newspaper headlines arabic",
+   "query": "court case files documents",
    "transition": "slide"
   },
   {
