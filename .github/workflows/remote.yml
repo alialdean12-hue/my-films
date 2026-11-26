@@ -60,7 +60,7 @@ jobs:
                           subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", os.path.join(d, "v.wav"), os.path.join(d, "v.flac")], check=True)
                           for x in ("l.json", "v.wav", "v.mp3", "durations.json"):
                               if os.path.exists(os.path.join(d, x)): os.remove(os.path.join(d, x))
-                      open(os.path.join(d, "done"), "w").close(); print("ok", kind, it["key"])
+                      open(os.path.join(d, "done"), "w").close(); print("ok", kind, it["key"]); __import__("time").sleep(1)
                   except (Exception, SystemExit) as e:
                       open(os.path.join(d, "error.txt"), "w").write(str(e)[:500]); print("FAIL", kind, it["key"], e)
           PY

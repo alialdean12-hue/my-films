@@ -1,7 +1,7 @@
 """Find photos for a video: several candidates per query from Pixabay, Wikimedia Commons or Openverse, a numbered contact sheet to pick from, and a credits file.
   python3 images.py "titanic ship" outdir [--source pixabay|wikimedia|openverse|auto] [--n 6]
 Python use: fetch(query, outdir, source, n) -> [{"file","title","author","license","page"}], sheet(files, out_jpg)
-source "auto": wikimedia first (best for history, real people, places, artworks), then pixabay, then openverse.
+source "auto": Wikipedia article photos ("wiki"), then Openverse (free real photos: Commons, Flickr CC), Wikimedia search, and a little Pixabay stock.
 Pixabay needs PIXABAY_KEY. Wikimedia/Openverse need no key; credits are written for licences that ask for them."""
 import json, os, re, subprocess, sys, time, urllib.parse, urllib.request
 UA = "StudioKitVideoBot/1.1 (educational shorts maker; https://www.mediawiki.org/wiki/API:Etiquette)"
@@ -41,8 +41,10 @@ def wikimedia(q, out, n):
         if len(res) >= n: break
     return res
 def openverse(q, out, n):
-    d = json.loads(get("https://api.openverse.org/v1/images/?" + urllib.parse.urlencode({"q": q, "page_size": n * 2, "license_type": "commercial"}))); res = []
+    """open photos (Wikimedia Commons, Flickr CC, museums) with their licence; commercial use allowed; no tiny images."""
+    d = json.loads(get("https://api.openverse.org/v1/images/?" + urllib.parse.urlencode({"q": q, "page_size": n * 3, "license_type": "commercial", "mature": "false"}))); res = []
     for r in d.get("results", []):
+        if (r.get("width") or 999) < 500 or (r.get("height") or 999) < 400: continue
         try: f = _save(r["url"], os.path.join(out, f"ov{r['id'][:8]}.jpg"))
         except Exception: continue
         res.append(dict(file=f, title=r.get("title", ""), author=r.get("creator", ""), license=f"{r.get('license','')} {r.get('license_version','')}".strip(), page=r.get("foreign_landing_url", "")))
@@ -99,14 +101,16 @@ def fetch_mixed(q, out, n_wm=3, n_px=3, n_vid=0, video_q=None, photos="auto", wi
         try:
             for r in wiki_article(t, out, 4): r.update(kind="photo", source="wikipedia", thumb=r["file"]); res.append(r)
         except Exception as e: print(f"  wikipedia «{t}»: {type(e).__name__}", file=sys.stderr)
-    plan = {"auto": [("wikimedia", n_wm), ("pixabay", n_px)], "wikimedia": [("wikimedia", n_wm + n_px)], "pixabay": [("pixabay", n_wm + n_px)], "openverse": [("openverse", n_wm + n_px)], "none": []}[photos]
+    plan = {"auto": [("openverse", 3), ("wikimedia", 2), ("pixabay", max(1, n_px - 1))], "wikimedia": [("wikimedia", n_wm + n_px)], "pixabay": [("pixabay", n_wm + n_px)], "openverse": [("openverse", n_wm + n_px)], "none": []}[photos]
     for src, n in plan:
         try:
             for r in SRC[src](q, out, n): r.update(kind="photo", source=src, thumb=r["file"]); res.append(r)
         except Exception as e: print(f"  {src}: {type(e).__name__}", file=sys.stderr)
-    if not res and photos == "auto":
+    if photos == "auto" and sum(r["source"] != "pixabay" for r in res) < 2:   # too few real photos: ask Openverse for more
         try:
-            for r in openverse(q, out, n_wm + n_px): r.update(kind="photo", source="openverse", thumb=r["file"]); res.append(r)
+            seen = {r.get("page") for r in res}
+            for r in openverse(q + " photo", out, 4):
+                if r.get("page") not in seen: r.update(kind="photo", source="openverse", thumb=r["file"]); res.append(r)
         except Exception: pass
     if n_vid:
         try:
@@ -126,6 +130,7 @@ def wiki_article(title, out, n=6, lang="en"):
         src = "https:" + it["srcset"][-1]["src"]
         if "/wikipedia/commons/" not in src or src.lower().endswith((".svg", ".svg.png", ".gif")): continue
         name = it.get("title", "").replace("File:", "")
+        if name.lower().endswith((".svg", ".gif")) or re.search(r"coat.of.arms|emblem|logo|flag.of|seal.of|signature|map", name, re.I): continue
         f = os.path.join(out, "wa" + re.sub(r"[^A-Za-z0-9]", "", name)[:40] + ".jpg")
         try: _save(src, f)
         except Exception: continue
