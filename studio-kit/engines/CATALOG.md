@@ -3,7 +3,7 @@
 Use these names in the JSON keys. Mix freely. Engines: see README.md.
 
 ## 1 · Documentary (`doc.py`)
-- **grade**: `sepia`, `bw`, `cold`, `warm`, `noir`, `vivid`, `faded`, `green`, `red`, `night`, `old_film`, `clean`
+- **grade** (default `natural` = the photo as it is; the others darken it): `natural`, `sepia`, `bw`, `cold`, `warm`, `noir`, `vivid`, `faded`, `green`, `red`, `night`, `old_film`, `clean`
 - **cam**: `in`, `out`, `left`, `right`, `up`, `down`, `still`, `fast_in` or [scaleFrom, scaleTo, dx, dy]
 - **caption**: `gold`, `box`, `lower`, `news`, `type`, `big`, `top`, `red`
 - **transition**: `fade`, `cut`, `slide`, `up`, `zoom`, `blur`, `flash`, `glitch`
