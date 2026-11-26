@@ -395,6 +395,7 @@ def main():
     if "✗" in lint: print(lint); sys.exit("LINT ERRORS")
     sys.path.insert(0, os.path.join(KIT, "engines")); import post
     if ep.get("qa", True):
+        post.contrast(P, [[min(x[0] + 1.9, (sch[k+1][0] - .3) if k + 1 < len(sch) else D - .2), f"B{k}"] for k, x in enumerate(sch)])
         probs = post.qa(P, sch, D, prefix="B")
         if probs:
             print("QA PROBLEMS (fix the JSON: shorter text / smaller size / move x):\n  " + "\n  ".join(probs[:20]))

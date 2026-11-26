@@ -1,0 +1,97 @@
+{
+ "title": "النحلة",
+ "character": "bee",
+ "music": "happy",
+ "beats": [
+  {
+   "line": "هل تعلم؟ النحلة تزور ألفي زهرة في اليوم!",
+   "cap": "<span style='color:#ffd21f'>2000</span> زهرة!",
+   "k": "count",
+   "number": 2000
+  },
+  {
+   "line": "لتصنع ملعقةً صغيرةً من العسل.",
+   "cap": "ملعقة عسل",
+   "k": "swarm",
+   "icon": "flower",
+   "icon_scale": 0.2,
+   "n": 14
+  },
+  {
+   "line": "وترقص لتخبر صديقاتها عن الأزهار.",
+   "cap": "ترقص لتتكلم",
+   "k": "rings"
+  },
+  {
+   "line": "وبدونها، يقلّ طعامنا كثيرًا.",
+   "cap": "بدونها؟",
+   "k": "grow",
+   "icon": "apple",
+   "icon_scale": 1.2
+  },
+  {
+   "line": "احمِ النحل، وشارك المعلومة.",
+   "cap": "احمِ النحل",
+   "k": "end",
+   "character": "kid"
+  },
+  {
+   "line": "وتطير النحلة بسرعة تقارب خمسةً وعشرين كيلومترًا في الساعة.",
+   "cap": "<span style='color:#ffd21f'>25</span> كم/ساعة",
+   "k": "count",
+   "number": 25,
+   "unit": " كم"
+  },
+  {
+   "line": "وفي الخلية الواحدة قد يعيش أكثر من خمسين ألف نحلة.",
+   "cap": "<span style='color:#ffd21f'>50,000</span> نحلة",
+   "k": "count",
+   "number": 50000
+  },
+  {
+   "line": "ولكل نحلة عمل: الحراسة أو التنظيف أو جمع الرحيق أو رعاية الصغار.",
+   "cap": "لكل نحلة <span style='color:#ffd21f'>عمل</span>",
+   "k": "rings",
+   "icon": "flower",
+   "icon_scale": 0.2,
+   "n": 14
+  },
+  {
+   "line": "والعسل لا يفسد تقريبًا، فقد وُجد عسلٌ صالح في مقابر قديمة جدًا.",
+   "cap": "عسلٌ <span style='color:#ffd21f'>لا يفسد</span>",
+   "k": "grow",
+   "icon": "honey",
+   "icon_scale": 1.2
+  },
+  {
+   "line": "والملكة تضع آلاف البيوض كل يوم في فصل الربيع.",
+   "cap": "الملكة <span style='color:#ffd21f'>تضع آلاف البيوض</span>",
+   "k": "grow",
+   "icon": "egg",
+   "icon_scale": 1.0
+  },
+  {
+   "line": "وللنحلة خمس عيون، ترى بها ألوانًا لا نراها نحن.",
+   "cap": "<span style='color:#ffd21f'>5</span> عيون",
+   "k": "count",
+   "number": 5,
+   "unit": ""
+  },
+  {
+   "line": "وتحرّك جناحيها أكثر من مئتي مرة في الثانية الواحدة.",
+   "cap": "<span style='color:#ffd21f'>200</span> رفّة/ثانية",
+   "k": "count",
+   "number": 200,
+   "unit": ""
+  },
+  {
+   "line": "والنحلة لا تلدغ إلا إذا شعرت بالخطر، لتدافع عن خليتها.",
+   "cap": "تلدغ <span style='color:#ffd21f'>للدفاع فقط</span>",
+   "k": "rings"
+  }
+ ],
+ "sources": [
+  "National Geographic — honeybees (flowers per trip, waggle dance)",
+  "FAO — pollinators and food"
+ ]
+}
