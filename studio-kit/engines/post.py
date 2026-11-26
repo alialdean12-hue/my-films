@@ -40,6 +40,69 @@ def qa(P, sch, D, prefix="S"):
     try: return json.loads(r.stdout.strip().splitlines()[-1])
     except Exception: return [f"QA could not run: {r.stderr[-300:]}"]
 
+# ------------------------------------------------------------------ 1b. automatic text contrast (text colour opposite to the background behind it)
+CONTRAST_JS = r"""
+const {chromium} = require('playwright');
+(async () => {
+  const [file, times] = [process.argv[2], JSON.parse(process.argv[3])];
+  const b = await chromium.launch(); const p = await b.newPage({viewport: {width: 1080, height: 1920}});
+  await p.goto('file://' + file); await p.waitForTimeout(800);
+  const hasT = (e) => [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length > 1);
+  const out = {};
+  for (const [t, clip] of times) {
+    const boxes = await p.evaluate(([t, clip]) => {
+      const tl = window.__timelines && (window.__timelines.c || Object.values(window.__timelines)[0]); if (tl) tl.seek(t, false);
+      document.querySelectorAll('[data-start][data-duration]').forEach(c => { if (c.id === 'root' || c.hasAttribute('data-composition-id')) return;
+        const a = parseFloat(c.dataset.start), d = parseFloat(c.dataset.duration); c.style.visibility = (t >= a && t < a + d) ? '' : 'hidden'; });
+      const all = [...document.querySelectorAll('div,span,text')].filter(e => [...e.childNodes].some(n => n.nodeType === 3 && n.textContent.trim().length > 1));
+      const vis = (el) => { let o = 1; for (let e = el; e && e.id !== 'root'; e = e.parentElement) { const cs = getComputedStyle(e); if (cs.display === 'none' || cs.visibility === 'hidden') return 0; o *= parseFloat(cs.opacity); } return o; };
+      const scope = clip ? document.getElementById(clip) : document; const res = [];
+      all.forEach((e, i) => { if (scope && scope !== document && !scope.contains(e)) return; if (vis(e) < .5) return;
+        const rg = document.createRange(); rg.selectNodeContents(e); const r = rg.getBoundingClientRect(); if (r.width < 4 || r.height < 4) return;
+        res.push([i, Math.max(0, r.left), Math.max(0, r.top), Math.min(1080, r.right), Math.min(1920, r.bottom)]); });
+      let st = document.getElementById('__hideTxt'); if (!st) { st = document.createElement('style'); st.id = '__hideTxt'; document.head.appendChild(st); }
+      st.textContent = 'div,span,text{color:transparent!important;-webkit-text-stroke-color:transparent!important;text-shadow:none!important;fill:transparent!important;stroke:transparent!important}';
+      return res; }, [t, clip]);
+    for (const [i, x1, y1, x2, y2] of boxes) {
+      if (out[i] !== undefined || x2 - x1 < 4 || y2 - y1 < 4) continue;
+      const buf = await p.screenshot({clip: {x: x1, y: y1, width: x2 - x1, height: y2 - y1}});
+      out[i] = buf.toString('base64');
+    }
+    await p.evaluate(() => { const st = document.getElementById('__hideTxt'); if (st) st.textContent = ''; });
+  }
+  console.log(JSON.stringify(out)); await b.close();
+})();
+"""
+CONTRAST_CSS = (".onlight{color:#141414!important;-webkit-text-stroke-color:#ffffff!important;text-shadow:0 5px 0 rgba(255,255,255,.45)!important}"
+    "text.onlight{fill:#141414!important;stroke:#ffffff!important}"
+    ".onlight .kw,.kw.onlight,.onlight .y,.onlight .r{color:#b0001c!important}"
+    ".ondark{color:#ffffff!important;-webkit-text-stroke-color:#111111!important;text-shadow:0 6px 0 rgba(0,0,0,.4)!important}"
+    "text.ondark{fill:#ffffff!important;stroke:#111111!important}")
+def contrast(P, times, html="index.html"):
+    """measures the real background behind every visible text at the given times [[t, clip_id|None]] and
+    makes the text dark on light backgrounds, white on dark ones (key words: yellow on dark, deep red on light)."""
+    import base64, io
+    from PIL import Image
+    js = os.path.join(P, "_contrast.js"); open(js, "w").write(CONTRAST_JS)
+    r = subprocess.run(["node", js, os.path.join(P, html), json.dumps(times)], capture_output=True, text=True, cwd=P)
+    try: shots = json.loads(r.stdout.strip().splitlines()[-1])
+    except Exception: print("contrast skipped:", r.stderr[-200:]); return {}
+    mode = {}
+    for i, b64 in shots.items():
+        im = Image.open(io.BytesIO(base64.b64decode(b64))).convert("RGB").resize((24, 24))
+        px = list(im.getdata()); lum = sum(.2126*a + .7152*b + .0722*c for a, b, c in px) / len(px) / 255
+        if lum > .58: mode[i] = "onlight"
+        elif lum < .42: mode[i] = "ondark"
+    idx = os.path.join(P, html); s = open(idx).read()
+    s = re.sub(r"<style id=\"__contrast\">.*?</script>", "", s, flags=re.S)
+    inj = (f'<style id="__contrast">{CONTRAST_CSS}</style><script>(function(){{var M={json.dumps(mode)};'
+           'var A=[].slice.call(document.querySelectorAll("div,span,text")).filter(function(e){return [].some.call(e.childNodes,function(n){return n.nodeType===3&&n.textContent.trim().length>1})});'
+           '[].forEach.call(document.querySelectorAll("span"),function(e){if(e.style&&e.style.color)e.classList.add("kw");});for(var k in M){var e=A[k];if(!e)continue;if(M[k]==="ondark"&&e.style&&e.style.color)continue;e.classList.add(M[k]);}})();</script>')
+    s = s.replace("</body>", inj + "</body>", 1)
+    open(idx, "w").write(s)
+    print(f"CONTRAST: {sum(v == 'onlight' for v in mode.values())} texts made dark (light background), {sum(v == 'ondark' for v in mode.values())} white (dark background)")
+    return mode
+
 # ------------------------------------------------------------------ 2. cover (frame of the video + big title inside the safe area)
 def cover(ep, P, OUT, sch, D):
     c = ep.get("cover", {}); at = c.get("at", min(sch[0][0] + 1.8, D - .5) if len(sch) == 1 else sch[min(c.get("beat", 1), len(sch) - 1)][0] + 1.8)
@@ -78,6 +141,7 @@ html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflo
 <script>const tl=gsap.timeline({{paused:true}});tl.to({{}},{{duration:1}},0);window.__timelines={{cv:tl}};</script></body></html>'''
     open(os.path.join(T, "index.html"), "w").write(html)
     shutil.rmtree(os.path.join(T, "snap"), ignore_errors=True)
+    contrast(T, [[0.5, None]])
     subprocess.run(["npx", "hyperframes", "snapshot", "--at", "0.5", "--no-end", "-o", "snap", "."], cwd=T, capture_output=True)
     png = [f for f in os.listdir(os.path.join(T, "snap")) if f.startswith("frame-")][0]
     sh(["ffmpeg", "-y", "-loglevel", "error", "-i", os.path.join(T, "snap", png), "-q:v", "2", os.path.join(OUT, "cover.jpg")])
@@ -106,7 +170,7 @@ def caption(ep, OUT, style):
     def cut(t, n=60):   # never cut a word in half
         t = t.strip(); return t if len(t) <= n else t[:n].rsplit(" ", 1)[0].rstrip("،,.… ") + "…"
     yt_title = cut(c.get("youtube_title") or (title if len(title) >= 6 else hook))
-    uniq = lambda xs: list(dict.fromkeys(xs))          # never repeat a hashtag
+    uniq = lambda xs: list(dict.fromkeys(xs))
     tiktok_tags = uniq(own + niche)[:3] + BROAD[:1]
     yt_tags = uniq(own + niche)[:3]
     ig_tags = list(dict.fromkeys(own + niche + BROAD))[:12]
@@ -164,11 +228,12 @@ if __name__ == "__main__":
         if step == "cover": cover(ep, P, OUT, sch, D)
 
 # ------------------------------------------------------------------ 5. delivery folder (ready to upload to Google Drive as it is)
-DRIVE = {"doc": "وثائقي", "collage": "Vox", "cine": "رجل العود", "saw": "الغاز saw"}
+CATEGORY = {"1": "جرائم حقيقية عربية", "2": "حروب ومخابرات وأسرار", "3": "قصص تحوّل الحياة والعبرة"}   # Drive: أفلامي/<category>/<title>/
+DRIVE = {"doc": "وثائقي", "collage": "Vox", "voxflat": "رسوم Vox", "kinetic": "نصوص متحركة", "threed": "ثلاثي الأبعاد", "paper": "ورق مقصوص", "stick": "رجل العود", "cine": "رجل العود", "anime": "أنمي", "cartoon": "هل تعلم", "saw": "الغاز saw"}
 def deliver_saw(ep, OUT):
     """puzzle parts: الغاز saw/<title>/<title> - اللغز.mp4 | - الحل.mp4, غلاف اللغز.jpg | غلاف الحل.jpg (+ wide/square)"""
     t = re.sub(r'[\\/:*?"<>|\n]', " ", ep.get("title", "لغز")).strip(); part = "اللغز" if int(ep.get("part", 1)) == 1 else "الحل"
-    d = os.path.join(OUT, "deliver", "الغاز saw", t); os.makedirs(d, exist_ok=True)
+    d = os.path.join(OUT, "deliver", "أفلامي", "الغاز saw", t); os.makedirs(d, exist_ok=True)
     for src, dst in (("video.mp4", f"{t} - {part}.mp4"), ("thumb.jpg", f"غلاف {part}.jpg")) + ((("video_16x9.mp4", f"{t} - {part} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - {part} - مربع.mp4")) if ep.get("formats") else ()):
         if os.path.exists(os.path.join(OUT, src)): shutil.copy(os.path.join(OUT, src), os.path.join(d, dst))
     print("DELIVER", d); return d
@@ -176,7 +241,7 @@ def deliver(ep, OUT, style):
     """OUT/deliver/<Drive folder>/<title>/ with ONLY: <title>.mp4, غلاف.jpg and 5 plain-text files (1 عنوان يوتيوب, 2 وصف يوتيوب, 3 تيك توك, 4 انستجرام, 5 مصادر وملاحظات).
     Wide/square videos only when "formats": true. Nothing else goes to Drive."""
     t = re.sub(r'[\\/:*?"<>|\n]', " ", re.sub(r"\[/?[yr]\]|<[^>]+>", "", ep.get("title", "video"))).strip() or "video"
-    d = os.path.join(OUT, "deliver", ep.get("drive_folder", DRIVE.get(style, "فيديوهات")), t)
+    d = os.path.join(OUT, "deliver", "أفلامي", ep.get("drive_folder") or CATEGORY.get(str(ep.get("category", "")), "أخرى"), t)
     shutil.rmtree(d, ignore_errors=True); os.makedirs(d)
     pairs = [("video_phone.mp4", f"{t}.mp4"), ("cover.jpg", "غلاف.jpg")]
     if ep.get("formats"): pairs += [("video_16x9.mp4", f"{t} - أفقي.mp4"), ("video_1x1.mp4", f"{t} - مربع.mp4")]
