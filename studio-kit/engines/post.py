@@ -97,7 +97,7 @@ def contrast(P, times, html="index.html"):
     s = re.sub(r"<style id=\"__contrast\">.*?</script>", "", s, flags=re.S)
     inj = (f'<style id="__contrast">{CONTRAST_CSS}</style><script>(function(){{var M={json.dumps(mode)};'
            'var A=[].slice.call(document.querySelectorAll("div,span,text")).filter(function(e){return [].some.call(e.childNodes,function(n){return n.nodeType===3&&n.textContent.trim().length>1})});'
-           '[].forEach.call(document.querySelectorAll("span"),function(e){if(e.style&&e.style.color)e.classList.add("kw");});for(var k in M){var e=A[k];if(!e)continue;if(M[k]==="ondark"&&e.style&&e.style.color)continue;e.classList.add(M[k]);}})();</script>')
+           '[].forEach.call(document.querySelectorAll("span"),function(e){if(e.style&&e.style.color)e.classList.add("kw");});for(var k in M){var e=A[k];if(!e)continue;if(e.style&&(e.style.backgroundColor||e.style.background))continue;if(M[k]==="ondark"&&e.style&&e.style.color)continue;e.classList.add(M[k]);}})();</script>')
     s = s.replace("</body>", inj + "</body>", 1)
     open(idx, "w").write(s)
     print(f"CONTRAST: {sum(v == 'onlight' for v in mode.values())} texts made dark (light background), {sum(v == 'ondark' for v in mode.values())} white (dark background)")
@@ -149,7 +149,7 @@ html,body{{margin:0}}#root{{position:relative;width:1080px;height:1920px;overflo
 
 # ------------------------------------------------------------------ 3. caption document (4 copy blocks)
 TAGS = {  # niche tags per style (Arabic first); broad tags are added from BROAD
- "doc": ["#قصة_حقيقية", "#وثائقي", "#تاريخ", "#غموض", "#ألغاز"], "collage": ["#لماذا", "#شرح", "#معلومة", "#اقتصاد", "#ثقافة"],
+ "hybrid": ["#قصة_حقيقية", "#وثائقي", "#تاريخ", "#غموض", "#أسرار"], "doc": ["#قصة_حقيقية", "#وثائقي", "#تاريخ", "#غموض", "#ألغاز"], "collage": ["#لماذا", "#شرح", "#معلومة", "#اقتصاد", "#ثقافة"],
  "voxflat": ["#معلومة", "#إحصائيات", "#شرح", "#اقتصاد", "#تعلم"], "kinetic": ["#تطوير_الذات", "#نصائح", "#تحفيز", "#حكمة", "#نجاح"],
  "threed": ["#فضاء", "#علوم", "#الكون", "#ماذا_لو", "#معلومة"], "paper": ["#تاريخ", "#حضارات", "#قصص", "#آثار", "#تراث"],
  "cine": ["#قصة_حقيقية", "#قصص", "#تاريخ", "#قصة_قصيرة", "#عبرة"], "stick": ["#ماذا_تفعل", "#نصائح", "#سلامة", "#مواقف", "#معلومة_مفيدة"], "anime": ["#أنمي", "#قصة_قصيرة", "#قصص", "#مشاعر", "#عبرة"],
@@ -229,7 +229,7 @@ if __name__ == "__main__":
 
 # ------------------------------------------------------------------ 5. delivery folder (ready to upload to Google Drive as it is)
 CATEGORY = {"1": "جرائم حقيقية عربية", "2": "حروب ومخابرات وأسرار", "3": "قصص تحوّل الحياة والعبرة"}   # Drive: أفلامي/<category>/<title>/
-DRIVE = {"doc": "وثائقي", "collage": "Vox", "voxflat": "رسوم Vox", "kinetic": "نصوص متحركة", "threed": "ثلاثي الأبعاد", "paper": "ورق مقصوص", "stick": "رجل العود", "cine": "رجل العود", "anime": "أنمي", "cartoon": "هل تعلم", "saw": "الغاز saw"}
+DRIVE = {"doc": "وثائقي", "hybrid": "وثائقي كولاج", "collage": "Vox", "voxflat": "رسوم Vox", "kinetic": "نصوص متحركة", "threed": "ثلاثي الأبعاد", "paper": "ورق مقصوص", "stick": "رجل العود", "cine": "رجل العود", "anime": "أنمي", "cartoon": "هل تعلم", "saw": "الغاز saw"}
 def deliver_saw(ep, OUT):
     """puzzle parts: الغاز saw/<title>/<title> - اللغز.mp4 | - الحل.mp4, غلاف اللغز.jpg | غلاف الحل.jpg (+ wide/square)"""
     t = re.sub(r'[\\/:*?"<>|\n]', " ", ep.get("title", "لغز")).strip(); part = "اللغز" if int(ep.get("part", 1)) == 1 else "الحل"

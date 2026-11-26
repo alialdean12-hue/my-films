@@ -29,6 +29,7 @@ jobs:
           - {style: 8, json: studio-kit/engines/examples/anime.json}
           - {style: 9, json: studio-kit/engines/examples/cartoon.json}
           - {style: 10, json: studio-kit/series/saw_5tory/examples/001-part1.json}
+          - {style: 11, json: studio-kit/engines/examples/hybrid.json}
     name: style ${{ matrix.style }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
@@ -41,7 +42,7 @@ jobs:
         run: |
           command -v ffmpeg >/dev/null || (sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg)
           pip install -q edge-tts numpy pillow
-          if [ "${{ matrix.style }}" = 2 ]; then pip install -q "rembg[cpu]"; fi
+          if [ "${{ matrix.style }}" = 2 ] || [ "${{ matrix.style }}" = 11 ]; then pip install -q "rembg[cpu]"; fi
           npm i -g playwright >/dev/null && npx playwright install --with-deps chromium >/dev/null
           npx --yes hyperframes --version
       - name: Preview
