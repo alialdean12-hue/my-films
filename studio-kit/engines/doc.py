@@ -4,6 +4,8 @@ CSS = ('.ph{position:absolute;inset:-6%;background-size:cover;background-positio
        '.cap{position:absolute;left:80px;right:80px;top:1240px;text-align:center;font-weight:900;font-size:84px;line-height:1.25;color:#fff;-webkit-text-stroke:12px #111;paint-order:stroke fill;text-shadow:0 6px 18px rgba(0,0,0,.45)}.dt{position:absolute;left:0;right:0;top:300px;text-align:center}.dt span{background:#c9a24a;color:#111;font-weight:900;font-size:62px;padding:2px 30px 10px}'
        '.bar{position:absolute;left:300px;right:300px;top:1215px;height:8px;background:#c9a24a}')
 ep = load(); B = ep["beats"]
+STYLE = globals().get("__STYLE__", "doc")   # "hybrid" = style 11: documentary photo + collage stickers and paper captions
+HYB = STYLE == "hybrid"
 GRADES = {"sepia": "sepia(.35) contrast(1.1) saturate(.8) brightness(.85)", "bw": "grayscale(1) contrast(1.2) brightness(.85)", "cold": "saturate(.7) hue-rotate(15deg) brightness(.85) contrast(1.1)",
           "warm": "sepia(.2) saturate(1.2) brightness(.9)", "noir": "grayscale(1) contrast(1.6) brightness(.7)", "vivid": "saturate(1.4) contrast(1.15) brightness(.9)", "faded": "saturate(.5) contrast(.85) brightness(1.05)",
           "green": "sepia(.3) hue-rotate(60deg) saturate(.9) brightness(.8)", "red": "sepia(.4) hue-rotate(-30deg) saturate(1.4) brightness(.75)", "night": "saturate(.6) hue-rotate(190deg) brightness(.6) contrast(1.2)",
@@ -13,12 +15,18 @@ CAPS = {  # caption looks
  "gold": ('top:1240px;color:#fff;text-shadow:0 6px 24px #000', True), "box": ('top:1260px;color:#111;', False), "lower": ('top:1500px;text-align:right;color:#fff;font-size:66px', False),
  "news": ('top:1300px;color:#fff;', False), "type": ('top:1280px;color:#f4ecd8;font-family:monospace,Cairo;font-size:64px', False), "big": ('top:780px;color:#fff;font-size:150px;text-shadow:0 10px 40px #000', False),
  "top": ('top:320px;color:#fff;text-shadow:0 6px 24px #000', False), "red": ('top:1260px;color:#fff;', False),
+ "paper": ('top:250px;color:#141414;-webkit-text-stroke:0;text-shadow:none', False),
 }
 def capdiv(i, b):
-    st = b.get("caption", ep.get("caption", "gold")); css, bar = CAPS.get(st, CAPS["gold"]); t = b.get("cap", "")
+    st = b.get("caption", ep.get("caption", "paper" if HYB else "gold")); css, bar = CAPS.get(st, CAPS["gold"]); t = b.get("cap", "")
     if st == "box": t = f'<span style="background:#f4ecd8;padding:6px 30px 16px;box-shadow:10px 10px 0 #c9a24a">{t}</span>'
     if st == "news": t = f'<span style="background:#c0392b;padding:6px 30px 16px">{t}</span>'
     if st == "red": t = f'<span style="background:#e5322d;padding:6px 30px 16px;transform:rotate(-2deg);display:inline-block">{t}</span>'
+    if st == "paper":   # torn paper strip with tape and a yellow marker on the key word
+        t = (f'<span class="tp" style="display:inline-block;background:#f6eedc;padding:20px 46px 30px;transform:rotate(-2deg);'
+             f'clip-path:polygon(0 6%,4% 0,9% 5%,15% 1%,22% 6%,30% 0,38% 5%,46% 1%,55% 6%,63% 0,71% 5%,79% 1%,87% 6%,94% 0,100% 5%,98% 50%,100% 95%,94% 100%,86% 94%,78% 100%,70% 95%,61% 100%,52% 94%,44% 100%,36% 95%,27% 100%,19% 94%,11% 100%,4% 95%,0 100%,2% 50%);'
+             f'box-shadow:0 14px 26px rgba(0,0,0,.35)">{t.replace("color:#ffd21f", "color:#141414;background:#ffd21f;padding:0 10px").replace("color:#ff3b3b", "color:#fff;background:#d0202a;padding:0 10px")}</span>'
+             f'<span style="position:absolute;left:50%;top:-14px;width:150px;height:46px;margin-left:-75px;background:rgba(240,230,190,.75);transform:rotate(4deg)"></span>')
     if st == "lower": t = f'<span style="border-right:16px solid #c9a24a;padding-right:24px;background:linear-gradient(270deg,#000c,#0000)">{t}</span>'
     return (f'<div class="bar" id="br{i}"></div>' if bar else "") + f'<div class="cap" id="cp{i}" style="opacity:0;{css}">{t}</div>', bar
 def overlay(i, b, s, e):
@@ -52,6 +60,12 @@ def scene(i, b, s, e, c0, c1):
         TOP.append(f'<video id="vid{i}" src="vid/{i}.mp4" data-start="{c0:.2f}" data-duration="{D:.2f}" data-track-index="0" muted playsinline style="position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:{g}"></video>')
         h = '<div class="vg"></div>'
     else: h = f'<div class="ph" id="ph{i}" style="background-image:url(img/{i}.jpg);filter:{g}"></div><div class="vg"></div>'
+    if b.get("_sticker"):   # cut-out sticker of the key person/object, pops in front of the photo
+        st = b.get("sticker", {}); x, y, w = st.get("x", 560), st.get("y", 1180), st.get("size", 640); rot = st.get("rotate", -4 if i % 2 else 4)
+        h += (f'<img id="stk{i}" src="img/{i}s.png" style="position:absolute;left:{x - w/2:.0f}px;top:{y - w/2:.0f}px;width:{w}px;height:{w}px;object-fit:contain;'
+              f'filter:drop-shadow(0 18px 18px rgba(0,0,0,.45))"/>')
+        js.append(f'tl.fromTo("#stk{i}",{{scale:0,rotation:{rot*4}}},{{scale:1,rotation:{rot},duration:.5,ease:"back.out(2)"}},{s+.5:.2f});')
+        js.append(f'tl.to("#stk{i}",{{rotation:{-rot*.4:.1f},duration:.5,ease:"sine.inOut",yoyo:true,repeat:{int((e-s)/.5)}}},{s+1.0:.2f});')
     oh, oj = overlay(i, b, s, e); h += oh; js += oj
     if b.get("route"): o2, j2 = overlay(i, {"overlay": "route"}, s, e); h += o2; js += j2
     if b.get("date"): h += f'<div class="dt" id="dt{i}" style="opacity:0"><span>{b["date"]}</span></div>'
@@ -67,7 +81,9 @@ def scene(i, b, s, e, c0, c1):
                    "glitch": f'tl.fromTo("#S{i}",{{opacity:0,x:-40}},{{opacity:1,x:0,duration:.06,repeat:4,yoyo:true}},{c0+.2:.2f});'}.get(tr, ""))
     if b.get("_vsrc") and i: js.append(f'tl.fromTo("#vid{i}",{{opacity:0}},{{opacity:1,duration:.45}},{c0:.2f});')
     if bar: js.append(f'tl.fromTo("#br{i}",{{scaleX:0}},{{scaleX:1,duration:.5,ease:"power2.out"}},{s+.1:.2f});')
-    js.append(f'tl.fromTo("#cp{i}",{{opacity:0,y:30}},{{opacity:1,y:0,duration:.6,ease:"power2.out"}},{s+.3:.2f});')
+    if b.get("caption", ep.get("caption", "paper" if HYB else "gold")) == "paper":
+        js.append(f'tl.fromTo("#cp{i}",{{opacity:0,scale:1.6,rotation:-6}},{{opacity:1,scale:1,rotation:0,duration:.35,ease:"power3.in"}},{s+.2:.2f});')
+    else: js.append(f'tl.fromTo("#cp{i}",{{opacity:0,y:30}},{{opacity:1,y:0,duration:.6,ease:"power2.out"}},{s+.3:.2f});')
     if b.get("date"): js.append(f'tl.fromTo("#dt{i}",{{opacity:0,scaleX:1.4}},{{opacity:1,scaleX:1,duration:.6}},{s:.2f});')
     if b.get("flash"): js += [f'tl.fromTo("#fl{i}",{{opacity:.9}},{{opacity:0,immediateRender:false,duration:.5}},{s+.9:.2f});', f'tl.fromTo("#S{i}",{{x:0}},{{x:14,duration:.05,yoyo:true,repeat:9}},{s+.9:.2f});']
     return h, js
@@ -80,7 +96,8 @@ def images():
     credits, used = [], {}
     src0 = ep.get("source", "auto")   # all photo searches of the video in one go (through GitHub if this sandbox blocks the sites)
     IM.ensure([(q, b.get("source", src0)) for b in B if not (b.get("img") or b.get("video")) for q in [b.get("query") or b.get("video_query")]]
-              + [(b["query2"], "auto") for b in B if b.get("query2") and not b.get("img2")])
+              + [(b["query2"], "auto") for b in B if b.get("query2") and not b.get("img2")]
+              + [(b["sticker"]["query"], b["sticker"].get("source", "auto")) for b in B if isinstance(b.get("sticker"), dict) and b["sticker"].get("query")])
     def key(r): return r.get("page") or r["file"]
     for i, b in enumerate(B):
         tag = ""
@@ -115,9 +132,28 @@ def images():
                 if not os.path.exists(m2): json.dump(res2, open(m2, "w"), ensure_ascii=False)
                 f2 = [x for x in res2 if key(x) not in used] or res2; r2 = f2[max(1, min(int(b.get("pick2", 1)), len(f2))) - 1]; used[key(r2)] = i + 1; src2 = r2["file"]
             sh(["ffmpeg", "-y", "-loglevel", "error", "-i", src2, "-vf", "scale=-2:2100", "-q:v", "3", f"{out}/{i}b.jpg"]); b["img2_ready"] = True
+        stk = b.get("sticker")
+        if stk:
+            if stk.get("img"): s_src = stk["img"] if os.path.isabs(stk["img"]) else os.path.join(ep["_dir"], stk["img"])
+            else:
+                cf3 = f"{cand}/q{i}s"; m3 = os.path.join(cf3, "credits.json")
+                res3 = json.load(open(m3)) if os.path.exists(m3) else IM.fetch_mixed(stk["query"], cf3, n_vid=0, photos=stk.get("source", "auto"))
+                if not os.path.exists(m3): json.dump(res3, open(m3, "w"), ensure_ascii=False)
+                f3 = [x for x in res3 if key(x) not in used]
+                if not f3: sys.exit(f"NO NEW MEDIA for the sticker of scene {i+1}: change its query.")
+                IM.mixed_sheet(f3, f"{cand}/sticker{i+1}.jpg")
+                r3 = f3[max(1, min(int(stk.get("pick", 1)), len(f3))) - 1]; used[key(r3)] = i + 1; s_src = r3["file"]
+                credits.append(f"ملصق مشهد {i+1}: {r3['title'][:60]} — {r3['author']} — {r3['license']} — {r3['page']}")
+            sys.path.insert(0, KIT + "/collage"); import cutout
+            try: cutout.sticker(s_src, f"{out}/{i}s.png", stk.get("outline", 14))
+            except Exception as ex:   # no rembg here: a white-framed photo card instead
+                print(f"sticker cut-out failed ({type(ex).__name__}); using a photo card")
+                from PIL import Image, ImageOps
+                im = Image.open(s_src).convert("RGB"); im.thumbnail((900, 900)); ImageOps.expand(im, 22, "#ffffff").save(f"{out}/{i}s.png")
+            b["_sticker"] = True
     open(OUT + "/CREDITS.txt", "w").write("مصادر الصور والفيديوهات وتراخيصها:\n" + "\n".join(credits) + "\n")
     print("media candidates: look at", cand, "(beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set \"pick\": number")
 
 images()
-run("doc", B, scene, css=CSS, bg="#000", bed="drone", rate="+3%",
+run(STYLE, B, scene, css=CSS, bg="#000", bed="drone", rate="+3%",
     extra_sfx=lambda sch: sum(([{"file": "sfx/hit.wav", "at": round(sch[k][0] + .9, 2), "gain": .35}, {"file": "sfx/riser.wav", "at": round(sch[k][0] - .2, 2), "gain": .15}] for k, b in enumerate(B) if b.get("flash")), []))
