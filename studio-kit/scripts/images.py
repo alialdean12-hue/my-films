@@ -5,18 +5,27 @@ source "auto": Wikipedia article photos ("wiki"), then Openverse (free real phot
 Pixabay needs PIXABAY_KEY. Wikimedia/Openverse need no key; credits are written for licences that ask for them."""
 import json, os, re, subprocess, sys, time, urllib.parse, urllib.request
 UA = "StudioKitVideoBot/1.1 (educational shorts maker; https://www.mediawiki.org/wiki/API:Etiquette)"
-def get(url, tries=6):
-    """polite download: on 429 (too many requests) waits what the server asks (Retry-After), up to 60 s, then retries."""
+DOWN = set()   # sites that keep refusing (429) are skipped for the rest of the run; the other open sources are used
+def get(url, tries=4):
+    """polite download: on 429 (too many requests) waits a little (Retry-After, max 15 s) and retries once; a site that refuses twice is skipped."""
+    host = urllib.parse.urlparse(url).netloc
+    if host in DOWN: raise RuntimeError(f"{host} is refusing requests: skipped")
+    refused = 0
     for k in range(tries):
         try: return urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": UA}), timeout=40).read()
         except Exception as e:
-            if k == tries - 1: raise
             if getattr(e, "code", 0) == 429:
-                ra = (getattr(e, "headers", None) or {}).get("Retry-After") or 20
+                refused += 1
+                if refused >= 2:
+                    if not host.startswith("upload."): DOWN.add(host)   # image files: only this one fails
+                    raise
+                ra = (getattr(e, "headers", None) or {}).get("Retry-After") or 8
                 try: ra = float(ra)
-                except ValueError: ra = 20
-                time.sleep(min(60, ra + 2 + 5 * k))
+                except ValueError: ra = 8
+                time.sleep(min(15, ra))
+            elif k == tries - 1: raise
             else: time.sleep(2 + 3 * k)
+    raise RuntimeError("download failed")
 def _save(url, path): open(path, "wb").write(get(url)); return path
 def pixabay(q, out, n):
     key = os.environ.get("PIXABAY_KEY")
