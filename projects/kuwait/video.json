@@ -50,7 +50,7 @@
    "transition": "fade",
    "overlay": "film",
    "sticker": {
-    "query": "handcuffs metal close up",
+    "query": "judge gavel wooden",
     "size": 560,
     "y": 1250,
     "x": 600
@@ -108,13 +108,13 @@
   {
    "line": "لكن ما حدث في القاعة نفسها… كان لها اسم آخر في الخارج.",
    "cap": "الاسم الآخر",
-   "query": "united nations hall meeting",
+   "query": "newspaper printing press rolls",
    "transition": "cut"
   },
   {
    "line": "المفوضية الأممية للحقوق: خطوة للخلف.",
    "cap": "قلقٌ أممي",
-   "query": "United Nations headquarters building",
+   "query": "United Nations emblem",
    "overlay": "stamp",
    "stamp": "إدانة"
   },
@@ -134,7 +134,7 @@
   {
    "line": "سبعة أسماء… وصمتٌ حكومي عن التفاصيل.",
    "cap": "بلا تفاصيل",
-   "query": "empty wooden benches hall",
+   "query": "prison cell interior bunk",
    "transition": "cut"
   },
   {
