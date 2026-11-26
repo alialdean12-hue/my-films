@@ -1,2 +1,10 @@
-NO PHOTOS for «Reuters Baghdad 2003 newspaper front page». Try simpler English words, or give "img" files.
-make exit: 1
+  wikimedia: HTTPError
+/home/runner/work/_temp/out/cover_check.jpg
+media candidates: look at /home/runner/work/_temp/out/candidates (beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set "pick": number
+CONTRAST: 6 texts made dark (light background), 14 white (dark background)
+QA OK
+LENGTH 67.50 s
+CONTRAST: 2 texts made dark (light background), 1 white (dark background)
+DELIVER /home/runner/work/_temp/out/deliver/أفلامي/حروب ومخابرات وأسرار/حفرة في مزرعة… ونهاية صدام (upload exactly these files, nothing else)
+DONE /home/runner/work/_temp/out : deliver/ (ready to upload) + video.mp4 video_phone.mp4 video_16x9.mp4 video_1x1.mp4 cover.jpg cover_check.jpg CAPTION.md
+make exit: 0
