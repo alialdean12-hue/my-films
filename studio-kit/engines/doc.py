@@ -95,7 +95,7 @@ def images():
     OUT = os.path.abspath(sys.argv[2]); out = OUT + "/project/img"; cand = OUT + "/candidates"; os.makedirs(out, exist_ok=True); os.makedirs(cand, exist_ok=True)
     credits, used = [], {}
     src0 = ep.get("source", "auto")   # all photo searches of the video in one go (through GitHub if this sandbox blocks the sites)
-    IM.ensure([(q, b.get("source", src0)) for b in B if not (b.get("img") or b.get("video")) for q in [b.get("query") or b.get("video_query")]]
+    IM.ensure([(q, b.get("source", src0), b.get("wiki")) for b in B if not (b.get("img") or b.get("video")) for q in [b.get("query") or b.get("video_query")]]
               + [(b["query2"], "auto") for b in B if b.get("query2") and not b.get("img2")]
               + [(b["sticker"]["query"], b["sticker"].get("source", "auto")) for b in B if isinstance(b.get("sticker"), dict) and b["sticker"].get("query")])
     def key(r): return r.get("page") or r["file"]
@@ -113,7 +113,7 @@ def images():
         if os.path.exists(meta): res = json.load(open(meta))
         else:
             nv = 0 if b.get("videos", ep.get("videos", 3)) == 0 else 3
-            res = IM.fetch_mixed(q, cf, video_q=b.get("video_query"), n_vid=0, photos=b.get("source", ep.get("source", "auto")))
+            res = IM.fetch_mixed(q, cf, video_q=b.get("video_query"), n_vid=0, photos=b.get("source", ep.get("source", "auto")), wiki=b.get("wiki"))
             json.dump(res, open(meta, "w"), ensure_ascii=False)
         fresh = [r for r in res if key(r) not in used]          # never offer what an earlier scene already uses
         if not fresh: sys.exit(f"NO NEW MEDIA for scene {i+1} («{q}»): every candidate is already used. Change the query of this scene.")
