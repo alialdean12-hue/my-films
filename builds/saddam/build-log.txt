@@ -1,4 +1,3 @@
-  wikimedia: HTTPError
 /home/runner/work/_temp/out/cover_check.jpg
 media candidates: look at /home/runner/work/_temp/out/candidates (beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set "pick": number
 CONTRAST: 6 texts made dark (light background), 14 white (dark background)
