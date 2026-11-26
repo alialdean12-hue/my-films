@@ -87,7 +87,7 @@
    "line": "في 13 ديسمبر اعتُقل رجل من عائلة المسلط… وتكلّم.",
    "cap": "الاسم المفصلي",
    "date": "13 ديسمبر · 10:50 ص",
-   "query": "interrogation room military",
+   "query": "desk lamp papers office dark",
    "overlay": "stamp",
    "stamp": "اعتراف"
   },
@@ -101,7 +101,7 @@
    "line": "600 جندي وطائرات ومدرعات طوّقت الموقعين في الليل.",
    "cap": "عملية «رد داون»",
    "date": "13 ديسمبر · 20:00",
-   "query": "military helicopters night sky",
+   "query": "helicopter silhouette sunset",
    "flash": true
   },
   {
@@ -113,7 +113,7 @@
   {
    "line": "ثم ركلها أحدهم: لوحٌ يُزاح… وظهر مدخلُ حفرة.",
    "cap": "تحت اللوح",
-   "query": "brick slab ground close up",
+   "query": "wooden plank on dirt ground",
    "overlay": "circle",
    "at": [
     540,
@@ -133,7 +133,7 @@
   {
    "line": "في الحفرة: مسدس لم يُستخدم، و750 ألف دولار.",
    "cap": "750 ألف دولار",
-   "query": "currency banknotes american dollars",
+   "query": "hundred dollar bills stack",
    "transition": "slide"
   },
   {
