@@ -72,7 +72,7 @@
   {
    "line": "سبعة: ثلاثة كويتيين، وكويتية، وسوري، وباكستاني، وإثيوبية.",
    "cap": "7 أسماء",
-   "query": "court verdict papers arabic",
+   "query": "prison cell door keys",
    "transition": "slide",
    "overlay": "counter",
    "number": 7
@@ -114,14 +114,14 @@
   {
    "line": "المفوضية الأممية للحقوق: خطوة للخلف.",
    "cap": "قلقٌ أممي",
-   "query": "OHCHR United Nations Geneva",
+   "query": "United Nations building flags",
    "overlay": "stamp",
    "stamp": "إدانة"
   },
   {
    "line": "الاتحاد الأوروبي تحدّث عن عواقب… وكان التصويت على الإعفاء من التأشيرة قريبًا.",
    "cap": "عواقب",
-   "query": "European Parliament Brussels building",
+   "query": "European Parliament building",
    "transition": "slide"
   },
   {
