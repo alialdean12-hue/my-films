@@ -1,0 +1,62 @@
+[0;93m2026-11-26 09:12:01.322528963 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+Downloading data from 'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx' to file '/home/runner/.rembg/models/u2net/u2net.onnx'.
+1/5 cut-outs...
+  0%|                                               | 0.00/176M [00:00<?, ?B/s]  6%|██▍                                    | 10.9M/176M [00:00<00:01, 109MB/s] 14%|█████▎                                 | 24.2M/176M [00:00<00:01, 123MB/s] 21%|████████▎                              | 37.3M/176M [00:00<00:01, 127MB/s] 29%|███████████▏                           | 50.5M/176M [00:00<00:00, 129MB/s] 36%|██████████████                         | 63.7M/176M [00:00<00:00, 130MB/s] 44%|█████████████████                      | 76.9M/176M [00:00<00:00, 131MB/s] 51%|███████████████████▉                   | 90.2M/176M [00:00<00:00, 131MB/s] 59%|███████████████████████▍                | 103M/176M [00:00<00:00, 130MB/s] 66%|██████████████████████████▍             | 116M/176M [00:00<00:00, 130MB/s] 74%|█████████████████████████████▍          | 130M/176M [00:01<00:00, 131MB/s] 81%|████████████████████████████████▍       | 143M/176M [00:01<00:00, 131MB/s] 89%|███████████████████████████████████▍    | 156M/176M [00:01<00:00, 131MB/s] 96%|██████████████████████████████████████▍ | 169M/176M [00:01<00:00, 130MB/s]  0%|                                               | 0.00/176M [00:00<?, ?B/s]100%|███████████████████████████████████████| 176M/176M [00:00<00:00, 1.16TB/s]
+  wikimedia: HTTPError
+Checking browser...
+Browser: download
+[INFO] [Render] Pipeline started {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","platform":"linux","arch":"x64","nodeVersion":"v22.23.5","fps":{"num":24,"den":1},"format":"mp4","quality":"high","browserGpuMode":"auto","forceScreenshot":false,"protocolTimeout":300000,"browserTimeout":120000,"pageNavigationTimeout":60000,"playerReadyTimeout":45000}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"pipeline","status":"checkpoint","elapsedMs":4,"message":"started","format":"mp4","quality":"high","browserGpuMode":"auto","forceScreenshot":false,"protocolTimeoutMs":300000,"pageNavigationTimeoutMs":60000,"playerReadyTimeoutMs":45000,"requestedWorkers":1}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"compile","status":"start","elapsedMs":7,"needsAlpha":false}
+[INFO] Compiled composition metadata {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","entryFile":"index.html","staticDuration":77.77,"width":1080,"height":1920,"videoCount":0,"audioCount":0,"renderModeHints":{"recommendScreenshot":false,"reasons":[]}}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"compile","status":"end","elapsedMs":158,"durationMs":151,"needsAlpha":false}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"compile","status":"checkpoint","elapsedMs":159,"message":"composition metadata resolved","width":1080,"height":1920,"videoCount":0,"audioCount":0,"imageCount":0,"deviceScaleFactor":1,"forceScreenshot":false,"compositionHash":"9dc350097d37bbbc"}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"browser_probe","status":"start","elapsedMs":159,"forceScreenshot":false,"stagePhase":"calibrating"}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"browser_probe","status":"end","elapsedMs":176,"durationMs":16,"forceScreenshot":false,"stagePhase":"calibrating"}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"browser_probe","status":"checkpoint","elapsedMs":177,"message":"duration resolved","durationSeconds":77.77,"totalFrames":1867,"compositionHash":"9dc350097d37bbbc","beginFrameStalled":false}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"video_extract","status":"start","elapsedMs":177,"videoCount":0}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"video_extract","status":"end","elapsedMs":178,"durationMs":1,"videoCount":0}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"video_extract","status":"checkpoint","elapsedMs":180,"message":"frames resolved","videoCount":0,"extractedVideoCount":0,"totalFramesExtracted":0,"maxFramesPerVideo":0,"avgFramesPerExtractedVideo":null,"vfrPreflightCount":null,"vfrPreflightMs":null,"cacheHits":null,"cacheMisses":null,"transientRetries":null,"minVideoFrameCoverageRatio":null,"authoredTimedClipCount":15}
+[INFO] [Render] No HDR sources detected, rendering SDR {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f"}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"hdr_detection","status":"checkpoint","elapsedMs":181,"message":"resolved","requestedHdrMode":"auto","effectiveHdr":"sdr","nativeHdrVideoCount":0,"nativeHdrImageCount":0}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"audio_process","status":"start","elapsedMs":181,"audioCount":0}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"file_server","status":"start","elapsedMs":181,"reused":false}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"audio_process","status":"end","elapsedMs":185,"durationMs":4,"audioCount":0}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"file_server","status":"end","elapsedMs":186,"durationMs":5}
+[hyperframes] browserGpuMode probe → software (WebGL unavailable)
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"capture_calibration","status":"checkpoint","elapsedMs":420,"message":"skipped","requestedWorkers":1,"totalFrames":1867,"htmlInCanvasDetected":false,"lowMemoryMode":false,"deInversionEligible":false,"deParallelRouterEligible":false}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"worker_resolution","status":"checkpoint","elapsedMs":421,"message":"resolved","workerCount":1}
+[INFO] streaming-encode gate {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","enabled":true,"reason":"single_worker","configFlag":true,"durationCapEnabled":false,"outputFormat":"mp4","workerCount":1,"durationSeconds":77.77,"maxDurationSeconds":240}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"capture_strategy","status":"checkpoint","elapsedMs":422,"message":"resolved","workerCount":1,"forceScreenshot":false,"captureBeyondViewport":null,"useStreamingEncode":true,"useLayeredComposite":false,"usePageSideCompositing":false,"hasHdrContent":false,"hasShaderTransitions":false,"isPngSequence":false}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"capture_streaming","status":"start","elapsedMs":423,"stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1867,"framesCompleted":0,"captureMode":"beginframe","captureOperation":"beginFrame"}
+[Browser:WARN] GSAP target #i1_0 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i4_0 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i6_2 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i9_0 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target #i12_2 .mk not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"capture_streaming","status":"checkpoint","elapsedMs":30424,"message":"stage still running","stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1867,"framesCompleted":240,"captureMode":"beginframe","captureOperation":"beginFrame","heartbeatIndex":1,"stageElapsedMs":30001}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"capture_streaming","status":"checkpoint","elapsedMs":60427,"message":"stage still running","stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1867,"framesCompleted":527,"captureMode":"beginframe","captureOperation":"beginFrame","heartbeatIndex":2,"stageElapsedMs":60004}
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"capture_streaming","status":"checkpoint","elapsedMs":120428,"message":"stage still running","stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1867,"framesCompleted":1131,"captureMode":"beginframe","captureOperation":"beginFrame","heartbeatIndex":3,"stageElapsedMs":120005}
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[Browser:WARN] GSAP target  not found. https://gsap.com
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"capture_streaming","status":"end","elapsedMs":204260,"durationMs":203837,"stagePhase":"capturing","workerCount":1,"forceScreenshot":false,"totalFrames":1867,"framesCompleted":1867,"captureMode":"beginframe","captureOperation":"encode"}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"assemble","status":"start","elapsedMs":204261,"stagePhase":"capturing","hasAudio":false,"workerCount":1,"forceScreenshot":false,"totalFrames":1867,"framesCompleted":1867,"captureMode":"beginframe","captureOperation":"encode"}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"assemble","status":"end","elapsedMs":204386,"durationMs":124,"stagePhase":"capturing","hasAudio":false,"workerCount":1,"forceScreenshot":false,"totalFrames":1867,"framesCompleted":1867,"captureMode":"beginframe","captureOperation":"encode"}
+[INFO] [Render:trace] {"renderJobId":"5009e1bd-bd81-4204-ba85-ad95aee6a41f","phase":"pipeline","status":"checkpoint","elapsedMs":204510,"message":"artifact validated","totalElapsedMs":204510}
+2/5 voice...
+3/5 html...
+CONTRAST: 17 texts made dark (light background), 4 white (dark background)
+QA OK
+4/5 sound + render...
+5/5 cover...
+DONE /home/runner/work/_temp/out/video.mp4 /home/runner/work/_temp/out/cover.jpg
+DELIVER /home/runner/work/_temp/out/deliver/أفلامي/حروب ومخابرات وأسرار/الوثائق التي أسقطت الاتفاق النووي (upload exactly these files, nothing else)
+make exit: 0
