@@ -22,7 +22,7 @@ def zone(i, b):
     """hybrid layout of beat i: where the caption goes; the other layers use the free zones."""
     if not HYB: return {}
     z = b.get("cap_pos") or ["top", "low", "middle", "top", "middle", "low"][i % 6]
-    stk_y = {"top": 1250, "middle": 1380, "low": 830}[z]; date_y = {"top": 1560, "middle": 300, "low": 300}[z]
+    stk_y = {"top": 1250, "middle": 1390, "low": 760}[z]; date_y = {"top": 1560, "middle": 300, "low": 300}[z]
     stamp_y = {"top": 1450, "middle": 1500, "low": 640}[z]
     side = -1 if i % 2 else 1
     return dict(cap=z, cap_y=ZONES[z], stk_x=540 + side * 210, stk_y=stk_y, date_y=date_y, stamp_y=stamp_y, card_x=540 - side * 230, card_y=stk_y - 60, side=side)
@@ -73,7 +73,7 @@ def scene(i, b, s, e, c0, c1):
         if not os.path.exists(f"{vd}/{i}.mp4"): IM.vertical(b["_vsrc"], f"{vd}/{i}.mp4", D + .2, b.get("video_start", 1.0))
         TOP.append(f'<video id="vid{i}" src="vid/{i}.mp4" data-start="{c0:.2f}" data-duration="{D:.2f}" data-track-index="0" muted playsinline style="position:absolute;inset:0;width:1080px;height:1920px;object-fit:cover;filter:{g}"></video>')
         h = '<div class="vg"></div>'
-    else: h = f'<div class="ph" id="ph{i}" style="background-image:url(img/{i}.jpg);filter:{g}"></div><div class="vg"></div>'
+    else: h = f'<div id="pz{i}" style="position:absolute;inset:0"><div class="ph" id="ph{i}" style="background-image:url(img/{i}.jpg);filter:{g}"></div></div><div class="vg"></div>'
     Z = zone(i, b)
     if b.get("_card"):   # second real photo as a taped polaroid that flies in mid-beat (more shots per beat)
         cx, cy = Z.get("card_x", 300), Z.get("card_y", 1100); r0 = 7 * Z.get("side", 1)
@@ -83,7 +83,7 @@ def scene(i, b, s, e, c0, c1):
         js.append(f'tl.fromTo("#cd{i}",{{x:{900*Z.get("side",1)},rotation:{r0*3},opacity:1}},{{x:0,rotation:{r0},duration:.45,ease:"power3.out"}},{tc:.2f});')
         js.append(f'tl.to("#cd{i}",{{y:-14,duration:.9,ease:"sine.inOut",yoyo:true,repeat:{max(1, int((e-tc)/.9))}}},{tc+.5:.2f});')
     if b.get("_sticker"):   # cut-out sticker of the key person/object, 4 different entrances
-        st = b.get("sticker", {}); x, y, w = st.get("x", Z.get("stk_x", 560)), st.get("y", Z.get("stk_y", 1180)), st.get("size", 600); rot = st.get("rotate", -4 if i % 2 else 4)
+        st = b.get("sticker", {}); x, y, w = st.get("x", Z.get("stk_x", 560)), st.get("y", Z.get("stk_y", 1180)), st.get("size", 540); rot = st.get("rotate", -4 if i % 2 else 4)
         h += (f'<img id="stk{i}" src="img/{i}s.png" style="position:absolute;left:{x - w/2:.0f}px;top:{y - w/2:.0f}px;width:{w}px;height:{w}px;object-fit:contain;'
               f'filter:drop-shadow(0 18px 18px rgba(0,0,0,.45))"/>')
         ent = st.get("enter", ["pop", "drop", "slide", "stamp"][i % 4])
@@ -111,7 +111,7 @@ def scene(i, b, s, e, c0, c1):
                    "whip": f'tl.fromTo("#S{i}",{{x:-1100,filter:"blur(24px)"}},{{x:0,filter:"blur(0px)",duration:.4,ease:"power3.out"}},{c0:.2f});'}.get(tr, ""))
     if b.get("_vsrc") and i: js.append(f'tl.fromTo("#vid{i}",{{opacity:0}},{{opacity:1,duration:.45}},{c0:.2f});')
     if HYB and not b.get("_vsrc") and e - s > 3:   # a "cut" to a closer framing halfway through the beat
-        js.append(f'tl.to("#ph{i}",{{scale:"+=0.14",x:"+={40*Z.get("side",1)}",duration:.18,ease:"power4.out"}},{s+(e-s)*.55:.2f});')
+        js.append(f'tl.fromTo("#pz{i}",{{scale:1,x:0}},{{scale:1.14,x:{40*Z.get("side",1)},duration:.18,ease:"power4.out"}},{s+(e-s)*.55:.2f});')
     if HYB and b.get("caption", ep.get("caption", "paper")) == "paper": js.append(f'tl.to("#ul{i}",{{attr:{{"stroke-dashoffset":0}},duration:.45,ease:"power2.out"}},{s+.7:.2f});')
     if bar: js.append(f'tl.fromTo("#br{i}",{{scaleX:0}},{{scaleX:1,duration:.5,ease:"power2.out"}},{s+.1:.2f});')
     if b.get("caption", ep.get("caption", "paper" if HYB else "gold")) == "paper":
