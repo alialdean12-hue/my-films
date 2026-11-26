@@ -57,8 +57,8 @@
    "query": "steel safe deposit box door"
   },
   "cd": {
-   "cut": true,
-   "query": "stack of file folders documents"
+   "vintage": true,
+   "query": "file folders documents desk"
   },
   "cargo": {
    "vintage": true,
@@ -131,24 +131,24 @@
     {
      "type": "text",
      "text": "نصف طن [r]ورق[/r]",
-     "y": 400,
-     "size": 104,
+     "y": 390,
+     "size": 108,
      "at": 0.1
     },
     {
-     "type": "cutout",
+     "type": "photo",
      "asset": "papers",
      "x": 540,
      "y": 1080,
-     "w": 700,
+     "w": 760,
      "at": 0.5
     },
     {
      "type": "underline",
      "x": 540,
-     "y": 1450,
-     "w": 520,
-     "at": 1.5
+     "y": 1470,
+     "w": 480,
+     "at": 1.6
     }
    ]
   },
@@ -269,11 +269,11 @@
      "at": 0.1
     },
     {
-     "type": "cutout",
+     "type": "photo",
      "asset": "cd",
      "x": 540,
-     "y": 1040,
-     "w": 620,
+     "y": 1060,
+     "w": 760,
      "at": 0.5
     },
     {
@@ -402,7 +402,7 @@
     {
      "type": "text",
      "text": "[y]اليورانيوم[/y]",
-     "y": 380,
+     "y": 370,
      "size": 112,
      "at": 0.1
     },
@@ -410,14 +410,14 @@
      "type": "cutout",
      "asset": "lab",
      "x": 540,
-     "y": 1040,
-     "w": 600,
+     "y": 1010,
+     "w": 500,
      "at": 0.5
     },
     {
      "type": "text",
      "text": "2019 · موقع لم تعلنه إيران",
-     "y": 1520,
+     "y": 1590,
      "size": 58,
      "at": 1.6
     }
