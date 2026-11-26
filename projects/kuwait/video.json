@@ -108,13 +108,13 @@
   {
    "line": "لكن ما حدث في القاعة نفسها… كان لها اسم آخر في الخارج.",
    "cap": "الاسم الآخر",
-   "query": "newspaper printing press rolls",
+   "query": "courtroom interior empty",
    "transition": "cut"
   },
   {
    "line": "المفوضية الأممية للحقوق: خطوة للخلف.",
    "cap": "قلقٌ أممي",
-   "query": "United Nations emblem",
+   "query": "United Nations General Assembly hall",
    "overlay": "stamp",
    "stamp": "إدانة"
   },
@@ -140,7 +140,7 @@
   {
    "line": "ملفٌّ واحد… سبعةُ أسماء… فهل كانت العقوبة رسالة؟ اكتب رأيك.",
    "cap": "رسالة؟",
-   "query": "Kuwait desert sunset",
+   "query": "Kuwait Towers sea",
    "transition": "fade"
   }
  ]
