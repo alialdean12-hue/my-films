@@ -70,7 +70,7 @@
   },
   "whitehouse": {
    "vintage": true,
-   "query": "white house washington dc"
+   "query": "american flag waving close up"
   },
   "flags": {
    "vintage": true,
@@ -83,6 +83,10 @@
   "gravel": {
    "vintage": true,
    "query": "gravel pile construction site"
+  },
+  "inspect": {
+   "cut": true,
+   "query": "magnifying glass documents investigation"
   }
  },
  "cover": {
@@ -367,11 +371,11 @@
      "at": 0.1
     },
     {
-     "type": "photo",
-     "asset": "flags",
+     "type": "cutout",
+     "asset": "inspect",
      "x": 540,
-     "y": 1100,
-     "w": 760,
+     "y": 1080,
+     "w": 640,
      "at": 0.5
     },
     {
@@ -382,7 +386,7 @@
      ],
      "to": [
       600,
-      1230
+      1260
      ],
      "at": 1.8
     }
@@ -394,18 +398,25 @@
    "items": [
     {
      "type": "text",
-     "text": "[y]يورانيوم[/y] 2019",
-     "y": 390,
-     "size": 104,
+     "text": "في [y]2019[/y]",
+     "y": 380,
+     "size": 112,
      "at": 0.1
     },
     {
      "type": "cutout",
      "asset": "lab",
      "x": 540,
-     "y": 1100,
-     "w": 640,
+     "y": 1030,
+     "w": 600,
      "at": 0.5
+    },
+    {
+     "type": "text",
+     "text": "يورانيوم في موقع لم تعلنه إيران",
+     "y": 1500,
+     "size": 58,
+     "at": 1.5
     }
    ]
   },
