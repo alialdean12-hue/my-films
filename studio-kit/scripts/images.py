@@ -4,7 +4,7 @@ Python use: fetch(query, outdir, source, n) -> [{"file","title","author","licens
 source "auto": Wikipedia article photos ("wiki"), then Openverse (free real photos: Commons, Flickr CC), Wikimedia search, and a little Pixabay stock.
 Pixabay needs PIXABAY_KEY. Wikimedia/Openverse need no key; credits are written for licences that ask for them."""
 import json, os, re, subprocess, sys, time, urllib.parse, urllib.request
-UA = "StudioKitVideoBot/1.1 (educational shorts maker; https://www.mediawiki.org/wiki/API:Etiquette)"
+UA = "MyFilmsStudioKit/1.2 (https://github.com/alialdean12-hue/my-films; educational shorts) python-urllib"
 DOWN = set()   # sites that keep refusing (429) are skipped for the rest of the run; the other open sources are used
 def get(url, tries=4):
     """polite download: on 429 (too many requests) waits a little (Retry-After, max 15 s) and retries once; a site that refuses twice is skipped."""
