@@ -80,7 +80,7 @@
   {
    "line": "ثم بدأت الخيوط من الأقرب إليه: حرّاسه وأقاربه.",
    "cap": "من الأقرب إليه",
-   "query": "Iraqi men traditional village",
+   "query": "Iraqi village alley mud houses",
    "transition": "slide"
   },
   {
@@ -94,26 +94,26 @@
   {
    "line": "قال إن في مزرعةٍ جنوب تكريت بيتًا طينيًّا وحفرة سقفها فلين وبساط.",
    "cap": "6–8 أقدام",
-   "query": "Iraq mud brick house",
+   "query": "Iraq mud brick wall village",
    "transition": "zoom"
   },
   {
    "line": "600 جندي وطائرات ومدرعات طوّقت الموقعين في الليل.",
    "cap": "عملية «رد داون»",
    "date": "13 ديسمبر · 20:00",
-   "query": "US soldiers night raid",
+   "query": "military helicopters night sky",
    "flash": true
   },
   {
    "line": "وفي الموقع الأول: لا شيء. المزرعة بدت فارغة.",
    "cap": "الموقع الأول فارغ",
-   "query": "abandoned farm night",
+   "query": "empty dusty road night desert",
    "transition": "cut"
   },
   {
    "line": "ثم ركلها أحدهم: لوحٌ يُزاح… وظهر مدخلُ حفرة.",
    "cap": "تحت اللوح",
-   "query": "dark hole ground flashlight",
+   "query": "brick slab ground close up",
    "overlay": "circle",
    "at": [
     540,
@@ -125,21 +125,22 @@
    "line": "خرج رجلٌ أشعث رافعًا يديه: «أنا صدام حسين».",
    "cap": "«أنا صدام حسين»",
    "date": "نحو 20:30",
-   "query": "Saddam Hussein 2003",
+   "query": "Reuters Baghdad 2003 newspaper front page",
    "flash": true,
    "overlay": "stamp",
-   "stamp": "قُبض عليه"
+   "stamp": "قُبض عليه",
+   "source": "wikimedia"
   },
   {
    "line": "في الحفرة: مسدس لم يُستخدم، و750 ألف دولار.",
    "cap": "750 ألف دولار",
-   "query": "pistol on table",
+   "query": "currency banknotes american dollars",
    "transition": "slide"
   },
   {
    "line": "لا إصابات… ولا حارس واحد حاول الدفاع عنه.",
    "cap": "بلا مقاومة",
-   "query": "soldiers desert dusk",
+   "query": "desert dusk silhouette soldier",
    "transition": "cut"
   },
   {
