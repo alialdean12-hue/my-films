@@ -1,13 +1,13 @@
 from lib import *
 import json
-CSS = ('.ph{position:absolute;inset:-6%;background-size:cover;background-position:center}.vg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 40%,#000c 100%),linear-gradient(transparent 55%,#000e)}'
-       '.cap{position:absolute;left:80px;right:80px;top:1240px;text-align:center;font-weight:900;font-size:84px;line-height:1.25;color:#fff;text-shadow:0 6px 24px #000}.dt{position:absolute;left:0;right:0;top:300px;text-align:center}.dt span{background:#c9a24a;color:#111;font-weight:900;font-size:62px;padding:2px 30px 10px}'
+CSS = ('.ph{position:absolute;inset:-6%;background-size:cover;background-position:center}.vg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 55%,#0000004d 100%)}'
+       '.cap{position:absolute;left:80px;right:80px;top:1240px;text-align:center;font-weight:900;font-size:84px;line-height:1.25;color:#fff;-webkit-text-stroke:12px #111;paint-order:stroke fill;text-shadow:0 6px 18px rgba(0,0,0,.45)}.dt{position:absolute;left:0;right:0;top:300px;text-align:center}.dt span{background:#c9a24a;color:#111;font-weight:900;font-size:62px;padding:2px 30px 10px}'
        '.bar{position:absolute;left:300px;right:300px;top:1215px;height:8px;background:#c9a24a}')
 ep = load(); B = ep["beats"]
 GRADES = {"sepia": "sepia(.35) contrast(1.1) saturate(.8) brightness(.85)", "bw": "grayscale(1) contrast(1.2) brightness(.85)", "cold": "saturate(.7) hue-rotate(15deg) brightness(.85) contrast(1.1)",
           "warm": "sepia(.2) saturate(1.2) brightness(.9)", "noir": "grayscale(1) contrast(1.6) brightness(.7)", "vivid": "saturate(1.4) contrast(1.15) brightness(.9)", "faded": "saturate(.5) contrast(.85) brightness(1.05)",
           "green": "sepia(.3) hue-rotate(60deg) saturate(.9) brightness(.8)", "red": "sepia(.4) hue-rotate(-30deg) saturate(1.4) brightness(.75)", "night": "saturate(.6) hue-rotate(190deg) brightness(.6) contrast(1.2)",
-          "old_film": "sepia(.8) contrast(1.3) brightness(.8)", "clean": "brightness(.9)"}
+          "old_film": "sepia(.8) contrast(1.3) brightness(.8)", "clean": "none", "natural": "contrast(1.05) saturate(1.05)"}
 CAMS = {"in": (1.0, 1.18, 0, 0), "out": (1.2, 1.0, 0, 0), "left": (1.15, 1.15, 60, 0), "right": (1.15, 1.15, -60, 0), "up": (1.15, 1.15, 0, 60), "down": (1.15, 1.15, 0, -60), "still": (1.05, 1.05, 0, 0), "fast_in": (1.0, 1.4, 0, 0)}
 CAPS = {  # caption looks
  "gold": ('top:1240px;color:#fff;text-shadow:0 6px 24px #000', True), "box": ('top:1260px;color:#111;', False), "lower": ('top:1500px;text-align:right;color:#fff;font-size:66px', False),
@@ -44,7 +44,7 @@ def overlay(i, b, s, e):
 def scene(i, b, s, e, c0, c1):
     D = c1 - c0; js = []
     cam = b.get("cam", ep.get("cam")); a, z, dx, dy = CAMS[cam] if isinstance(cam, str) else (cam or [(1.0, 1.18, -40, 0), (1.2, 1.0, 0, 30), (1.0, 1.15, 30, -20), (1.15, 1.0, 0, -30)][i % 4])
-    g = GRADES.get(b.get("grade", ep.get("grade", "sepia")), GRADES["sepia"])
+    g = GRADES.get(b.get("grade", ep.get("grade", "natural")), GRADES["natural"])
     if b.get("_vsrc"):
         sys.path.insert(0, KIT + "/scripts"); import images as IM
         vd = os.path.abspath(sys.argv[2]) + "/project/vid"; os.makedirs(vd, exist_ok=True)
