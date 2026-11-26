@@ -80,7 +80,7 @@
   {
    "line": "كل شيء كان مسجّلًا: كاميرات المراقبة صوّرت الواقعة كاملة.",
    "cap": "الكاميرا صوّرت كل شيء",
-   "query": "cctv security camera street",
+   "query": "surveillance camera wall building",
    "overlay": "circle",
    "at": [
     540,
@@ -106,7 +106,7 @@
   {
    "line": "الحكم استند إلى اعتراف المتهم و26 شاهدًا وتقرير الطب الشرعي.",
    "cap": "26 شاهدًا",
-   "query": "legal documents stack",
+   "query": "newspaper headlines arabic",
    "transition": "slide"
   },
   {
