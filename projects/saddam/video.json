@@ -94,7 +94,7 @@
   {
    "line": "قال إن في مزرعةٍ جنوب تكريت بيتًا طينيًّا وحفرة سقفها فلين وبساط.",
    "cap": "6–8 أقدام",
-   "query": "Iraq mud brick wall village",
+   "query": "brick wall texture old",
    "transition": "zoom"
   },
   {
@@ -133,7 +133,7 @@
   {
    "line": "في الحفرة: مسدس لم يُستخدم، و750 ألف دولار.",
    "cap": "750 ألف دولار",
-   "query": "hundred dollar bills stack",
+   "query": "stack of hundred dollar bills money",
    "transition": "slide"
   },
   {
