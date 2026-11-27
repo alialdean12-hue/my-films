@@ -40,7 +40,7 @@ jobs:
           node-version: 22
       - name: Tools
         run: |
-          command -v ffmpeg >/dev/null || (sudo apt-get -qq update && sudo apt-get -qq install -y ffmpeg)
+          command -v ffmpeg >/dev/null || ( (sudo apt-get -qq update || true) && sudo apt-get -qq install -y ffmpeg )
           pip install -q edge-tts numpy pillow
           if [ "${{ matrix.style }}" = 2 ] || [ "${{ matrix.style }}" = 11 ]; then pip install -q "rembg[cpu]"; fi
           npm i -g playwright >/dev/null && npx playwright install --with-deps chromium >/dev/null
