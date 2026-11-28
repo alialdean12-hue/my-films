@@ -47,13 +47,7 @@
     -30,
     0
    ],
-   "transition": "fade",
-   "sticker": {
-    "query": "cyber security hacker dark",
-    "size": 520,
-    "y": 1290,
-    "x": 600
-   }
+   "transition": "fade"
   },
   {
    "line": "الهدف جسر رقمي اسمه «رونين»… بوابة تعبر منها الأموال.",
@@ -121,7 +115,7 @@
   {
    "line": "وتقرير أممي: هذه الأنشطة توفر نصف عائداتها الصعبة.",
    "cap": "نصف العائدات",
-   "query": "United Nations flags row",
+   "query": "United Nations building Geneva flags",
    "transition": "cut"
   },
   {
