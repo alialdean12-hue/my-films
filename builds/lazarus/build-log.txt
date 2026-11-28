@@ -1,19 +1,18 @@
-[webp @ 0x571b9e9dde40] invalid TIFF header in Exif data
-[webp @ 0x571b9e94db40] invalid TIFF header in Exif data
-[webp @ 0x557d77124240] invalid TIFF header in Exif data
-[webp @ 0x557d77125a80] invalid TIFF header in Exif data
-[0;93m2026-11-28 15:35:54.648497114 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
+[webp @ 0x564f85e87140] invalid TIFF header in Exif data
+[webp @ 0x564f85ea39c0] invalid TIFF header in Exif data
+[webp @ 0x5c087aacc240] invalid TIFF header in Exif data
+[webp @ 0x5c087aacda80] invalid TIFF header in Exif data
 Downloading data from 'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx' to file '/home/runner/.rembg/models/u2net/u2net.onnx'.
-  0%|                                               | 0.00/176M [00:00<?, ?B/s]  4%|█▌                                    | 7.27M/176M [00:00<00:02, 72.7MB/s] 12%|████▊                                  | 21.8M/176M [00:00<00:01, 115MB/s] 21%|████████▏                              | 36.8M/176M [00:00<00:01, 131MB/s] 30%|███████████▌                           | 52.0M/176M [00:00<00:00, 140MB/s] 38%|██████████████▊                        | 66.7M/176M [00:00<00:00, 142MB/s] 46%|██████████████████                     | 81.7M/176M [00:00<00:00, 145MB/s] 55%|█████████████████████▍                 | 96.9M/176M [00:00<00:00, 147MB/s] 64%|█████████████████████████▍              | 112M/176M [00:00<00:00, 149MB/s] 72%|████████████████████████████▉           | 127M/176M [00:00<00:00, 149MB/s] 81%|████████████████████████████████▎       | 142M/176M [00:01<00:00, 150MB/s] 89%|███████████████████████████████████▊    | 158M/176M [00:01<00:00, 151MB/s] 98%|███████████████████████████████████████▎| 173M/176M [00:01<00:00, 151MB/s]  0%|                                               | 0.00/176M [00:00<?, ?B/s]100%|███████████████████████████████████████| 176M/176M [00:00<00:00, 1.53TB/s]
-[webp @ 0x5c4715ba2380] invalid TIFF header in Exif data
-[webp @ 0x5c4715bf0140] invalid TIFF header in Exif data
-[webp @ 0x64c0116bc240] invalid TIFF header in Exif data
-[webp @ 0x64c0116be300] invalid TIFF header in Exif data
+  0%|                                               | 0.00/176M [00:00<?, ?B/s]  7%|██▉                                    | 13.2M/176M [00:00<00:01, 132MB/s] 19%|███████▎                               | 32.9M/176M [00:00<00:00, 170MB/s] 30%|███████████▋                           | 52.6M/176M [00:00<00:00, 182MB/s] 41%|███████████████▉                       | 71.9M/176M [00:00<00:00, 187MB/s] 52%|████████████████████▏                  | 91.3M/176M [00:00<00:00, 189MB/s] 63%|█████████████████████████▏              | 111M/176M [00:00<00:00, 191MB/s] 74%|█████████████████████████████▋          | 130M/176M [00:00<00:00, 193MB/s] 85%|██████████████████████████████████      | 150M/176M [00:00<00:00, 194MB/s] 96%|██████████████████████████████████████▌ | 170M/176M [00:00<00:00, 195MB/s]  0%|                                               | 0.00/176M [00:00<?, ?B/s]100%|███████████████████████████████████████| 176M/176M [00:00<00:00, 1.12TB/s]
+[webp @ 0x5aad6534f8c0] invalid TIFF header in Exif data
+[webp @ 0x5aad65350500] invalid TIFF header in Exif data
+[webp @ 0x5b610f9ba240] invalid TIFF header in Exif data
+[webp @ 0x5b610f9bc300] invalid TIFF header in Exif data
 /home/runner/work/_temp/out/cover_check.jpg
 media candidates: look at /home/runner/work/_temp/out/candidates (beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set "pick": number
-CONTRAST: 13 texts made dark (light background), 3 white (dark background)
+CONTRAST: 12 texts made dark (light background), 3 white (dark background)
 QA OK
-LENGTH 79.21 s
+LENGTH 78.41 s
 CONTRAST: 0 texts made dark (light background), 2 white (dark background)
 DELIVER /home/runner/work/_temp/out/deliver/أفلامي/حروب ومخابرات وأسرار/السرقة التي لم تُطلق رصاصة (upload exactly these files, nothing else)
 DONE /home/runner/work/_temp/out : deliver/ (ready to upload) + video.mp4 video_phone.mp4 video_16x9.mp4 video_1x1.mp4 cover.jpg cover_check.jpg CAPTION.md
