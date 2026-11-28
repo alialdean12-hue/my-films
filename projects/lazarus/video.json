@@ -49,9 +49,9 @@
    ],
    "transition": "fade",
    "sticker": {
-    "query": "hand holding bank card",
-    "size": 540,
-    "y": 1280,
+    "query": "smartphone dark screen",
+    "size": 520,
+    "y": 1290,
     "x": 600
    }
   },
@@ -70,9 +70,8 @@
   {
    "line": "الشبكة كانت تحرسها 9 مفاتيح… ومن يملك 5 يصبح السيد.",
    "cap": "5 من 9",
-   "query": "keys lock door metal",
+   "query": "padlock chain security",
    "transition": "slide",
-   "overlay": "counter",
    "number": 5
   },
   {
@@ -92,9 +91,8 @@
   {
    "line": "والأغرب: لم يلاحظ أحد. مرّت 6 أيام قبل الاكتشاف.",
    "cap": "6 أيام صمت",
-   "query": "server room lights",
+   "query": "server rack data center",
    "transition": "slide",
-   "overlay": "counter",
    "number": 6
   },
   {
@@ -109,15 +107,14 @@
   {
    "line": "وبعدها بأيام أضافت الخزانة الأمريكية المحفظة للعقوبات.",
    "cap": "عقوبات",
-   "query": "US treasury building washington",
+   "query": "american flag building washington",
    "transition": "cut"
   },
   {
    "line": "لكن الرقم أكبر: 3 مليارات دولار في 58 هجومًا.",
    "cap": "3 مليارات",
-   "query": "money pile world map",
+   "query": "stack of dollar bills",
    "transition": "zoom",
-   "overlay": "counter",
    "number": 3,
    "unit": " مليار"
   },
@@ -130,7 +127,7 @@
   {
    "line": "وكوريا الشمالية تنفي… وتقول إنها لا تخترق أحدًا.",
    "cap": "نفيٌ رسمي",
-   "query": "Pyongyang city skyline",
+   "query": "Pyongyang North Korea city",
    "transition": "slide"
   },
   {
