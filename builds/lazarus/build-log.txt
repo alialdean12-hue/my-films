@@ -1,13 +1,14 @@
-[webp @ 0x6367bc8f3840] invalid TIFF header in Exif data
-[webp @ 0x6367bc8fb7c0] invalid TIFF header in Exif data
-[webp @ 0x5f1e7ff2d240] invalid TIFF header in Exif data
-[webp @ 0x5f1e7ff2ea80] invalid TIFF header in Exif data
+[webp @ 0x57e5dcb88700] invalid TIFF header in Exif data
+[webp @ 0x57e5dcc43380] invalid TIFF header in Exif data
+[webp @ 0x5f67a28b8240] invalid TIFF header in Exif data
+[webp @ 0x5f67a28b9a80] invalid TIFF header in Exif data
+[0;93m2026-11-28 15:33:11.517229789 [W:onnxruntime:Default, device_discovery.cc:95 GetPciBusId] Skipping pci_bus_id for PCI path at "/sys/devices/LNXSYSTM:00/LNXSYBUS:00/ACPI0004:00/MSFT1000:00/5620e0c7-8062-4dce-aeb7-520c7ef76171" because filename "5620e0c7-8062-4dce-aeb7-520c7ef76171" did not match expected pattern of [0-9a-f]+:[0-9a-f]+:[0-9a-f]+[.][0-9a-f]+[m
 Downloading data from 'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx' to file '/home/runner/.rembg/models/u2net/u2net.onnx'.
-  0%|                                               | 0.00/176M [00:00<?, ?B/s]  9%|███▌                                   | 16.0M/176M [00:00<00:00, 160MB/s] 18%|███████                                | 32.1M/176M [00:00<00:00, 149MB/s] 28%|███████████                            | 49.9M/176M [00:00<00:00, 162MB/s] 38%|██████████████▋                        | 66.2M/176M [00:00<00:00, 149MB/s] 48%|██████████████████▌                    | 83.8M/176M [00:00<00:00, 158MB/s] 58%|███████████████████████▏                | 102M/176M [00:00<00:00, 165MB/s] 68%|███████████████████████████▎            | 120M/176M [00:00<00:00, 170MB/s] 78%|███████████████████████████████▍        | 138M/176M [00:00<00:00, 174MB/s] 89%|███████████████████████████████████▋    | 157M/176M [00:00<00:00, 178MB/s]  0%|                                               | 0.00/176M [00:00<?, ?B/s]100%|███████████████████████████████████████| 176M/176M [00:00<00:00, 1.07TB/s]
-[webp @ 0x5f343a565cc0] invalid TIFF header in Exif data
-[webp @ 0x5f343a511b00] invalid TIFF header in Exif data
-[webp @ 0x5de1f6a75240] invalid TIFF header in Exif data
-[webp @ 0x5de1f6a77300] invalid TIFF header in Exif data
+  0%|                                               | 0.00/176M [00:00<?, ?B/s]  6%|██▎                                    | 10.2M/176M [00:00<00:01, 102MB/s] 12%|████▋                                  | 21.0M/176M [00:00<00:01, 104MB/s] 18%|███████                                | 31.7M/176M [00:00<00:01, 106MB/s] 24%|█████████▎                             | 42.2M/176M [00:00<00:01, 104MB/s] 30%|███████████▊                           | 53.0M/176M [00:00<00:01, 105MB/s] 36%|██████████████▏                        | 63.9M/176M [00:00<00:01, 106MB/s] 42%|████████████████▌                      | 74.7M/176M [00:00<00:00, 107MB/s] 49%|██████████████████▉                    | 85.5M/176M [00:00<00:00, 107MB/s] 55%|█████████████████████▎                 | 96.4M/176M [00:00<00:00, 108MB/s] 61%|████████████████████████▍               | 107M/176M [00:01<00:00, 108MB/s] 67%|██████████████████████████▊             | 118M/176M [00:01<00:00, 108MB/s] 73%|█████████████████████████████▎          | 129M/176M [00:01<00:00, 108MB/s] 79%|███████████████████████████████▊        | 140M/176M [00:01<00:00, 107MB/s] 86%|██████████████████████████████████▏     | 150M/176M [00:01<00:00, 107MB/s] 92%|████████████████████████████████████▋   | 161M/176M [00:01<00:00, 108MB/s] 98%|███████████████████████████████████████▏| 173M/176M [00:01<00:00, 109MB/s]  0%|                                               | 0.00/176M [00:00<?, ?B/s]100%|████████████████████████████████████████| 176M/176M [00:00<00:00, 978GB/s]
+[webp @ 0x61bca8e53500] invalid TIFF header in Exif data
+[webp @ 0x61bca8e2e0c0] invalid TIFF header in Exif data
+[webp @ 0x653fbeb28240] invalid TIFF header in Exif data
+[webp @ 0x653fbeb2a300] invalid TIFF header in Exif data
 media candidates: look at /home/runner/work/_temp/out/candidates (beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set "pick": number
-TOO LONG: the narration lasts 82.2 s but Shorts/Reels allow at most 80 s. Remove about 6 words. Video not rendered.
+TOO LONG: the narration lasts 80.0 s but Shorts/Reels allow at most 80 s. Remove about 3 words. Video not rendered.
 make exit: 1
