@@ -1,0 +1,17 @@
+[webp @ 0x5ad74c962700] invalid TIFF header in Exif data
+[webp @ 0x5ad74ca35240] invalid TIFF header in Exif data
+[webp @ 0x5e66eb3a1240] invalid TIFF header in Exif data
+[webp @ 0x5e66eb3a2a80] invalid TIFF header in Exif data
+[webp @ 0x56afcef10900] invalid TIFF header in Exif data
+[webp @ 0x56afcef53780] invalid TIFF header in Exif data
+[webp @ 0x556a9c3ae240] invalid TIFF header in Exif data
+[webp @ 0x556a9c3b0300] invalid TIFF header in Exif data
+/home/runner/work/_temp/out/cover_check.jpg
+media candidates: look at /home/runner/work/_temp/out/candidates (beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set "pick": number
+CONTRAST: 12 texts made dark (light background), 3 white (dark background)
+QA OK
+LENGTH 78.41 s
+CONTRAST: 0 texts made dark (light background), 2 white (dark background)
+DELIVER /home/runner/work/_temp/out/deliver/أفلامي/حروب ومخابرات وأسرار/السرقة التي لم تُطلق رصاصة (upload exactly these files, nothing else)
+DONE /home/runner/work/_temp/out : deliver/ (ready to upload) + video.mp4 video_phone.mp4 video_16x9.mp4 video_1x1.mp4 cover.jpg cover_check.jpg CAPTION.md
+make exit: 0

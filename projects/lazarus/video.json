@@ -1,0 +1,140 @@
+{
+ "title": "السرقة التي لم تُطلق رصاصة",
+ "caption": "paper",
+ "music": "tech",
+ "voice": {
+  "name": "ar-SA-HamedNeural",
+  "rate": "+4%"
+ },
+ "min_duration": 50,
+ "max_duration": 80,
+ "category": 2,
+ "sources": [
+  "Ronin Network / Sky Mavis (29 Mar 2022) — 173,600 إيثيريوم و25.5 مليون USDC في معاملتين بمفاتيح مسروقة، واكتُشفت بعد 6 أيام",
+  "FBI (14 Apr 2022) — إعلان رسمي بأن Lazarus Group وAPT38 (كوريا الشمالية) وراء سرقة 625 مليون دولار",
+  "Blockworks (18 Apr 2022) — الخزانة الأمريكية أضافت محفظة المهاجم إلى قوائم عقوبات Lazarus",
+  "UN Panel of Experts (مارس 2024) — 58 هجومًا سيبرانيًا بين 2017 و2023 بقيمة تقارب 3 مليارات دولار، ونحو نصف عائدات العملة الأجنبية من هذه الأنشطة",
+  "Yonhap/UN (أكتوبر 2023) — سرقات العملات الرقمية 2022 نحو 1.7 مليار دولار، ثلاثة أضعاف 2021"
+ ],
+ "tags": [
+  "مخابرات",
+  "كوريا_الشمالية"
+ ],
+ "caption_doc": {
+  "hook": "لم يُطلقوا رصاصة واحدة… وسرقوا أكثر من 600 مليون دولار.",
+  "question": "هل يمكن أن تُموَّل حرب كاملة بضغطة زر؟ اكتب رأيك 👇",
+  "youtube_title": "كوريا الشمالية: السرقة التي لم تُطلق رصاصة",
+  "hashtags": [
+   "#كوريا_الشمالية",
+   "#مخابرات",
+   "#أسرار_المنطقة"
+  ],
+  "audience": "أسرار المخابرات"
+ },
+ "cover": {
+  "text": "[y]625[/y] مليون دولار",
+  "tag": "أسرار المنطقة"
+ },
+ "beats": [
+  {
+   "line": "لم يُطلقوا رصاصة… وفي معاملتين سرقوا 625 مليون دولار.",
+   "cap": "625 مليون دولار",
+   "date": "مارس 2022",
+   "query": "bitcoin cryptocurrency coins",
+   "cam": [
+    1.0,
+    1.12,
+    -30,
+    0
+   ],
+   "transition": "fade"
+  },
+  {
+   "line": "الهدف جسر رقمي اسمه «رونين»… بوابة تعبر منها الأموال.",
+   "cap": "جسر رقمي",
+   "query": "bridge night city lights",
+   "cam": [
+    1.15,
+    1.0,
+    0,
+    20
+   ],
+   "transition": "cut"
+  },
+  {
+   "line": "الشبكة كانت تحرسها 9 مفاتيح… ومن يملك 5 يصبح السيد.",
+   "cap": "5 من 9",
+   "query": "padlock chain security",
+   "transition": "slide",
+   "number": 5
+  },
+  {
+   "line": "الطريق كان رسالة عمل وهمية… فتح الموظف ملفًا وانتهى.",
+   "cap": "رسالة عمل وهمية",
+   "query": "laptop screen code dark",
+   "transition": "cut",
+   "overlay": "stamp",
+   "stamp": "فخّ"
+  },
+  {
+   "line": "عمليتان فقط… وخرج 173,600 إيثيريوم و25.5 مليون دولار.",
+   "cap": "معاملتان",
+   "query": "blockchain network glowing",
+   "transition": "cut"
+  },
+  {
+   "line": "والأغرب: لم يلاحظ أحد. مرّت 6 أيام قبل الاكتشاف.",
+   "cap": "6 أيام صمت",
+   "query": "server rack data center",
+   "transition": "slide",
+   "number": 6
+  },
+  {
+   "line": "ثم قال الـ FBI: الفاعل «لازاروس»، أي كوريا الشمالية.",
+   "cap": "الـ FBI يتّهم",
+   "date": "14 أبريل 2022",
+   "query": "FBI headquarters building",
+   "transition": "cut",
+   "overlay": "stamp",
+   "stamp": "مسؤول"
+  },
+  {
+   "line": "وبعدها بأيام أضافت الخزانة الأمريكية المحفظة للعقوبات.",
+   "cap": "عقوبات",
+   "query": "american flag building washington",
+   "transition": "cut"
+  },
+  {
+   "line": "لكن الرقم أكبر: 3 مليارات دولار في 58 هجومًا.",
+   "cap": "3 مليارات",
+   "query": "stack of dollar bills",
+   "transition": "zoom",
+   "number": 3,
+   "unit": " مليار"
+  },
+  {
+   "line": "وتقرير أممي: هذه الأنشطة توفر نصف عائداتها الصعبة.",
+   "cap": "نصف العائدات",
+   "query": "United Nations building Geneva flags",
+   "transition": "cut"
+  },
+  {
+   "line": "وكوريا الشمالية تنفي… وتقول إنها لا تخترق أحدًا.",
+   "cap": "نفيٌ رسمي",
+   "query": "Pyongyang North Korea city",
+   "transition": "slide"
+  },
+  {
+   "line": "برامج نووية وصواريخ… يدفع فاتورتها موظف ضغط رابطًا.",
+   "cap": "ضغطة زر",
+   "query": "person typing laptop night",
+   "transition": "cut"
+  },
+  {
+   "line": "لا دخان ولا دماء… محفظة تُفرَّغ في ثانية. حرب جديدة؟",
+   "cap": "حرب جديدة؟",
+   "query": "empty chair dark room",
+   "transition": "fade"
+  }
+ ]
+}

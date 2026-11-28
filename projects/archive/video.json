@@ -1,0 +1,455 @@
+{
+ "title": "الوثائق التي أسقطت الاتفاق النووي",
+ "paper": "cream",
+ "voice": {
+  "name": "ar-SA-HamedNeural",
+  "rate": "+4%"
+ },
+ "min_duration": 50,
+ "max_duration": 80,
+ "category": 2,
+ "sources": [
+  "The New York Times (30 Apr 2018) — مسؤول إسرائيلي: الموساد عثر على المستودع في فبراير 2016، واقتحمه في يناير 2018، ونقل الوثائق الأصلية إلى إسرائيل في الليلة نفسها؛ 55 ألف صفحة و183 قرصًا (55 ألف ملف) بوزن نصف طن",
+  "JTA (1 May 2018) — نتنياهو: «كان مستودعًا متهالكًا من الخارج»، والنسخ نُقلت إلى مكان آمن، وأُبلغ ترامب بالعملية في يناير",
+  "Israel National News / NYT (يوليو 2018) — تفاصيل العملية: 31 يناير 2018، ست ساعات و29 دقيقة، 32 خزنة، موعد الخروج 5:00 صباحًا قبل وصول الحراسة",
+  "The Atlantic (30 Apr 2018) — العرض التلفزيوني في 30 أبريل 2018، ومشروع «آمد» 1999–2003 (بحسب العرض الإسرائيلي)",
+  "BBC (11 Nov 2019) — الوكالة الدولية للطاقة الذرية: جزيئات يورانيوم طبيعية من أصل بشري في موقع لم تعلنه إيران، ونتنياهو قال إن الموقع رُدم بالحصى",
+  "Times of Israel (2021) — الرئيس الإيراني الأسبق روحاني أقرّ بأخذ الوثائق من داخل إيران؛ وإيران نفت القصة ووصفتها بالمزاعم المفبركة"
+ ],
+ "tags": [
+  "مخابرات",
+  "إيران_النووي"
+ ],
+ "caption_doc": {
+  "hook": "مستودع قديم في طهران… كان يخفي أكبر سرّ نووي في المنطقة.",
+  "question": "هل تُصدّق هذه الوثائق؟ اكتب رأيك في التعليقات 👇",
+  "youtube_title": "الوثائق التي أسقطت الاتفاق النووي الإيراني",
+  "hashtags": [
+   "#إيران",
+   "#المخابرات",
+   "#أسرار_المنطقة"
+  ],
+  "audience": "أسرار المخابرات"
+ },
+ "assets": {
+  "warehouse": {
+   "vintage": true,
+   "query": "old warehouse building exterior"
+  },
+  "papers": {
+   "vintage": true,
+   "query": "cardboard archive boxes stacked"
+  },
+  "street": {
+   "vintage": true,
+   "query": "tehran skyline milad tower"
+  },
+  "clock": {
+   "cut": true,
+   "query": "wall clock face close up"
+  },
+  "torch": {
+   "vintage": true,
+   "query": "cutting metal sparks workshop"
+  },
+  "safe": {
+   "cut": true,
+   "query": "steel safe deposit box door"
+  },
+  "cd": {
+   "vintage": true,
+   "query": "file folders documents desk"
+  },
+  "cargo": {
+   "vintage": true,
+   "query": "cargo plane night runway"
+  },
+  "stage": {
+   "vintage": true,
+   "query": "press conference podium microphones"
+  },
+  "whitehouse": {
+   "vintage": true,
+   "query": "capitol building washington dome"
+  },
+  "flags": {
+   "vintage": true,
+   "query": "international flags united nations"
+  },
+  "lab": {
+   "cut": true,
+   "query": "laboratory glassware science"
+  },
+  "gravel": {
+   "vintage": true,
+   "query": "gravel pile construction site"
+  },
+  "inspect": {
+   "cut": true,
+   "query": "magnifying glass documents investigation"
+  }
+ },
+ "cover": {
+  "asset": "warehouse",
+  "text": "سرّ [y]المستودع[/y]",
+  "bg": "dark",
+  "tag": "أسرار المنطقة"
+ },
+ "beats": [
+  {
+   "line": "مستودع قديم في طهران… كان يخفي أكبر سرّ نووي في المنطقة.",
+   "bg": "dark",
+   "items": [
+    {
+     "type": "text",
+     "text": "سرّ [y]المستودع[/y]",
+     "y": 380,
+     "size": 108,
+     "at": 0.1
+    },
+    {
+     "type": "photo",
+     "asset": "warehouse",
+     "x": 540,
+     "y": 1080,
+     "w": 780,
+     "at": 0.5
+    },
+    {
+     "type": "circle",
+     "x": 540,
+     "y": 1080,
+     "r": 340,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "line": "في الداخل لم يكن سلاحًا… بل نصف طن من الورق والملفات.",
+   "bg": "cream",
+   "items": [
+    {
+     "type": "text",
+     "text": "نصف طن [r]ورق[/r]",
+     "y": 390,
+     "size": 108,
+     "at": 0.1
+    },
+    {
+     "type": "photo",
+     "asset": "papers",
+     "x": 540,
+     "y": 1080,
+     "w": 760,
+     "at": 0.5
+    },
+    {
+     "type": "underline",
+     "x": 540,
+     "y": 1470,
+     "w": 480,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "line": "في 2016 عثرت المخابرات الإسرائيلية عليه في حي شورآباد جنوب طهران.",
+   "bg": "kraft",
+   "items": [
+    {
+     "type": "text",
+     "text": "حي [y]شورآباد[/y]",
+     "y": 390,
+     "size": 108,
+     "at": 0.1
+    },
+    {
+     "type": "photo",
+     "asset": "street",
+     "x": 540,
+     "y": 1060,
+     "w": 760,
+     "at": 0.5
+    },
+    {
+     "type": "text",
+     "text": "2016 · جنوب طهران",
+     "y": 1520,
+     "size": 58,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "line": "راقبته سنتين… ثم جاءت ليلة 31 يناير 2018.",
+   "bg": "dark",
+   "items": [
+    {
+     "type": "text",
+     "text": "ليلة [y]الاقتحام[/y]",
+     "y": 390,
+     "size": 108,
+     "at": 0.1
+    },
+    {
+     "type": "cutout",
+     "asset": "clock",
+     "x": 540,
+     "y": 1060,
+     "w": 600,
+     "at": 0.5
+    },
+    {
+     "type": "text",
+     "text": "31 يناير 2018",
+     "y": 1520,
+     "size": 62,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "line": "عطّلوا الإنذار، وفتحوا الخزائن بلهبٍ حارق.",
+   "bg": "cream",
+   "items": [
+    {
+     "type": "text",
+     "text": "[r]الإنذار[/r] مقطوع",
+     "y": 390,
+     "size": 104,
+     "at": 0.1
+    },
+    {
+     "type": "photo",
+     "asset": "torch",
+     "x": 540,
+     "y": 1080,
+     "w": 760,
+     "at": 0.5
+    }
+   ]
+  },
+  {
+   "line": "ست ساعات ونصف… وخرجوا قبل الحراسة في الخامسة صباحًا.",
+   "bg": "kraft",
+   "items": [
+    {
+     "type": "text",
+     "text": "[y]ست[/y] ساعات ونصف",
+     "y": 390,
+     "size": 104,
+     "at": 0.1
+    },
+    {
+     "type": "cutout",
+     "asset": "safe",
+     "x": 540,
+     "y": 1090,
+     "w": 660,
+     "at": 0.5
+    },
+    {
+     "type": "underline",
+     "x": 540,
+     "y": 1470,
+     "w": 480,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "line": "الحمولة: 55 ألف صفحة، و183 قرصًا فيه 55 ألف ملف.",
+   "bg": "dark",
+   "items": [
+    {
+     "type": "text",
+     "text": "[y]الحمولة[/y]",
+     "y": 380,
+     "size": 112,
+     "at": 0.1
+    },
+    {
+     "type": "photo",
+     "asset": "cd",
+     "x": 540,
+     "y": 1060,
+     "w": 760,
+     "at": 0.5
+    },
+    {
+     "type": "text",
+     "text": "55 ألف صفحة · 183 قرصًا",
+     "y": 1520,
+     "size": 60,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "line": "صور ومخططات وحسابات… خرجت من إيران في الليلة نفسها.",
+   "bg": "cream",
+   "items": [
+    {
+     "type": "text",
+     "text": "خرجت [y]في الليلة[/y]",
+     "y": 400,
+     "size": 100,
+     "at": 0.1
+    },
+    {
+     "type": "photo",
+     "asset": "cargo",
+     "x": 540,
+     "y": 1100,
+     "w": 780,
+     "at": 0.5
+    }
+   ]
+  },
+  {
+   "line": "ثم عرضتها إسرائيل على المسرح العالمي في 30 أبريل 2018.",
+   "bg": "dark",
+   "items": [
+    {
+     "type": "text",
+     "text": "[y]عرضٌ[/y] علني",
+     "y": 380,
+     "size": 112,
+     "at": 0.1
+    },
+    {
+     "type": "photo",
+     "asset": "stage",
+     "x": 540,
+     "y": 1070,
+     "w": 780,
+     "at": 0.5
+    },
+    {
+     "type": "text",
+     "text": "30 أبريل 2018",
+     "y": 1530,
+     "size": 62,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "line": "بعدها بثمانية أيام… انسحبت واشنطن من الاتفاق النووي.",
+   "bg": "cream",
+   "items": [
+    {
+     "type": "text",
+     "text": "[y]انسحاب[/y] أمريكا",
+     "y": 390,
+     "size": 108,
+     "at": 0.1
+    },
+    {
+     "type": "photo",
+     "asset": "whitehouse",
+     "x": 540,
+     "y": 1080,
+     "w": 760,
+     "at": 0.5
+    },
+    {
+     "type": "text",
+     "text": "8 مايو 2018",
+     "y": 1530,
+     "size": 62,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "line": "إيران نفت كل شيء وسمّتها مزاعم… لكن الوكالة الذرية فتّشت الموقع.",
+   "bg": "kraft",
+   "items": [
+    {
+     "type": "text",
+     "text": "الوكالة [y]الذرية[/y]",
+     "y": 390,
+     "size": 100,
+     "at": 0.1
+    },
+    {
+     "type": "cutout",
+     "asset": "inspect",
+     "x": 540,
+     "y": 1080,
+     "w": 640,
+     "at": 0.5
+    },
+    {
+     "type": "arrow",
+     "from": [
+      760,
+      1560
+     ],
+     "to": [
+      600,
+      1260
+     ],
+     "at": 1.8
+    }
+   ]
+  },
+  {
+   "line": "وفي 2019 وجدت يورانيوم في موقع لم تعلنه إيران.",
+   "bg": "dark",
+   "items": [
+    {
+     "type": "text",
+     "text": "[y]اليورانيوم[/y]",
+     "y": 370,
+     "size": 112,
+     "at": 0.1
+    },
+    {
+     "type": "cutout",
+     "asset": "lab",
+     "x": 540,
+     "y": 1010,
+     "w": 500,
+     "at": 0.5
+    },
+    {
+     "type": "text",
+     "text": "2019 · موقع لم تعلنه إيران",
+     "y": 1590,
+     "size": 58,
+     "at": 1.6
+    }
+   ]
+  },
+  {
+   "line": "ورقٌ قديم غيّر سياسة دولة… من كان يحرس السرّ الحقيقي؟",
+   "bg": "cream",
+   "items": [
+    {
+     "type": "text",
+     "text": "من كان يحرس [y]السرّ[/y]؟",
+     "y": 380,
+     "size": 92,
+     "at": 0.1
+    },
+    {
+     "type": "photo",
+     "asset": "gravel",
+     "x": 540,
+     "y": 1090,
+     "w": 760,
+     "at": 0.4
+    },
+    {
+     "type": "text",
+     "text": "اكتب رأيك في التعليقات",
+     "y": 1580,
+     "size": 58,
+     "at": 1.6
+    }
+   ]
+  }
+ ]
+}
