@@ -1,13 +1,13 @@
-[webp @ 0x58862ae966c0] invalid TIFF header in Exif data
-[webp @ 0x58862ae43000] invalid TIFF header in Exif data
-[webp @ 0x651470f4b240] invalid TIFF header in Exif data
-[webp @ 0x651470f4ca80] invalid TIFF header in Exif data
+[webp @ 0x61ccb60dd700] invalid TIFF header in Exif data
+[webp @ 0x61ccb6231380] invalid TIFF header in Exif data
+[webp @ 0x63e92ee3b240] invalid TIFF header in Exif data
+[webp @ 0x63e92ee3ca80] invalid TIFF header in Exif data
 Downloading data from 'https://github.com/danielgatis/rembg/releases/download/v0.0.0/u2net.onnx' to file '/home/runner/.rembg/models/u2net/u2net.onnx'.
-  0%|                                               | 0.00/176M [00:00<?, ?B/s]  9%|███▍                                   | 15.7M/176M [00:00<00:01, 157MB/s] 20%|███████▊                               | 35.1M/176M [00:00<00:00, 179MB/s] 31%|████████████▎                          | 55.3M/176M [00:00<00:00, 190MB/s] 42%|████████████████▍                      | 74.3M/176M [00:00<00:00, 183MB/s] 53%|████████████████████▌                  | 92.6M/176M [00:00<00:00, 177MB/s] 63%|█████████████████████████               | 110M/176M [00:00<00:00, 153MB/s] 72%|████████████████████████████▋           | 126M/176M [00:00<00:00, 134MB/s] 80%|████████████████████████████████        | 141M/176M [00:00<00:00, 137MB/s] 88%|███████████████████████████████████▏    | 155M/176M [00:01<00:00, 137MB/s] 97%|██████████████████████████████████████▊ | 171M/176M [00:01<00:00, 142MB/s]  0%|                                               | 0.00/176M [00:00<?, ?B/s]100%|███████████████████████████████████████| 176M/176M [00:00<00:00, 1.51TB/s]
-[webp @ 0x646a9ef0ae40] invalid TIFF header in Exif data
-[webp @ 0x646a9ef92580] invalid TIFF header in Exif data
-[webp @ 0x611e7ed97240] invalid TIFF header in Exif data
-[webp @ 0x611e7ed99300] invalid TIFF header in Exif data
+  0%|                                               | 0.00/176M [00:00<?, ?B/s] 11%|████                                   | 18.6M/176M [00:00<00:00, 186MB/s] 22%|████████▌                              | 38.4M/176M [00:00<00:00, 193MB/s] 33%|████████████▉                          | 58.2M/176M [00:00<00:00, 195MB/s] 44%|█████████████████▎                     | 78.1M/176M [00:00<00:00, 197MB/s] 56%|█████████████████████▋                 | 98.0M/176M [00:00<00:00, 197MB/s] 67%|██████████████████████████▊             | 118M/176M [00:00<00:00, 195MB/s] 78%|███████████████████████████████▏        | 137M/176M [00:00<00:00, 196MB/s] 89%|███████████████████████████████████▋    | 157M/176M [00:00<00:00, 196MB/s]  0%|                                               | 0.00/176M [00:00<?, ?B/s]100%|████████████████████████████████████████| 176M/176M [00:00<00:00, 953GB/s]
+[webp @ 0x5d9b3bc241c0] invalid TIFF header in Exif data
+[webp @ 0x5d9b3bc48040] invalid TIFF header in Exif data
+[webp @ 0x56e6c7dce240] invalid TIFF header in Exif data
+[webp @ 0x56e6c7dd0300] invalid TIFF header in Exif data
 media candidates: look at /home/runner/work/_temp/out/candidates (beatN.jpg: numbered PHOTO/VIDEO + source; items used in earlier scenes are removed), then set "pick": number
-TOO LONG: the narration lasts 85.3 s but Shorts/Reels allow at most 80 s. Remove about 11 words. Video not rendered.
+TOO LONG: the narration lasts 83.2 s but Shorts/Reels allow at most 80 s. Remove about 7 words. Video not rendered.
 make exit: 1
