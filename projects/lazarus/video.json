@@ -1,0 +1,149 @@
+{
+ "title": "السرقة التي لم تُطلق رصاصة",
+ "caption": "paper",
+ "music": "tech",
+ "voice": {
+  "name": "ar-SA-HamedNeural",
+  "rate": "+4%"
+ },
+ "min_duration": 50,
+ "max_duration": 80,
+ "category": 2,
+ "sources": [
+  "Ronin Network / Sky Mavis (29 Mar 2022) — 173,600 إيثيريوم و25.5 مليون USDC في معاملتين بمفاتيح مسروقة، واكتُشفت بعد 6 أيام",
+  "FBI (14 Apr 2022) — إعلان رسمي بأن Lazarus Group وAPT38 (كوريا الشمالية) وراء سرقة 625 مليون دولار",
+  "Blockworks (18 Apr 2022) — الخزانة الأمريكية أضافت محفظة المهاجم إلى قوائم عقوبات Lazarus",
+  "UN Panel of Experts (مارس 2024) — 58 هجومًا سيبرانيًا بين 2017 و2023 بقيمة تقارب 3 مليارات دولار، ونحو نصف عائدات العملة الأجنبية من هذه الأنشطة",
+  "Yonhap/UN (أكتوبر 2023) — سرقات العملات الرقمية 2022 نحو 1.7 مليار دولار، ثلاثة أضعاف 2021"
+ ],
+ "tags": [
+  "مخابرات",
+  "كوريا_الشمالية"
+ ],
+ "caption_doc": {
+  "hook": "لم يُطلقوا رصاصة واحدة… وسرقوا أكثر من 600 مليون دولار.",
+  "question": "هل يمكن أن تُموَّل حرب كاملة بضغطة زر؟ اكتب رأيك 👇",
+  "youtube_title": "كوريا الشمالية: السرقة التي لم تُطلق رصاصة",
+  "hashtags": [
+   "#كوريا_الشمالية",
+   "#مخابرات",
+   "#أسرار_المنطقة"
+  ],
+  "audience": "أسرار المخابرات"
+ },
+ "cover": {
+  "text": "[y]625[/y] مليون دولار",
+  "tag": "أسرار المنطقة"
+ },
+ "beats": [
+  {
+   "line": "لم يُطلقوا رصاصة واحدة… وفي معاملتين سرقوا 625 مليون دولار.",
+   "cap": "625 مليون دولار",
+   "date": "مارس 2022",
+   "query": "bitcoin cryptocurrency coins",
+   "cam": [
+    1.0,
+    1.12,
+    -30,
+    0
+   ],
+   "transition": "fade",
+   "sticker": {
+    "query": "hand holding bank card",
+    "size": 540,
+    "y": 1280,
+    "x": 600
+   }
+  },
+  {
+   "line": "الهدف كان جسرًا رقميًا اسمه «رونين»… بوابة تعبر منها الأموال.",
+   "cap": "جسر رقمي",
+   "query": "bridge night city lights",
+   "cam": [
+    1.15,
+    1.0,
+    0,
+    20
+   ],
+   "transition": "cut"
+  },
+  {
+   "line": "الشبكة كانت تحرسها 9 مفاتيح… ومن يملك 5 يصبح السيد.",
+   "cap": "5 من 9",
+   "query": "keys lock door metal",
+   "transition": "slide",
+   "overlay": "counter",
+   "number": 5
+  },
+  {
+   "line": "الطريق كان رسالة عمل وهمية لموظف… فتح ملفًا فانتهى كل شيء.",
+   "cap": "رسالة عمل وهمية",
+   "query": "laptop screen code dark",
+   "transition": "cut",
+   "overlay": "stamp",
+   "stamp": "فخّ"
+  },
+  {
+   "line": "بعدها عمليتان فقط… وخرج 173,600 إيثيريوم و25.5 مليون دولار رقمي.",
+   "cap": "معاملتان",
+   "query": "blockchain network glowing",
+   "transition": "cut"
+  },
+  {
+   "line": "والأغرب: لم يلاحظ أحد. مرّت 6 أيام قبل اكتشاف السرقة.",
+   "cap": "6 أيام صمت",
+   "query": "server room lights",
+   "transition": "slide",
+   "overlay": "counter",
+   "number": 6
+  },
+  {
+   "line": "ثم قال الـ FBI بوضوح: الفاعل «لازاروس»، أي كوريا الشمالية.",
+   "cap": "الـ FBI يتّهم",
+   "date": "14 أبريل 2022",
+   "query": "FBI headquarters building",
+   "transition": "cut",
+   "overlay": "stamp",
+   "stamp": "مسؤول"
+  },
+  {
+   "line": "وبعدها بأيام أضافت الخزانة الأمريكية المحفظة إلى العقوبات.",
+   "cap": "عقوبات",
+   "query": "US treasury building washington",
+   "transition": "cut"
+  },
+  {
+   "line": "لكن الرقم الحقيقي أكبر: 3 مليارات دولار في 58 هجومًا.",
+   "cap": "3 مليارات",
+   "query": "money pile world map",
+   "transition": "zoom",
+   "overlay": "counter",
+   "number": 3,
+   "unit": " مليار"
+  },
+  {
+   "line": "وتقرير أممي: هذه الأنشطة توفر نحو نصف عائداتها من العملة الصعبة.",
+   "cap": "نصف العائدات",
+   "query": "United Nations Security Council chamber",
+   "transition": "cut"
+  },
+  {
+   "line": "وكوريا الشمالية تنفي… وتقول إنها لا تقوم بأي اختراق.",
+   "cap": "نفيٌ رسمي",
+   "query": "Pyongyang city skyline",
+   "transition": "slide"
+  },
+  {
+   "line": "برامج نووية وصواريخ… فاتورتها يدفعها موظف ضغط على رابط.",
+   "cap": "ضغطة زر",
+   "query": "person typing laptop night",
+   "transition": "cut"
+  },
+  {
+   "line": "لا دخان، لا دماء… محفظة تُفرَّغ في ثانية. هل هذه حرب جديدة؟",
+   "cap": "حرب جديدة؟",
+   "query": "empty chair dark room",
+   "transition": "fade"
+  }
+ ]
+}
